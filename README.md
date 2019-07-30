@@ -16,8 +16,9 @@ Roles:
 <br>•    Alistair will be the Lieutenant  (figures out logistics)
 
 Also Important:
-<br>•    Appreciation for people: Assume that people are approaching you with the best solution, with positive intent, and that everyone wants to get the project done
-<br>•    Celebration: try to celebrate every milestone by getting out early on Fridays, maybe getting pastriesSigned,Ensign Daniel
+<br>•    Appreciation for people: Assume that people are approaching you with the best solution, with positive 
+intent, and that everyone wants to get the project done, use positive reinforcement to encourage good behavior.
+<br>•    Celebration: try to celebrate every milestone by getting out early on Fridays, maybe getting pastries
 
 Signed:
 <br>Chief Engineer Mark
