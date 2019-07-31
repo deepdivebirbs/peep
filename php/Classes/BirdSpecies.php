@@ -118,14 +118,11 @@ class BirdSpecies {
 		$this->sciName = $sciName;
 	}
 
-	/**
-	 * @param $locData
+	//Javascript location function here.
+	/*
+	 * function setLocData() {
+	 *
+	 * }
 	 */
-	public function setLocData($locData) : void {
-		// Make sure location data is valid and accurate.
-		/**
-		 * Try catch with error handling
-		 */
-	}
 }
 ?>
