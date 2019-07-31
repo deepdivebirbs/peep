@@ -2,6 +2,8 @@
 
 namespace Birbs\Peep;
 
+use http\Exception\InvalidArgumentException;
+
 /**
  * This class takes API data from the Ebirds API at https://confluence.cornell.edu/display/CLOISAPI/eBirdAPIs and parses
  * the data into usable chunks and inserts that data into the table as specified.
@@ -17,7 +19,9 @@ class BirdSpecies {
 
 	public $sciName;
 
-	public $locData;
+	public $locData;/**
+		 * Some try catch statement here?  Error handling for invalid data?
+		 */
 
 	/**
 	 * BirdSpecies constructor.
@@ -68,33 +72,60 @@ class BirdSpecies {
 	 * Setters
 	 */
 
+	/**
+	 * @param $birdId
+	 */
 	public function setBirdId($birdId) : void {
 		//Check if given parameter is valid data.
-		/**
-		 * Some try catch statement here?  Error handling for invalid data?
-		 */
+		if(get_class($birdId) !== 'string') {
+			throw(new \TypeError("birdId must be a string."));
+		}
+
+		if (strlen($birdId) <= 6) {
+			throw(new \RangeException("birdId must be at least 6 characters."));
+		}
+		$this->birdId = $birdId;
 	}
 
-	public function setSpecCode($specCode) : void {
-		// Check if data is valid
-		/**
-		 * Try catch statement with error handling.
-		 */
-	}
-
+	/**
+	 * @param $comName
+	 */
 	public function setComName($comName) : void {
+		// Check if $comName is NULL.
+		if(is_null($comName) !== true) {
+			throw(new InvalidArgumentException('comName cannot be NULL!'));
+		}
 
+		// Check if $comName is string.
+		if(get_class($comName) !== 'string') {
+			throw(new \TypeError('comName must be string.'));
+		}
+		$this->comName = $comName;
 	}
 
+	/**
+	 * @param $sciName
+	 */
 	public function setSciName($sciName) : void {
+		// Check if $sciName is NULL.
+		if(is_null($sciName)) {
+			throw(new InvalidArgumentException('sciName cannot be null.'));
+		}
 
+		if(get_class($sciName) !== 'string') {
+			throw(new \TypeError('sciName must be a string.'));
+		}
+		$this->sciName = $sciName;
 	}
 
+	/**
+	 * @param $locData
+	 */
 	public function setLocData($locData) : void {
 		// Make sure location data is valid and accurate.
 		/**
 		 * Try catch with error handling
-		 */j;klfjekfl;sdjadsdkl;dj;agd
+		 */
 	}
 }
 ?>
