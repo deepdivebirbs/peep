@@ -5,7 +5,7 @@ namespace Birbs\Peep
 require_once("autoload.php")
 require_once(dirname(__DIR__) . "/vendor/autoload.php");
 
-use http\Params;
+use http\Exception\BadQueryStringException;use http\Params;
 use Ramsey\Uuid\Uuid;
 /**
  * This is the birdSighting class. It will handle user-submitted bird sightings to the correct table.
@@ -27,7 +27,7 @@ class birdSighting {
 	private $birdSightingUserId;
 	/**
 	 * id for the bird species table; fk
-	 * @var binary $birdSightingBirdSpeciesId
+	 * @var string $birdSightingBirdSpeciesId
 	 **/
 	private $birdSightingBirdSpeciesId;
 	/**
@@ -111,15 +111,22 @@ class birdSighting {
 
 /**
  * accessor method for the birdsighting bird species ID
- * @return binary value of birdsighting bird species ID
+ * @return string of birdsighting bird species ID
  **/
-	public function getBirdSightingBirdSpeciesId(): binary {
+	public function getBirdSightingBirdSpeciesId(): void {
 		return $this->birdSightingBirdSpeciesId;
 	}
 
 /**
  * mutator method for the birdsighting bird species ID
  *
- * @param string for $
- */
+ * @param string for $newbirdsightingBirdSpeciesId
+ * @throws \InvalidArgumentException if not a string
+ * @throws \RangeException if the bird species ID is shorter or longer than 6 chars
+ * @throws \TypeError if the bird species ID is not a string
+ **/
+
+	public function setBirdSightingBirdSpeciesId( $birdSightingBirdSpeciesId) {
+		$this->birdSightingBirdSpeciesId = $birdSightingBirdSpeciesId;
+	}
 }
