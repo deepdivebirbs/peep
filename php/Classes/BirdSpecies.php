@@ -2,6 +2,7 @@
 
 namespace Birbs\Peep;
 
+use http\Exception\BadQueryStringException;
 use http\Exception\InvalidArgumentException;
 
 /**
@@ -48,22 +49,41 @@ class BirdSpecies {
 	 * Getters
 	 */
 
-	public function getBirdId() : int {
+	/**
+	 * Gets the birdId string and returns it.
+	 *
+	 * @return string
+	 */
+	public function getBirdId() : string {
 		return $this->birdId;
 	}
 
+	/**
+	 * Gets the specCode and returns it.
+	 *
+	 * @return string
+	 */
 	public function getSpecCode() : string {
 		return $this->specCode;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getComName() : string {
 		return $this->comName;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getSciName() : string {
 		return $this->sciName;
 	}
 
+	/**
+	 * @return float
+	 */
 	public function getLocData() : float {
 		return $this->locData;
 	}
@@ -74,6 +94,8 @@ class BirdSpecies {
 
 	/**
 	 * @param $birdId
+	 * @throws \TypeError if $birdId isn't a string
+	 * @throws \RangeException if $birdId is less than 6 characters
 	 */
 	public function setBirdId($birdId) : void {
 		//Check if given parameter is valid data.
@@ -89,6 +111,8 @@ class BirdSpecies {
 
 	/**
 	 * @param $comName
+	 * @throws \InvalidArgumentException if $comName is NULL
+	 * @throws \TypeError if $comName isn't a string
 	 */
 	public function setComName($comName) : void {
 		// Check if $comName is NULL.
@@ -105,6 +129,8 @@ class BirdSpecies {
 
 	/**
 	 * @param $sciName
+	 * @throws \InvalidArgumentException if $sciName is NULL
+	 * @throws \TypeError if $sciName isn't a string
 	 */
 	public function setSciName($sciName) : void {
 		// Check if $sciName is NULL.
@@ -112,6 +138,7 @@ class BirdSpecies {
 			throw(new InvalidArgumentException('sciName cannot be null.'));
 		}
 
+		// Check if $sciName is a string.
 		if(get_class($sciName) !== 'string') {
 			throw(new \TypeError('sciName must be a string.'));
 		}
