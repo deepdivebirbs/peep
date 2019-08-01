@@ -155,7 +155,42 @@ class UserProfile {
 		}
 		$this->userEmail = $newUserEmail;
 	}
+	/**
+	 * Mutator method for userAuthorizationToken. Needs additional sanitizing
+	 *
+	 * @param string $newUserAuthorizationToken new value of userAuthorizationToken
+	 * @throws \InvalidArgumentException if $newUserAuthorizationToken is empty or insecure
+	 */
+	public function setUserAuthorizationToken(string $newUserAuthorizationToken): void{
+		$newUserAuthorizationToken = strtolower(trim($newUserAuthorizationToken));
+		$newUserAuthorizationToken = filter_var($newUserAuthorizationToken, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newUserAuthorizationToken) === true) {
+			throw(new \InvalidArgumentException("input is empty"));
+		}
+		if(ctype_xdigit($newUserAuthorizationToken) === false) {
+			throw(new\RangeException("user activation is not valid"));
+		}
+		if(strlen($newUserAuthorizationToken) !== 32) {
+			throw(new\RangeException("user activation token has to be 32 characters."));
+		}
 
+		$this->userAuthorizationToken = $newUserAuthorizationToken;
+	}
+
+	/**
+	 * Mutator method for userHash. Needs additional sanitizing
+	 *
+	 * @param string $newUserHash new value of userHash
+	 * @throws \InvalidArgumentException if $newUserHash is empty or insecure
+	 */
+	public function setUserHash(string $newUserHash): void{
+		$newUserHash = trim($newUserHash);
+		$newUserHash = filter_var($newUserHash, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newUserHash) === true) {
+			throw(new \InvalidArgumentException("input is empty or insecure"));
+		}
+		$this->userHash = $newUserHash;
+	}
 
 
 
