@@ -2,7 +2,7 @@
 
 
 namespace birbs\peep;
-
+require_once("autoload.php");
 use Ramsey\Uuid\Uuid;
 
 
