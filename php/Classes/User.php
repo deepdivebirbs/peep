@@ -6,9 +6,12 @@ namespace birbs\peep;
 
 class User {
 	private $userId;
+	private $userName;
 	private $firstName;
 	private $lastName;
 	private $userEmail;
-	private $userAvatar;
+	private $userAuthenticationToken;
+	private $userHash;
+
 
 }
