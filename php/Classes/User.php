@@ -192,7 +192,20 @@ class UserProfile {
 		$this->userHash = $newUserHash;
 	}
 
-
+/**
+ * Constructor method for User object
+ *
+ * @param $newUserId, $newUserName, $newFirstName, $newLastName, $newUserEmail, $newUserAuthenticationToken, $newUserHash
+ */
+	public function __construct(string $newUserId, string $newUserName, string $newLastName, string $newUserEmail, string $newUserAuthenticationToken, string $newUserHash) {
+	$this->setUserId($newUserId);
+	$this->setUserName($newUserName);
+	$this->setLastName($newLastName);
+	$this->setUserEmail($newUserEmail);
+	$this->setUserAuthenticationToken($newUserAuthenticationToken);
+	$this->setUserHash($newUserHash);
+}
+}
 
 
 
