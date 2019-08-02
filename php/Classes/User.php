@@ -7,6 +7,7 @@ use Ramsey\Uuid\Uuid;
 
 
 class UserProfile {
+	use ValidateUuid;
 
 	/**
 	 * @var $userId, the primary key and index
@@ -33,7 +34,7 @@ class UserProfile {
 	 * accessor method for userId
 	 * @return $userId - should fit in Binary.
 	 */
-	public function getUserId() Uuid {
+	public function getUserId() ?Uuid {
 		return ($this->userId);
 	}
 	/**
@@ -197,14 +198,14 @@ class UserProfile {
  *
  * @param $newUserId, $newUserName, $newFirstName, $newLastName, $newUserEmail, $newUserAuthenticationToken, $newUserHash
  */
-	public function __construct(string $newUserId, string $newUserName, string $newLastName, string $newUserEmail, string $newUserAuthenticationToken, string $newUserHash) {
-	$this->setUserId($newUserId);
-	$this->setUserName($newUserName);
-	$this->setLastName($newLastName);
-	$this->setUserEmail($newUserEmail);
-	$this->setUserAuthenticationToken($newUserAuthenticationToken);
-	$this->setUserHash($newUserHash);
-}
+public function __construct(string $newUserId, string $newUserName, string $newLastName, string $newUserEmail, string $newUserAuthenticationToken, string $newUserHash) {
+		$this->setUserId($newUserId);
+		$this->setUserName($newUserName);
+		$this->setLastName($newLastName);
+		$this->setUserEmail($newUserEmail);
+		$this->setUserAuthenticationToken($newUserAuthenticationToken);
+		$this->setUserHash($newUserHash);
+	}
 }
 
 
