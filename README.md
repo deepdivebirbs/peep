@@ -3,9 +3,10 @@
 Group Birbs Crew Manifesto
 
 Communication:
-<br>•    Primary communication is on Slack and in person 
+<br> •    Primary communication is on Slack and in person 
 <br> •    We will handle arguments/disagreements by using our leader (Ruth) as a mediator, where we just make a majority rules type agreement
-<br> •    Tuesdays and Thursdays meeting at lunch for fifteen minutes to determine what additional time we need and when we will get together. We will also treat Friday like a full work day, and stay until 5.
+<br> •    We will add a stand-up meeetings to the beginning of open work times. 
+<br> •    We will also treat Friday like a full work day, and stay as late as possible as needed
 <br> •    Asana will be the way that we assign roles and make sure everyone is pulling their weight
 <br> •    We will be motivated to follow the rules because of mutually assured destruction (we all win/lose together)
 <br> <br>
@@ -21,7 +22,7 @@ intent, and that everyone wants to get the project done, use positive reinforcem
 <br>•    Celebration: try to celebrate every milestone by getting out early on Fridays, maybe getting pastries
 
 Signed:
-<br>Chief Engineer Mark
+<br>Crewman Tenth Class Mark
 <br>Commander Ruth
 <br>Lieutenant Alistair
-<br> Ensign Daniel
+<br>Ensign Daniel
