@@ -118,19 +118,15 @@ class favoriteBirdList implements \JsonSerializable {
 	 */
 	public function delete (\PDO $pdo) : void {
 		//create query template
-		$query = "DELETE FROM favoriteBirdList WHERE birdFavoriteUserId=:birdFavoriteUserList";
+		$query = "DELETE FROM favoriteBirdList WHERE birdFavoriteUserId=:birdFavoriteSpeciesCode";
 		$statement = $pdo->prepare($query);
 		//binds the member variables to the placeholder in the template
 		$parameters = ["favoriteBirdList"=>$this->getBytes()];
 		$statement->execute($parameters);
 	}
 
+	public static function getAllFavoriteBirds (\PDO $pdo): \SPLFixedArray{
+		$query = "select 
+	}
 	 
-
-
-
-
-
-
-
 }
