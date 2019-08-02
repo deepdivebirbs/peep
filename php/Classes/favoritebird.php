@@ -1,1 +1,0 @@
-$favoritebird = new FavoriteBirdList ()

@@ -90,6 +90,47 @@ class favoriteBirdList implements \JsonSerializable {
 			$exceptionType=get_class($exception);
 		throw(new$exceptionType($exception->getMessage(),0,$exception));
 		}
-
+		$this->birdFavoriteUserId=$uuid;
 	}
+	/*
+	 * inserts this favorite bird into mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOexception when mySQL related errors occur
+	 * @throwsTypeError if $pdo is not a PDO connection object
+	 */
+	public function insert (\PDO $pdo) : void {
+		//template for query
+		$query = "INSERT INTO favoriteBirdList(birdFavoriteSpeciesCode, birdFavoriteUserId) 
+		VALUES (:birdfavoriteSpeciesCode, :birdFavoriteUserId )";
+		$statement = $pdo->prepare($query);
+
+		//binds member variables to the placeholders in the template. getbytes converts string into bytes
+		$parameters= [ "birdFavoriteSpeciesCode"=>$this->birdFavoriteSpeciesCode->getBytes(),
+			"birdFavoriteUserId"=>$this->birdFavoriteUserId->getBytes()];
+		$statement->execute($parameters);
+	}
+	/**
+	 * deletes favorite bird from mySQL
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 */
+	public function delete (\PDO $pdo) : void {
+		//create query template
+		$query = "DELETE FROM favoriteBirdList WHERE birdFavoriteUserId=:birdFavoriteUserList";
+		$statement = $pdo->prepare($query);
+		//binds the member variables to the placeholder in the template
+		$parameters = ["favoriteBirdList"=>$this->getBytes()];
+		$statement->execute($parameters);
+	}
+
+	 
+
+
+
+
+
+
+
 }
