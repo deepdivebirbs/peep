@@ -34,35 +34,35 @@ class UserProfile {
 	 * accessor method for userId
 	 * @return $userId - should fit in Binary.
 	 */
-	public function getUserId() ?Uuid {
+	public function getUserId() :Uuid {
 		return ($this->userId);
 	}
 	/**
 	 * accessor method for userName
 	 * @return $userName - should fit in varchar(32).
 	 */
-	public function getUserName() ?string {
+	public function getUserName() :string {
 		return ($this->userName);
 	}
 	/**
 	 * accessor method for firstName
 	 * @return $firstName - should fit in varChar(32)
 	 */
-	public function getFirstName() ?string {
+	public function getFirstName() :string {
 		return ($this->firstName);
 	}
 	/**
 	 * accessor method for lastName
 	 * @return $lastName - should fit in varChar(32).
 	 */
-	public function getLastName() ?string {
+	public function getLastName() :string {
 		return ($this->lastName);
 	}
 	/**
 	 * accessor method for userEmail
 	 * @return $userEmail - should fit in varChar(128)
 	 */
-	public function getUserEmail() ?string {
+	public function getUserEmail() :string {
 		return ($this->userEmail);
 	}
 	/**
@@ -70,7 +70,7 @@ class UserProfile {
 	 *
 	 * @return string userActivationToken
 	 */
-	public function getUserAuthenticationToken(): ?string {
+	public function getUserAuthenticationToken(): string {
 		return ($this->userAuthenticationToken);
 	}
 	/**
@@ -78,7 +78,7 @@ class UserProfile {
 	 *
 	 * @return string userHash
 	 */
-	public function getUserHash(): ?string {
+	public function getUserHash(): string {
 		return ($this->userHash);
 	}
 
@@ -206,7 +206,7 @@ public function __construct(string $newUserId, string $newUserName, string $newL
 		$this->setUserAuthenticationToken($newUserAuthenticationToken);
 		$this->setUserHash($newUserHash);
 	}
-}
+
 
 
 
