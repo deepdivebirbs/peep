@@ -67,7 +67,7 @@ class favoriteBirdList implements \JsonSerializable {
 		if(strlen($newBirdFavoriteSpeciesCode)!==6) {
 		throw (new\InvalidArgumentException("species id is not 6 characters"));
 		}
-		//store the username
+		//store the birdFavoriteSpeciesCode
 		$this->$newBirdFavoriteSpeciesCode;
 	}
 
