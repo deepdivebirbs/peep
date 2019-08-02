@@ -203,7 +203,7 @@ public function __construct(string $newUserId, string $newUserName, string $newL
 		$this->setUserName($newUserName);
 		$this->setLastName($newLastName);
 		$this->setUserEmail($newUserEmail);
-		$this->setUserAuthenticationToken($newUserAuthenticationToken);
+		$this->setUserAuthorizationToken($newUserAuthenticationToken);
 		$this->setUserHash($newUserHash);
 	}
 
