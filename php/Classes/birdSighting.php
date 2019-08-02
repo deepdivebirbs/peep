@@ -1,19 +1,19 @@
 <?php
 
-namespace Birbs\Peep
+namespace Birbs\Peep;
 
-require_once("autoload.php")
+require_once("autoload.php");
 require_once(dirname(__DIR__) . "/vendor/autoload.php");
 
-use http\Exception\BadQueryStringException;use http\Params;
+use http\Exception\BadQueryStringException; use http\Params;
 use Ramsey\Uuid\Uuid;
 /**
- * This is the birdSighting class. It will handle user-submitted bird sightings to the correct table.
+ * This is the BirdSighting class. It will handle user-submitted bird sightings to the correct table.
 @author Ruth E. Dove <senoritaruth@gmail.com>
 @version 1.0
  **/
 
-class birdSighting {
+class BirdSighting {
 	use ValidateUuid;
 	/**
 	 * id for this sighting
@@ -22,14 +22,14 @@ class birdSighting {
 	private $sightingId;
 	/**
 	 * id for the user who is submitting this sighting; fk
-	 * @var  binary $birdSightingUserId
+	 * @var binary $birdSightingUserProfileId
 	 **/
-	private $birdSightingUserId;
+	private $birdSightingUserProfileId;
 	/**
 	 * id for the bird species table; fk
-	 * @var string $birdSightingBirdSpeciesId
+	 * @var string $birdSightingSpeciesCode
 	 **/
-	private $birdSightingBirdSpeciesId;
+	private $birdSightingSpeciesCode;
 	/**
 	 * this is the common name entry for every bird
 	 * @var varchar $commonName
@@ -37,19 +37,19 @@ class birdSighting {
 	private $commonName;
 	/**
 	 * this is the scientific name for every bird
-	 * @var varchar $scientificName
+	 * @var varchar $sciName
 	 */
-	private $scientificName;
+	private $sciName;
 	/**
 	 * this is the latitude for the location data of a bird sighting
-	 * @var float $latitude
+	 * @var float $latitudeX
 	 */
-	private $latitude;
+	private $latitudeX;
 	/**
 	 * this is the longitude for the location data of a bird sighting
-	 * @var float $longitude
+	 * @var float $longitudeY
 	 */
-	private $longitude;
+	private $longitudeY;
 	/**
 	 * this is the date and time of a bird sighting
 	 * @var datetime $dateTime
@@ -77,7 +77,7 @@ class birdSighting {
 	 **/
 	public function setSightingId(Uuid $sightingId): void {
 		try {
-			$Uuid = self::validateUuid($newsightingId);
+			$Uuid = self::validateUuid($newSightingId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
@@ -86,23 +86,23 @@ class birdSighting {
 		$this->sightingId = $Uuid;
 	}
 
-	/** accessor method for birdsighting user ID
-	 * @return Uuid value of the birdsighting user ID
+	/** accessor method for BirdSighting user profile ID
+	 * @return Uuid value of the BirdSighting user profile ID
 	 **/
-	public function getBirdSightingUserId(): binary {
-		return $this->birdSightingUserId;
+	public function getBirdSightingUserProfileId(): binary {
+		return $this->birdSightingUserProfileId();
 	}
 
 	/**
-	 *mutator method for birdsighting bird species user ID
+	 *mutator method for BirdSighting user profile ID
 	 *
-	 * @param Uuid| string $newbirdSightingUserId
-	 * @throws \RangeException if the $newbirdSightingUserId is not positive
+	 * @param Uuid| string $newBirdSightingUserId
+	 * @throws \RangeException if the $newBirdSightingUserId is not positive
 	 * @throws \TypeError if the profile ID is not
 	 */
-	public function setBirdSightingUserId(binary $birdSightingUserId): void {
+	public function setBirdSightingUserProfileId(binary $birdSightingUserProfileId): void {
 		try {
-			$Uuid = self::validateUuid($newbirdsightingUserId);
+			$Uuid = self::validateUuid($newBirdSightingUserProfileId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
@@ -110,23 +110,22 @@ class birdSighting {
 	}
 
 /**
- * accessor method for the birdsighting bird species ID
+ * accessor method for the BirdSighting species ID
  * @return string of birdsighting bird species ID
  **/
-	public function getBirdSightingBirdSpeciesId(): void {
-		return $this->birdSightingBirdSpeciesId;
+	public function getBirdSightingSpeciesCode(): void {
+		return $this->birdSightingSpeciesCode;
 	}
 
 /**
- * mutator method for the birdsighting bird species ID
+ * mutator method for the BirdSighting species code
  *
- * @param string for $newbirdsightingBirdSpeciesId
+ * @param string for $newBirdSightingSpeciesCode
  * @throws \InvalidArgumentException if not a string
  * @throws \RangeException if the bird species ID is shorter or longer than 6 chars
  * @throws \TypeError if the bird species ID is not a string
  **/
-
-	public function setBirdSightingBirdSpeciesId( $birdSightingBirdSpeciesId) {
-		$this->birdSightingBirdSpeciesId = $birdSightingBirdSpeciesId;
+	public function setBirdSightingSpeciesCode($birdSightingSpeciesCode) {
+		$this->birdSightingSpeciesCode = $birdSightingSpeciesCode;
 	}
 }
