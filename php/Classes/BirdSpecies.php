@@ -4,6 +4,7 @@ namespace Birbs\Peep;
 
 use http\Exception\BadQueryStringException;
 use http\Exception\InvalidArgumentException;
+use PDO;
 
 /**
  * This class takes API data from the Ebirds API at https://confluence.cornell.edu/display/CLOISAPI/eBirdAPIs and parses
@@ -12,7 +13,7 @@ use http\Exception\InvalidArgumentException;
 class BirdSpecies {
 
 	//Define variables
-	private $birdId;
+	// private $birdId;
 
 	public $specCode;
 
@@ -21,12 +22,9 @@ class BirdSpecies {
 	public $sciName;
 
 	public $locData;/**
-		 * Some try catch statement here?  Error handling for invalid data?
-		 */
 
 	/**
 	 * BirdSpecies constructor.
-	 * @param birdId $
 	 * @param specCode $
 	 * @param comName $
 	 * @param sciName $
@@ -36,27 +34,29 @@ class BirdSpecies {
 	 * @throws \Exception
 	 * @throws \TypeError
 	 */
-	public function __construct($birdId, $specCode, $comName, $sciName, $locData) {
+	public function __construct($specCode, $comName, $sciName, $locData) {
 		try {
 			// Call all of the setters and create the object.
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
+
+		$this->setSpeciesCode($specCode);
+		$this->setComName($comName);
+		$this->setSciName($sciName);
+		// $this->setLocData($locData);
 	}
 
 	/**
 	 * Getters
 	 */
 
-	/**
-	 * Gets the birdId string and returns it.
-	 *
-	 * @return string
-	 */
+/*
 	public function getBirdId() : string {
 		return $this->birdId;
 	}
+*/
 
 	/**
 	 * Gets the specCode and returns it.
@@ -93,20 +93,20 @@ class BirdSpecies {
 	 */
 
 	/**
-	 * @param $birdId
-	 * @throws \TypeError if $birdId isn't a string
-	 * @throws \RangeException if $birdId is less than 6 characters
+	 * @param $specCode
+	 * @throws \TypeError if $specCode isn't a string
+	 * @throws \RangeException if $specCode is less than 6 characters
 	 */
-	public function setBirdId($birdId) : void {
+	public function setSpeciesCode($specCode) : void {
 		//Check if given parameter is valid data.
-		if(get_class($birdId) !== 'string') {
-			throw(new \TypeError("birdId must be a string."));
+		if(get_class($specCode) !== 'string') {
+			throw(new \TypeError("specCode must be a string."));
 		}
 
-		if (strlen($birdId) <= 6) {
-			throw(new \RangeException("birdId must be at least 6 characters."));
+		if (strlen($specCode) <= 6) {
+			throw(new \RangeException("specCode must be at least 6 characters."));
 		}
-		$this->birdId = $birdId;
+		$this->specCode = $specCode;
 	}
 
 	/**
@@ -145,11 +145,21 @@ class BirdSpecies {
 		$this->sciName = $sciName;
 	}
 
-	//Javascript location function here.
-	/*
-	 * function setLocData() {
-	 *
-	 * }
-	 */
+	public function setLocData($locX, $locY) {
+		$this->locData = "X:$locX" . "Y:$locY";
+	}
+
+	// Insert Function
+	public function insert(\PDO $pdo) : void {
+		// Define the insert query
+		$query = "INSERT INTO birdSpecies(speciesCode, commonName, sciName, locationX, locationY, dateTime, birdPhoto) VALUES(:specCode, :comName, :sciName, :locData)";
+		$statement = $pdo->prepare($query);
+
+		echo get_class($query);
+		echo get_class($statement);
+
+		$params = ["speciesCode" => $this->specCode, "commonName" => $this->comName, "sciName" => $this->sciName, "locationX" => $this->lo];
+
+	}
 }
 ?>
