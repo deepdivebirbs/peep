@@ -33,7 +33,7 @@ class UserProfile {
 	 * accessor method for userId
 	 * @return $userId - should fit in Binary.
 	 */
-	public function getUserId() {
+	public function getUserId() Uuid {
 		return ($this->userId);
 	}
 	/**
