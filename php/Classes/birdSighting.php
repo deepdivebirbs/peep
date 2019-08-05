@@ -22,7 +22,7 @@ class BirdSighting {
 	 **/
 	private $sightingId;
 	/**
-	 * id for the user who is submitting this sighting; fk
+	 * id for the user who is submitting this sighting; pk
 	 * @var Uuid $birdSightingUserProfileId
 	 **/
 	private $birdSightingUserProfileId;
@@ -32,7 +32,7 @@ class BirdSighting {
 	 **/
 	private $birdSightingSpeciesCode;
 	/**
-	 * this is the common name entry for every bird
+	 * this is the common name entry for every bird; fk
 	 * @var string $commonName
 	 */
 	private $commonName;

@@ -17,5 +17,5 @@ create table birdSighting (
 	unique(sightingId),
 	primary key(sightingId),
 	foreign key(birdSightingUserProfileId),
-	foreign key(birdSightingSpeciesCode),
+	foreign key(birdSightingSpeciesCode)
 )
