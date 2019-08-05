@@ -1,10 +1,8 @@
 <?php
 namespace Birbs\Peep;
 
-use http\Exception\InvalidArgumentException;
-
 require_once("autoload.php");
-require_once(dirname(__DIR__) . "vendor/autoload.php");
+require_once(dirname(__DIR__) . "/vendor/autoload.php");
 
 use Ramsey\Uuid\Uuid;
 
@@ -14,7 +12,7 @@ class favoriteBirdList implements \JsonSerializable {
 	/**
 	 *this is the species code of the bird that the user is adding to their favorites; this is a foreign key
 	 */
-	private $birdFavoriteSpeciesCode;
+	private $birdFavoriteSpeciesId;
 	/**
 	 * this is taken from the user id of the user that is adding the bird to their favorites; this is a foreign key
 	 */
@@ -27,7 +25,7 @@ class favoriteBirdList implements \JsonSerializable {
 	 * @param string $newBirdFavoriteUserId id of the user who is saving this bird
 	 * @throws InvalidArgumentException if data types are not valid
 	 * @throws \TypeError if data types violate type hints
-	 * @throws \Exception f some other exception occurs
+	 * @throws \Exception if some other exception occurs
 	 */
 
 	public function __construct($newBirdFavoriteSpeciesCode, $newBirdFavoriteUserId) {
@@ -125,11 +123,29 @@ class favoriteBirdList implements \JsonSerializable {
 		$statement->execute($parameters);
 	}
 
-	public static function getAllFavoriteBirdsbyUserId (\PDO $pdo, $userId): ?favoriteBirdList{
+	public static function getAllFavoriteBirdsbyUserId (\PDO $pdo, $birdFavoriteUserId): ?favoriteBirdList{
 		//create query template
 		$query = "SELECT birdFavoriteSpeciesCode, birdFavoriteUserId FROM favoriteBirdList WHERE birdFavoriteUserId =:birdFavoriteUserId";
 		$statement=$pdo->prepare($query);
 		// bind the birdFavoriteUserId to the place holder in the template
+		$parameters = ["birdFavoriteUserid" => $birdFavoriteUserId ->getBytes ()];
+		$statement ->execute($parameters);
+		//build an array of favoritebirds
+		$favoriteBirdList = new \SplFixedArray($statement->rowCount());
+		$statement ->setFetchMode(\PDO::FETCH_ASSOC);
+		while (($row=$statement->fetch())!==false) {
+			try {
+				$favoriteBirdList = new favoriteBirdList($row ["birdFavoriteSpeciesCode"], $row["birdFavoriteUserId"]);
+			} catch (\Exception $exception) {
+				throw (new \PDOException($exception->getMessage(),$exception));
+			}
+		}
+		return($favoriteBirdList);
 	}
-	 
+
+	public function jsonSerialize() : array {
+	$fields =get_object_vars ($this);
+
+	$fields ["birdFavoriteUserId"] = $this->birdFavoriteUserId->toString();
+	}
 }
