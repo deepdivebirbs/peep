@@ -63,6 +63,43 @@ class BirdSighting {
 	private $birdPhoto;
 
 	/**
+	 * constructor for this sighting
+	 *
+	 * @param string|Uuid $sightingId of this sighting or null if a new sighting
+	 * @param string|Uuid $birdSightingUserProfileId of the Profile that posted this sighting
+	 * @param string $birdSightingSpeciesCode
+	 * @param string $commonName
+	 * @param string $sciName
+	 * @param float $latitudeX
+	 * @param float $longitudeY
+	 * @param \DateTime|string|null $dateTime date and time sighting was sent or null if set to current date and time
+	 * @param string $birdPhoto
+	 * @throws \InvalidArgumentException if data types are not valid
+	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
+	 * @throws \TypeError if data types violate type hints
+	 * @throws \Exception if some other exception occurs
+	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
+	 **/
+	public function __construct($newSightingId, $newBirdSightingUserProfileId, string $newBirdSightingSpeciesCode, string $commonName, string $sciName, float $newLatitudeX, float $newLongitudeY, $newDateTime = null, string $newBirdPhoto) {
+		try {
+			$this->setSightingId($newSightingId));
+			$this->setBirdSightingUserProfileId($newBirdSightingUserProfileId);
+			$this->setBirdSightingSpeciesCode($newBirdSightingSpeciesCode);
+			$this->setCommonName($newcommonName);
+			$this->setSciName($newSciName);
+			$this->setLatitudeX($newLatitudeX);
+			$this->setLongitudeY($newLongitudeY);
+			$this->setDateTime($newTweetDate);
+			$this->setBirdPhoto($newBirdPhoto);
+		}
+			//determine what exception type was thrown
+		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+	}
+
+	/**
 	 * accessor method for sightingId
 	 * @return Uuid value of sighting ID (or null if new)
 	 **/
@@ -307,5 +344,58 @@ class BirdSighting {
 				throw(new \RangeException("image content is too large"));
 		}
 		$this->birdPhoto = $birdPhoto;
+	}
+	/**
+	 * inserts this sighting into mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function insert(\PDO $pdo) : void {
+
+		// create query template
+		$query = "INSERT INTO birdSighting(sightingId,birdSightingUserProfileId, birdSightingSpeciesCode, commonName, sciName, latitudeX, longitudeY, dateTime, birdPhoto) VALUES(:sightingId, :birdSightingUserProfileId, :birdSightingSpeciesCode, :commName, :sciName, :latitudeX, :longitudeY, :dateTime, :birdPhoto)";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holders in the template
+		$formattedDate = $this->dateTime->format("Y-m-d H:i:s.u");
+		$parameters = ["sightingId" => $this->sightingId->getBytes(), "birdSightingUserProfileId" => $this->birdSightingUserProfileId->getBytes(), "birdSightingSpeciesCode" => $this->birdSightingSpeciesCode, "commonName" => $this->commonName, "sciName" => $this->sciName, "latitudeX" => $this->latitudeX, "longitudeY" => $this->longitudeY, "dateTime" => $this->dateTime, "birdPhoto" => $this->birdPhoto];
+		$statement->execute($parameters);
+	}
+
+	/**
+	 * deletes this sighting from mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function delete(\PDO $pdo) : void {
+
+		// create query template
+		$query = "DELETE FROM birdSighting WHERE sightingId = :sightingId";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holder in the template
+		$parameters = ["sightingId" => $this->sightingId->getBytes(), "birdSightingUserProfileId" => $this->birdSightingUserProfileId->getBytes(), "birdSightingSpeciesCode" => $this->birdSightingSpeciesCode, "commonName" => $this->commonName, "sciName" => $this->sciName, "latitudeX" => $this->latitudeX, "longitudeY" => $this->longitudeY, "dateTime" => $this->dateTime, "birdPhoto" => $this->birdPhoto];
+		$statement->execute($parameters);
+	}
+
+
+	// this is the jsonserialize part of the class
+	public function jsonSerialize() : array {
+		$fields = get_object_vars($this);
+
+		$fields["sightingId"] = $this->sightingId->toString();
+		$fields["birdSightingUserProfileId"] = $this->birdSightingUserProfileId->toString();
+
+
+
+		//format the date so that the front end can consume it
+		$fields["dateTime"] = round(floatval($this->dateTime->format("U.u")) * 1000);
+		echo get_class($fields);
+		return($fields);
+
 	}
 }
