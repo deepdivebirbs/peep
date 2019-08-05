@@ -125,8 +125,10 @@ class favoriteBirdList implements \JsonSerializable {
 		$statement->execute($parameters);
 	}
 
-	public static function getAllFavoriteBirds (\PDO $pdo): \SPLFixedArray{
-		$query = "select 
+	public static function getAllFavoriteBirds (\PDO $pdo): array{
+		$faveList = Array();
+
+
 	}
 	 
 }
