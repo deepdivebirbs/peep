@@ -125,10 +125,11 @@ class favoriteBirdList implements \JsonSerializable {
 		$statement->execute($parameters);
 	}
 
-	public static function getAllFavoriteBirds (\PDO $pdo): array{
-		$faveList = Array();
-
-
+	public static function getAllFavoriteBirdsbyUserId (\PDO $pdo, $userId): ?favoriteBirdList{
+		//create query template
+		$query = "SELECT birdFavoriteSpeciesCode, birdFavoriteUserId FROM favoriteBirdList WHERE birdFavoriteUserId =:birdFavoriteUserId";
+		$statement=$pdo->prepare($query);
+		// bind the birdFavoriteUserId to the place holder in the template
 	}
 	 
 }
