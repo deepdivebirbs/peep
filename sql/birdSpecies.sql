@@ -9,7 +9,7 @@ CREATE TABLE birdSpecies(
 	sciName VARCHAR(64) NULL,
 	latitudeX FLOAT(6, 3) NULL,
 	longitudeY FLOAT(6, 3) NULL,
-	dateTime DATETIME(19) NULL,
+	dateTime DATETIME(6) NULL,
 	birdPhoto VARCHAR(128) NULL,
 	PRIMARY KEY (speciesCode)
 );

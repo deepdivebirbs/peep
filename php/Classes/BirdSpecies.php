@@ -21,31 +21,34 @@ class BirdSpecies {
 
 	public $sciName;
 
-	public $locData;/**
+	public $locX;
+
+	public $locY;
 
 	/**
 	 * BirdSpecies constructor.
 	 * @param specCode $
 	 * @param comName $
 	 * @param sciName $
-	 * @param locData $
+	 * @param locX $
+	 * @param locY $
 	 * @throws \InvalidArgumentException
 	 * @throws \RangeException
 	 * @throws \Exception
 	 * @throws \TypeError
 	 */
-	public function __construct($specCode, $comName, $sciName, $locData) {
+	public function __construct($specCode, $comName, $sciName, $locX, $locY) {
 		try {
 			// Call all of the setters and create the object.
+			$this->setSpeciesCode($specCode);
+			$this->setComName($comName);
+			$this->setSciName($sciName);
+			$this->setLocData($locX, $locY);
+
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-
-		$this->setSpeciesCode($specCode);
-		$this->setComName($comName);
-		$this->setSciName($sciName);
-		// $this->setLocData($locData);
 	}
 
 	/**
@@ -82,10 +85,12 @@ class BirdSpecies {
 	}
 
 	/**
-	 * @return float
+	 * @return string
 	 */
-	public function getLocData() : float {
-		return $this->locData;
+	public function getLocData() : string {
+		// Create string from location data
+		$locString = $this->locY . $this->locY;
+		return $locString;
 	}
 
 	/**
@@ -145,11 +150,29 @@ class BirdSpecies {
 		$this->sciName = $sciName;
 	}
 
+	/**
+	 * @param $locX
+	 * @param $locY
+	 * @throws \TypeError if $locX or $locY are not floats.
+	 */
 	public function setLocData($locX, $locY) {
-		$this->locData = "X:$locX" . "Y:$locY";
+		if(empty($locX) || empty($locX)) {
+			throw(new \InvalidArgumentException("locX and locY must not be NULL"));
+		}
+
+		if(is_float($locX) !== true && is_float($locY) !== true) {
+			throw(new \TypeError("locX and locY must both be floats."));
+		}
+
+		$this->locX = $locX;
+		$this->locY = $locY;
 	}
 
-	// Insert Function
+
+	/**
+	 * Insert Function
+	 * @param \PDO $pdo
+	 */
 	public function insert(\PDO $pdo) : void {
 		// Define the insert query
 		$query = "INSERT INTO birdSpecies(speciesCode, commonName, sciName, locationX, locationY, dateTime, birdPhoto) VALUES(:specCode, :comName, :sciName, :locData)";
@@ -158,8 +181,42 @@ class BirdSpecies {
 		echo get_class($query);
 		echo get_class($statement);
 
-		$params = ["speciesCode" => $this->specCode, "commonName" => $this->comName, "sciName" => $this->sciName, "locationX" => $this->lo];
+		$params = ["speciesCode" => $this->specCode, "commonName" => $this->comName, "sciName" => $this->sciName, "locationX" => $this->locX, "locationY" => $this->locY];
+		$statement->execute($params);
+	}
 
+	/**
+	 * @param $specCode
+	 * @throws \RangeException if $specCode is > or < 6 characters.
+	 * @throws \InvalidArgumentException if $specCode is NULL.
+	 * @throws \PDOException if something is wrong with the PDO object.
+	 * @throws \Exception if any other excpetion happens.
+	 */
+	public function getBirdBySpecCode(\PDO $pdo,string $specCode) {
+		if(empty($specCode)) {
+			throw(new \InvalidArgumentException("specCode must not be empty."));
+		}
+
+		if(strlen($specCode) < 6 || strlen($specCode) > 6) {
+			throw(new \RangeException("specCode must be no more or less than 6 characters."));
+		}
+
+		// Create an SQL query to send for the specCodes.
+		$query = "SELECT specCode, comName, sciName FROM peep WHERE specCode = :specCode";
+		$statement = $pdo->prepare($query);
+
+		$birds = new \SplFixedArray($statement->rowCount());
+
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$bird = new BirdSpecies($row["specCode"], $row["comName"], $row["sciName"], $row["locX"], $row["locY"]);
+			} catch(\Exception $exception) {
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return $specCode;
 	}
 }
 ?>
