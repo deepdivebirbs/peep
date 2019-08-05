@@ -331,13 +331,13 @@ class sighting {
  * @throws \RangeException if the url is > 255 characters
  * @throws \TypeError if the url is not a string
  */
-	public function setBirdPhoto(string $birdPhoto): void {
-		$newBirdPhoto = trim($newBirdPhoto);
-		$newBirdPhoto = filter_var($newBirdPhoto, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-		if(strlen($newBirdPhoto) > 255) {
+	public function setSightingBirdPhoto(string $sightingBirdPhoto): void {
+		$newSightingBirdPhoto = trim($newSightingBirdPhoto);
+		$newSightingBirdPhoto = filter_var($newSightingBirdPhoto, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(strlen($newSightingBirdPhoto) > 255) {
 				throw(new \RangeException("image content is too large"));
 		}
-		$this->birdPhoto = $birdPhoto;
+		$this->sightingBirdPhoto = $newSightingBirdPhoto;
 	}
 	/**
 	 * inserts this sighting into mySQL
@@ -349,12 +349,12 @@ class sighting {
 	public function insert(\PDO $pdo) : void {
 
 		// create query template
-		$query = "INSERT INTO birdSighting(sightingId,birdSightingUserProfileId, birdSightingSpeciesCode, commonName, sciName, latitudeX, longitudeY, dateTime, birdPhoto) VALUES(:sightingId, :birdSightingUserProfileId, :birdSightingSpeciesCode, :commName, :sciName, :latitudeX, :longitudeY, :dateTime, :birdPhoto)";
+		$query = "INSERT INTO sighting(sightingId,sightingUserProfileId, sightingSpeciesId, sightingComName, sightingSciName, sightingLocX, sightingLocY, sightingDateTime, sightingBirdPhoto) VALUES(:sightingId, :sightingUserProfileId, :sightingSpeciesId, :sightingComName, :sightingSciName, :sightingLocX, :sightingLocY, :sightingDateTime, :sightingBirdPhoto)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$formattedDate = $this->dateTime->format("Y-m-d H:i:s.u");
-		$parameters = ["sightingId" => $this->sightingId->getBytes(), "birdSightingUserProfileId" => $this->birdSightingUserProfileId->getBytes(), "birdSightingSpeciesCode" => $this->birdSightingSpeciesCode, "commonName" => $this->commonName, "sciName" => $this->sciName, "latitudeX" => $this->latitudeX, "longitudeY" => $this->longitudeY, "dateTime" => $this->dateTime, "birdPhoto" => $this->birdPhoto];
+		$formattedDate = $this->sightingDateTime->format("Y-m-d H:i:s.u");
+		$parameters = ["sightingId" => $this->sightingId->getBytes(), "sightingUserProfileId" => $this->sightingUserProfileId->getBytes(), "sightingSpeciesId" => $this->sightingSpeciesId->getBytes(), "sightingComName" => $this->sightingComName, "sightingSciName" => $this->sightingSciName, "sightingLocX" => $this->sightingLocX, "sightingLocY" => $this->sightingLocY, "sightingDateTime" => $this->sightingDateTime, "sightingBirdPhoto" => $this->sightingBirdPhoto];
 		$statement->execute($parameters);
 	}
 
@@ -368,11 +368,12 @@ class sighting {
 	public function delete(\PDO $pdo) : void {
 
 		// create query template
-		$query = "DELETE FROM birdSighting WHERE sightingId = :sightingId";
+		$query = "DELETE FROM sighting WHERE sightingId = :sightingId";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holder in the template
-		$parameters = ["sightingId" => $this->sightingId->getBytes(), "birdSightingUserProfileId" => $this->birdSightingUserProfileId->getBytes(), "birdSightingSpeciesCode" => $this->birdSightingSpeciesCode, "commonName" => $this->commonName, "sciName" => $this->sciName, "latitudeX" => $this->latitudeX, "longitudeY" => $this->longitudeY, "dateTime" => $this->dateTime, "birdPhoto" => $this->birdPhoto];
+		$parameters = ["sightingId" => $this->sightingId->getBytes(), "sightingUserProfileId" => $this->sightingUserProfileId->getBytes(), "sightingSpeciesId" => $this->sightingSpeciesId->getBytes(), "sightingComName" => $this->sightingComName, "sightingSciName" => $this->sightingSciName, "sightingLocX" => $this->sightingLocX, "sightingLocY" => $this->sightingLocY, "sightingDateTime" => $this->sightingDateTime, "sightingBirdPhoto" => $this->sightingBirdPhoto];
+		$statement->execute($parameters);
 		$statement->execute($parameters);
 	}
 
@@ -382,12 +383,12 @@ class sighting {
 		$fields = get_object_vars($this);
 
 		$fields["sightingId"] = $this->sightingId->toString();
-		$fields["birdSightingUserProfileId"] = $this->birdSightingUserProfileId->toString();
+		$fields["sightingUserProfileId"] = $this->sightingUserProfileId->toString();
 
 
 
 		//format the date so that the front end can consume it
-		$fields["dateTime"] = round(floatval($this->dateTime->format("U.u")) * 1000);
+		$fields["sightingDateTime"] = round(floatval($this->sightingDateTime->format("U.u")) * 1000);
 		echo get_class($fields);
 		return($fields);
 
