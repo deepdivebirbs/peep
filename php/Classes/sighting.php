@@ -5,7 +5,6 @@ namespace Birbs\Peep;
 require_once("autoload.php");
 require_once(dirname(__DIR__) . "/vendor/autoload.php");
 
-use http\Exception\BadQueryStringException; use http\Params;
 use Ramsey\Uuid\Uuid;
 /**
  * This is the BirdSighting class. It will handle user-submitted bird sightings to the correct table.
