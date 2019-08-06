@@ -1,8 +1,8 @@
 <?php
 namespace Birbs\Peep;
 
-require_once "autoload.php";
-require_once(dirname(__DIR__) . "/vendor/autoload.php");
+require_once ("autoload.php");
+require_once (dirname(__DIR__) . "/vendor/autoload.php");
 
 use Ramsey\Uuid\Uuid;
 
@@ -55,18 +55,14 @@ class Favorite implements \JsonSerializable {
 	 * @throws \TypeError if $newFavoriteSpeciesId is not a string
 	 */
 
-	public function setFavoriteSpeciesId(string $newFavoriteSpeciesId ): void {
-		//verify that the FavoriteSpeciesId is secure
-		$newFavoriteSpeciesId=trim($newFavoriteSpeciesId);
-		$newFavoriteSpeciesId=filter_var($newFavoriteSpeciesId, FILTER_SANITIZE_STRING);
-		if(empty($newFavoriteSpeciesId)===true) {
-			throw(new\InvalidArgumentException("Bird Favorite Species code is empty or insecure"));
+	public function setNewFavoriteSpeciesId ($newFavoriteSpeciesId): void {
+		try {
+			$uuid = self::validateUuid($newFavoriteSpeciesId);
+		} catch(\invalidArgumentException |\RangeException|\Exception|\TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new$exceptionType($exception->getMessage(), 0, $exception));
 		}
-		if(strlen($newFavoriteSpeciesId)!==6) {
-		throw (new\InvalidArgumentException("species id is not 6 characters"));
-		}
-		//store the FavoriteSpeciesId
-		$this->$newFavoriteSpeciesId;
+		$this->favoriteSpeciesIds = $uuid;
 	}
 
 	/**

@@ -20,13 +20,13 @@ CREATE TABLE favorite (
 	PRIMARY KEY (favoriteSpeciesId, favoriteUserProfileId)
  );
 
-DROP TABLE IF EXISTS favorite;
-CREATE TABLE favorite (
-	favoriteSpeciesId BINARY(16) NOT NULL,
-   favoriteUserProfileId BINARY (16) NOT NULL,
-	INDEX (favoriteSpeciesId),
-	INDEX (favoriteUserProfileId),
-	FOREIGN KEY (favoriteSpeciesId) REFERENCES species(speciesId),
-	FOREIGN KEY (favoriteUserProfileId) REFERENCES userProfile(userProfileId),
-	PRIMARY KEY (favoriteSpeciesId, favoriteUserProfileId)
- );
+-- DROP TABLE IF EXISTS favorite;
+-- CREATE TABLE favorite (
+-- 	favoriteSpeciesId BINARY(16) NOT NULL,
+--    favoriteUserProfileId BINARY (16) NOT NULL,
+-- 	INDEX (favoriteSpeciesId),
+-- 	INDEX (favoriteUserProfileId),
+-- 	FOREIGN KEY (favoriteSpeciesId) REFERENCES species(speciesId),
+-- 	FOREIGN KEY (favoriteUserProfileId) REFERENCES userProfile(userProfileId),
+-- 	PRIMARY KEY (favoriteSpeciesId, favoriteUserProfileId)
+--  );
