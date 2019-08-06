@@ -3,13 +3,13 @@
 namespace Birbs\Peep;
 
 require_once("autoload.php");
-require_once(dirname(__DIR__) . "/vendor/autoload.php");
+require_once(dirname(__DIR__) . "vendor/autoload.php");
 
 use Ramsey\Uuid\Uuid;
 /**
- * This is the BirdSighting class. It will handle user-submitted bird sightings to the correct table.
-@author Ruth E. Dove <senoritaruth@gmail.com>
-@version 1.0
+ * This is the Sighting class. It will handle user-submitted bird sightings to the correct table.
+ * @author Ruth E. Dove <senoritaruth@gmail.com>
+ * @version 1.0
  **/
 
 class sighting {
