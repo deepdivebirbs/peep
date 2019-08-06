@@ -1,13 +1,14 @@
 <?php
 namespace Birbs\Peep;
 
-require_once ("autoload.php");
-require_once (dirname(__DIR__) . "/vendor/autoload.php");
+/**
+ * adds required dependencies
+ */
+require_once "autoload.php";
+require_once (dirname(__DIR__,1) . "/vendor/autoload.php");
 
 use Ramsey\Uuid\Uuid;
-
-
-class Favorite implements \JsonSerializable {
+class favorite implements \JsonSerializable {
 	use ValidateUuid;
 	/**
 	 *this is the species code of the bird that the user is adding to their favorites; this is a foreign key
