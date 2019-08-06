@@ -2,9 +2,18 @@
 
 namespace Birbs\Peep;
 
+// Require our external local classes
+require_once("autoload.php");
+require_once(dirname(__DIR__) . "/vendor/autoload.php");
+
+use Ramsey\Uuid\Uuid;
+
+/*
 use http\Exception\BadQueryStringException;
 use http\Exception\InvalidArgumentException;
-use PDO;
+use \PDO;
+use \PDOException;
+*/
 
 /**
  * This class takes API data from the Ebirds API at https://confluence.cornell.edu/display/CLOISAPI/eBirdAPIs and parses
@@ -15,35 +24,52 @@ class BirdSpecies {
 	//Define variables
 	// private $birdId;
 
-	public $specCode;
+	// speciesId is the main identifier for a bird species on the site.
+	public $speciesId;
 
-	public $comName;
+	// speciesCode is an ID convention offered by the ebird API, we don't know what to do with it yet.
+	public $speciesCode;
 
-	public $sciName;
+	// speciesComName hold the value for the common name given to the bird EX. Red Tailed Hawk.
+	public $speciesComName;
 
-	public $locX;
+	// speciesSciName holds the value of the scientific latin name given to the bird.  Ex. Columbidae.
+	public $speciesSciName;
 
-	public $locY;
+	// speciesLocX holds the X lat/long coord for a bird sighting specified in the API.
+	public $speciesLocX;
+
+	// speciesLocY holds the Y lat/long coord for a bird sighting specified in the API.
+	public $speciesLocY;
+
+	// speciesDateTime holds the date time object for an API sighting.
+	public $speciesDateTime;
+
+	// speciesPhoto holds the URL that the bird pic is stored.
+	public $speciesPhoto;
 
 	/**
 	 * BirdSpecies constructor.
-	 * @param specCode $
-	 * @param comName $
-	 * @param sciName $
-	 * @param locX $
-	 * @param locY $
+	 * @param $speciesCode
+	 * @param $speciesComName
+	 * @param $speciesSciName
+	 * @param $speciesLocX
+	 * @param $speciesLocY
+	 * @param $speciesDateTime
+	 * @param $speciesPhoto
 	 * @throws \InvalidArgumentException
 	 * @throws \RangeException
 	 * @throws \Exception
 	 * @throws \TypeError
 	 */
-	public function __construct($specCode, $comName, $sciName, $locX, $locY) {
+	public function __construct($speciesId, $speciesCode, $speciesComName, $speciesSciName, $speciesLocX, $speciesLocY,$speciesDateTime, $speciesPhoto) {
 		try {
 			// Call all of the setters and create the object.
-			$this->setSpeciesCode($specCode);
-			$this->setComName($comName);
-			$this->setSciName($sciName);
-			$this->setLocData($locX, $locY);
+			$this->setSpeciesCode($speciesCode);
+			$this->setspeciesComName($speciesComName);
+			$this->setspeciesSciName($speciesSciName);
+			$this->setLocData($speciesLocX, $speciesLocY);
+			$this->setSpeciesId($speciesId);
 
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
@@ -55,33 +81,33 @@ class BirdSpecies {
 	 * Getters
 	 */
 
-/*
-	public function getBirdId() : string {
-		return $this->birdId;
-	}
-*/
-
 	/**
-	 * Gets the specCode and returns it.
+	 * @return Uuid
+	 */
+	public function getSpeciesId() : Uuid {
+		return $this->speciesCode;
+	}
+	/**
+	 * Gets the speciesCode and returns it.
 	 *
 	 * @return string
 	 */
-	public function getSpecCode() : string {
-		return $this->specCode;
+	public function getSpeciesCode() : string {
+		return $this->speciesCode;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getComName() : string {
-		return $this->comName;
+	public function getSpeciesComName() : string {
+		return $this->speciesComName;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getSciName() : string {
-		return $this->sciName;
+	public function getspeciesSciName() : string {
+		return $this->speciesSciName;
 	}
 
 	/**
@@ -89,8 +115,22 @@ class BirdSpecies {
 	 */
 	public function getLocData() : string {
 		// Create string from location data
-		$locString = $this->locY . $this->locY;
+		$locString = $this->speciesLocX . $this->speciesLocY;
 		return $locString;
+	}
+
+	/**
+	 * @return \DateTime
+	 */
+	public function getSpeciesDateTime() : \DateTime {
+		return $this->speciesDateTime;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getSpeciesPhoto() : string {
+		return $this->speciesPhoto;
 	}
 
 	/**
@@ -98,111 +138,140 @@ class BirdSpecies {
 	 */
 
 	/**
-	 * @param $specCode
-	 * @throws \TypeError if $specCode isn't a string
-	 * @throws \RangeException if $specCode is less than 6 characters
+	 * @param $speciesId
+	 * @throws \InvalidArgumentException if $speciesId isn't a UUID or not formatted correctly.
+	 * @throws \RangeException if the UUID is too short or too long.
+	 * @throws \TypeError if $speciesId isn't a UUID.
+	 * @throws \Exception if any other exception is called.
+	 * @return void
 	 */
-	public function setSpeciesCode($specCode) : void {
-		//Check if given parameter is valid data.
-		if(get_class($specCode) !== 'string') {
-			throw(new \TypeError("specCode must be a string."));
+	public function setSpeciesId($speciesId) : void {
+		try {
+			$uuid = self::validateUuid($speciesId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($speciesId);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-
-		if (strlen($specCode) <= 6) {
-			throw(new \RangeException("specCode must be at least 6 characters."));
-		}
-		$this->specCode = $specCode;
+		$this->speciesId = $speciesId;
 	}
 
 	/**
-	 * @param $comName
-	 * @throws \InvalidArgumentException if $comName is NULL
-	 * @throws \TypeError if $comName isn't a string
+	 * @param $speciesCode
+	 * @throws \TypeError if $speciesCode isn't a string
+	 * @throws \RangeException if $speciesCode is less than 6 characters
 	 */
-	public function setComName($comName) : void {
-		// Check if $comName is NULL.
-		if(is_null($comName) !== true) {
-			throw(new InvalidArgumentException('comName cannot be NULL!'));
+	public function setSpeciesCode($speciesCode) : void {
+		// Check if speciesCode is a string.
+		if(get_class($speciesCode) !== 'string') {
+			throw(new \TypeError("speciesCode must be a string."));
 		}
 
-		// Check if $comName is string.
-		if(get_class($comName) !== 'string') {
-			throw(new \TypeError('comName must be string.'));
+		if (strlen($speciesCode) <= 6) {
+			throw(new \RangeException("speciesCode must be at least 6 characters."));
 		}
-		$this->comName = $comName;
+		$this->speciesCode = $speciesCode;
 	}
 
 	/**
-	 * @param $sciName
-	 * @throws \InvalidArgumentException if $sciName is NULL
-	 * @throws \TypeError if $sciName isn't a string
+	 * @param $speciesspeciesComName
+	 * @throws \InvalidArgumentException if $speciesspeciesComName is NULL
+	 * @throws \TypeError if $speciesspeciesComName isn't a string
 	 */
-	public function setSciName($sciName) : void {
-		// Check if $sciName is NULL.
-		if(is_null($sciName)) {
-			throw(new InvalidArgumentException('sciName cannot be null.'));
+	public function setspeciesComName($speciesspeciesComName) : void {
+		// Check if $speciesspeciesComName is NULL.
+		if(is_null($speciesspeciesComName) !== true) {
+			throw(new \InvalidArgumentException('speciesComName cannot be NULL!'));
 		}
 
-		// Check if $sciName is a string.
-		if(get_class($sciName) !== 'string') {
-			throw(new \TypeError('sciName must be a string.'));
+		// Check if $speciesspeciesComName is string.
+		if(get_class($speciesspeciesComName) !== 'string') {
+			throw(new \TypeError('speciesComName must be string.'));
 		}
-		$this->sciName = $sciName;
+		$this->speciesComName = $speciesspeciesComName;
 	}
 
 	/**
-	 * @param $locX
-	 * @param $locY
-	 * @throws \TypeError if $locX or $locY are not floats.
+	 * @param $speciesspeciesSciName
+	 * @throws \InvalidArgumentException if $speciesspeciesSciName is NULL
+	 * @throws \TypeError if $speciesspeciesSciName isn't a string
 	 */
-	public function setLocData($locX, $locY) {
-		if(empty($locX) || empty($locX)) {
-			throw(new \InvalidArgumentException("locX and locY must not be NULL"));
+	public function setspeciesSciName($speciesspeciesSciName) : void {
+		// Check if $speciesspeciesSciName is NULL.
+		if(is_null($speciesspeciesSciName)) {
+			throw(new \InvalidArgumentException('speciesSciName cannot be null.'));
 		}
 
-		if(is_float($locX) !== true && is_float($locY) !== true) {
-			throw(new \TypeError("locX and locY must both be floats."));
+		// Check if $speciesspeciesSciName is a string.
+		if(get_class($speciesspeciesSciName) !== 'string') {
+			throw(new \TypeError('speciesSciName must be a string.'));
 		}
-
-		$this->locX = $locX;
-		$this->locY = $locY;
-	}
-
-
-	/**
-	 * Insert Function
-	 * @param \PDO $pdo
-	 */
-	public function insert(\PDO $pdo) : void {
-		// Define the insert query
-		$query = "INSERT INTO birdSpecies(speciesCode, commonName, sciName, locationX, locationY, dateTime, birdPhoto) VALUES(:specCode, :comName, :sciName, :locData)";
-		$statement = $pdo->prepare($query);
-
-		echo get_class($query);
-		echo get_class($statement);
-
-		$params = ["speciesCode" => $this->specCode, "commonName" => $this->comName, "sciName" => $this->sciName, "locationX" => $this->locX, "locationY" => $this->locY];
-		$statement->execute($params);
+		$this->speciesSciName = $speciesspeciesSciName;
 	}
 
 	/**
-	 * @param $specCode
-	 * @throws \RangeException if $specCode is > or < 6 characters.
-	 * @throws \InvalidArgumentException if $specCode is NULL.
+	 * @param $speciesLocX
+	 * @param $speciesLocY
+	 * @throws \TypeError if $speciesLocX or $speciesLocY are not floats.
+	 */
+	public function setLocData($speciesLocX, $speciesLocY) {
+		if(empty($speciesLocX) || empty($speciesLocX)) {
+			throw(new \InvalidArgumentException("$speciesLocX and locY must not be NULL"));
+		}
+
+		if(is_float($speciesLocX) !== true && is_float($speciesLocY) !== true) {
+			throw(new \TypeError("$speciesLocX and locY must both be floats."));
+		}
+
+		$this->$speciesLocX = $speciesLocX;
+		$this->speciesLocY = $speciesLocY;
+	}
+
+	/**
+	 * @param \DateTime $dateTime
+	 * @throws \InvalidArgumentException if $datetime isn't a DateTime object.
+	 * @throws \Exception
+	 */
+	public function setSpeciesDateTime(\DateTime $dateTime) {
+
+		// Check to see if $datetime is empty.
+		if(empty($dateTime)) {
+			throw(new \InvalidArgumentException("datetime must not be empty."));
+		}
+
+		// Check if $datetime is a datetime object.
+		if(get_class($dateTime) !== 'datetime') {
+			throw(new \InvalidArgumentException("Date Time must be a \DateTime object."));
+		}
+
+		// Get current datetime.
+		$currentDate = new \DateTime();
+
+		// Compare current date with given date and throw an error if given date is > than today's date.
+		if($dateTime->getTimestamp() > $currentDate->getTimestamp()) {
+			throw(new \RangeException("Date must not be in future."));
+		}
+		$this->speciesDateTime = $dateTime;
+	}
+
+	/**
+	 * @param $speciesCode
+	 * @throws \RangeException if $speciesCode is > or < 6 characters.
+	 * @throws \InvalidArgumentException if $speciesCode is NULL.
 	 * @throws \PDOException if something is wrong with the PDO object.
-	 * @throws \Exception if any other excpetion happens.
+	 * @throws \Exception if any other exception happens.
+	 * @return \Ramsey\Uuid\
 	 */
-	public function getBirdBySpecCode(\PDO $pdo,string $specCode) {
-		if(empty($specCode)) {
-			throw(new \InvalidArgumentException("specCode must not be empty."));
+	public function getBirdBySpeciesId(\PDO $pdo,string $speciesCode) : Uuid {
+		if(empty($speciesCode)) {
+			throw(new \InvalidArgumentException("speciesCode must not be empty."));
 		}
 
-		if(strlen($specCode) < 6 || strlen($specCode) > 6) {
-			throw(new \RangeException("specCode must be no more or less than 6 characters."));
+		if(strlen($speciesCode) < 6 ?? strlen($speciesCode) > 6) {
+			throw(new \RangeException("speciesCode must be no more or less than 6 characters."));
 		}
 
-		// Create an SQL query to send for the specCodes.
-		$query = "SELECT specCode, comName, sciName FROM peep WHERE specCode = :specCode";
+		// Create an SQL query to send for the speciesCodes.
+		$query = "SELECT speciesCode, speciesComName, speciesSciName FROM peep WHERE speciesCode = :speciesCode";
 		$statement = $pdo->prepare($query);
 
 		$birds = new \SplFixedArray($statement->rowCount());
@@ -211,12 +280,33 @@ class BirdSpecies {
 
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$bird = new BirdSpecies($row["specCode"], $row["comName"], $row["sciName"], $row["locX"], $row["locY"]);
+				$bird = new BirdSpecies($row["speciesId"], $row["speciesCode"], $row["speciesComName"], $row["speciesSciName"], $row["speciesLocX"], $row["speciesLocY"]);
 			} catch(\Exception $exception) {
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
 		}
-		return $specCode;
+		return $birds;
+	}
+
+	//Insert and Delete functions.
+	/**
+	 * Insert Function
+	 * @param \PDO $pdo
+	 */
+	public function insert(\PDO $pdo) : void {
+		// Define the insert query
+		$query = "INSERT INTO birdSpecies(speciesCode, commonName, speciesSciName, locationX, locationY, dateTime, birdPhoto) VALUES(:speciesCode, :speciesComName, :speciesSciName, :locData)";
+		$statement = $pdo->prepare($query);
+
+		echo get_class($query);
+		echo get_class($statement);
+
+		$params = ["speciesCode" => $this->speciesCode, "commonName" => $this->speciesComName, "speciesSciName" => $this->speciesSciName, "speciesLocX" => $this->speciesLocX, "speciesLocY" => $this->speciesLocY];
+		$statement->execute($params);
+	}
+
+	public function delete($post) {
+		// Delete some stuff...
 	}
 }
 ?>
