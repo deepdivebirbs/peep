@@ -1,15 +1,16 @@
 ALTER DATABASE peep CHARACTER SET utf8 COLLATE utf8_unicode_cli;
 
 /* ONLY RUN ONCE THIS LINE DELETES THE CURRENT TABLE AND REMAKES IT!! */
-DROP TABLE IF EXISTS birdSpecies;
+DROP TABLE IF EXISTS species;
 
-CREATE TABLE birdSpecies(
+CREATE TABLE species(
+	speciesId BINARY(16) NOT NULL,
 	speciesCode VARCHAR(6) NOT NULL,
-	commonName VARCHAR(64) NULL,
-	sciName VARCHAR(64) NULL,
-	latitudeX FLOAT(6, 3) NULL,
-	longitudeY FLOAT(6, 3) NULL,
-	dateTime DATETIME(6) NULL,
-	birdPhoto VARCHAR(128) NULL,
-	PRIMARY KEY (speciesCode)
+	speciesComName VARCHAR(64) NULL,
+	speciesSciName VARCHAR(64) NULL,
+	speciesLocX FLOAT(6, 3) NULL,
+	speciesLocY FLOAT(6, 3) NULL,
+	speciesDateTime DATETIME(6) NULL,
+	speciesBirdPhoto VARCHAR(128) NULL,
+	PRIMARY KEY (speciesId)
 );
