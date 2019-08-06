@@ -81,7 +81,7 @@ class sighting {
  * @throws \Exception if some other exception occurs
  * @Documentation https://php.net/manual/en/language.oop5.decon.php
  **/
-	public function __construct($newSightingId, $newSightingUserProfileId, $newSightingSpeciesId, string $newSightingComName, string $newSightingSciName, float $newSightingLocX, float $newSightingLocY, datetime $newSightingDateTime, string $newSightingBirdPhoto) {
+	public function __construct($newSightingId, $newSightingUserProfileId, $newSightingSpeciesId, string $newSightingComName, string $newSightingSciName, float $newSightingLocX, float $newSightingLocY, \DateTime $newSightingDateTime, string $newSightingBirdPhoto) {
 		try {
 			$this->setSightingId($newSightingId);
 			$this->setSightingUserProfileId($newSightingUserProfileId);
@@ -305,7 +305,7 @@ class sighting {
 	 * @throws \Exception
 	 **/
 	public function setsightingDateTime(\DateTime $sightingDateTime): void {
-		if($newSightingDateTime === null) {
+		if($sightingDateTime === null) {
 			$this->sightingDateTime = new \DateTime();
 			return;
 		}
@@ -315,7 +315,7 @@ class sighting {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-		$this->sightingDateTime = $sightingDateTime;
+		$this->sightingDateTime = $newSightingDateTime;
 	}
 
 /**
