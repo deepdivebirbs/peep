@@ -162,11 +162,11 @@ class BirdSpecies {
 	 */
 	public function setSpeciesCode($speciesCode) : void {
 		// Check if speciesCode is a string.
-		if(get_class($speciesCode) !== 'string') {
+		if(gettype($speciesCode) !== 'string') {
 			throw(new \TypeError("speciesCode must be a string."));
 		}
 
-		if (strlen($speciesCode) <= 6) {
+		if (strlen($speciesCode) < 6) {
 			throw(new \RangeException("speciesCode must be at least 6 characters."));
 		}
 		$this->speciesCode = $speciesCode;
@@ -179,7 +179,7 @@ class BirdSpecies {
 	 */
 	public function setspeciesComName($speciesspeciesComName) : void {
 		// Check if $speciesspeciesComName is NULL.
-		if(is_null($speciesspeciesComName) !== true) {
+		if(empty($speciesspeciesComName) !== true) {
 			throw(new \InvalidArgumentException('speciesComName cannot be NULL!'));
 		}
 
