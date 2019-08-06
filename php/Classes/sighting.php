@@ -1,10 +1,11 @@
 <?php
 
 namespace Birbs\Peep;
-
 require_once("autoload.php");
 require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 
+use http\Params;
+use Birbs\Peep\ValidateDate;
 use Ramsey\Uuid\Uuid;
 /**
  * This is the Sighting class. It will handle user-submitted bird sightings to the correct table.
@@ -17,12 +18,12 @@ class sighting {
 	use ValidateDate;
 
 /**
- * id for this sighting
+ * id for this sighting; pk
  * @var Uuid $sightingId
  **/
 	private $sightingId;
 /**
- * id for the user who is submitting this sighting; pk
+ * id for the user who is submitting this sighting; fk
  * @var Uuid $sightingUserProfileId
  **/
 	private $sightingUserProfileId;
@@ -32,22 +33,23 @@ class sighting {
  **/
 	private $sightingSpeciesId;
 /**
- * @var string $sightingSpeciescode; 	 *
+ * this is the common name for the bird submitted in the sighting
+ * @var string $sightingComName
  */
 	private $sightingComName;
 /**
- * this is the scientific name for every bird
+ * this is the scientific name for the bird submitted in the sighting
  * @var string $sightingSciName
  **/
 	private $sightingSciName;
 /**
  * this is the latitude for the location data of a bird sighting
- * @var float $sightingLatitudeX
+ * @var float $sightingLocX
  **/
 	private $sightingLocX;
 /**
  * this is the longitude for the location data of a bird sighting
- * @var float $sightingLongitudeY
+ * @var float $sightingLocY
  */
 	private $sightingLocY;
 /**
@@ -67,10 +69,10 @@ class sighting {
  * @param string|Uuid $sightingId of this sighting or null if a new sighting
  * @param string|Uuid $sightingUserProfileId of the Profile that posted this sighting
  * @param string|Uuid $sightingSpeciesId
- * @param string $sightingComName
- * @param string $sightingSciName
- * @param float $sightingLatitudeX
- * @param float $sightingLongitudeY
+ * @param string $sightingComName common name of the bird sighted
+ * @param string $sightingSciName scientific name of the bird sighted
+ * @param float $sightingLocX
+ * @param float $sightingLocY
  * @param \DateTime|string|null $sightingDateTime date and time sighting was sent or null if set to current date and time
  * @param string $sightingBirdPhoto
  * @throws \InvalidArgumentException if data types are not valid
@@ -79,15 +81,15 @@ class sighting {
  * @throws \Exception if some other exception occurs
  * @Documentation https://php.net/manual/en/language.oop5.decon.php
  **/
-	public function __construct($newSightingId, $newSightingUserProfileId, $newSightingSpeciesId, string $newSightingSpeciesCode, string $sightingComName, string $sightingSciName, float $newSightingLatitudeX, float $newSightingLongitudeY, $newSightingDateTime = null, string $newSightingBirdPhoto) {
+	public function __construct($newSightingId, $newSightingUserProfileId, $newSightingSpeciesId, string $newSightingComName, string $newSightingSciName, float $newSightingLocX, float $newSightingLocY, datetime $newSightingDateTime, string $newSightingBirdPhoto) {
 		try {
 			$this->setSightingId($newSightingId);
 			$this->setSightingUserProfileId($newSightingUserProfileId);
 			$this->setSightingSpeciesId($newSightingSpeciesId);
 			$this->setSightingComName($newSightingComName);
 			$this->setSightingSciName($newSightingSciName);
-			$this->setSightingLocX($newSightingLatitudeX);
-			$this->setSightingLocY($newSightingLongitudeY);
+			$this->setSightingLocX($newSightingLocX);
+			$this->setSightingLocY($newSightingLocY);
 			$this->setSightingDateTime($newSightingDateTime);
 			$this->setSightingBirdPhoto($newSightingBirdPhoto);
 		}
@@ -110,7 +112,7 @@ class sighting {
  * mutator method for sighting ID
  * @param Uuid| string $sightingId value of sighting ID
  * @throws \RangeException if $sightingId is no positive
- * @throws \TypeError if the sighting ID is not
+ * @throws \TypeError if the sighting ID is not Uuid
  **/
 	public function setSightingId(Uuid $sightingId): void {
 			try {
@@ -135,7 +137,7 @@ class sighting {
  *
  * @param Uuid| string $newSightingUserId
  * @throws \RangeException if the $newSightingUserId is not positive
- * @throws \TypeError if the profile ID is not
+ * @throws \TypeError if the profile ID is not Uuid
  **/
 	public function setSightingUserProfileId(Uuid $birdSightingUserProfileId): void {
 		try {
@@ -144,7 +146,7 @@ class sighting {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-		$this->sightingUserProfileId = $newSightingUserProfileId;
+		$this->sightingUserProfileId = $Uuid;
 	}
 
 /**
@@ -169,7 +171,7 @@ class sighting {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-		$this->sightingSpeciesId = $newSightingSpeciesId;
+		$this->sightingSpeciesId = $Uuid;
 	}
 
 /**
@@ -288,19 +290,21 @@ class sighting {
 /**
  * accessor for sighting dateTime
  *
- * @return \dateTime value for sighting date time
+ * @return \DateTime value for sighting date time
  **/
 	public function getSightingDateTime(): \DateTime {
 		return $this->sightingDateTime;
 	}
-/**
- * mutator method for sighting datetime
- *
- * @param \DateTime|string|null $newSightingDateTime Sighting as a DateTime object or string (or null to load the current time)
- * @throws \InvalidArgumentException if $newDateTime is not a valid object or string
- * @throws \RangeException if $newSightingDateTime is a date that does not exist
- **/
-	public function setsightingDateTime(datetime $sightingDateTime): void {
+
+	/**
+	 * mutator method for sighting datetime
+	 *
+	 * @param \DateTime|string|null $newSightingDateTime Sighting as a DateTime object or string (or null to load the current time)
+	 * @throws \InvalidArgumentException if $newDateTime is not a valid object or string
+	 * @throws \RangeException if $newSightingDateTime is a date that does not exist
+	 * @throws \Exception
+	 **/
+	public function setsightingDateTime(\DateTime $sightingDateTime): void {
 		if($newSightingDateTime === null) {
 			$this->sightingDateTime = new \DateTime();
 			return;
@@ -372,7 +376,6 @@ class sighting {
 
 		// bind the member variables to the place holder in the template
 		$parameters = ["sightingId" => $this->sightingId->getBytes(), "sightingUserProfileId" => $this->sightingUserProfileId->getBytes(), "sightingSpeciesId" => $this->sightingSpeciesId->getBytes(), "sightingComName" => $this->sightingComName, "sightingSciName" => $this->sightingSciName, "sightingLocX" => $this->sightingLocX, "sightingLocY" => $this->sightingLocY, "sightingDateTime" => $this->sightingDateTime, "sightingBirdPhoto" => $this->sightingBirdPhoto];
-		$statement->execute($parameters);
 		$statement->execute($parameters);
 	}
 
