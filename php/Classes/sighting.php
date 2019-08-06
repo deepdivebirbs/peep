@@ -3,7 +3,7 @@
 namespace Birbs\Peep;
 
 require_once("autoload.php");
-require_once(dirname(__DIR__) . "vendor/autoload.php");
+require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 
 use Ramsey\Uuid\Uuid;
 /**
@@ -136,7 +136,7 @@ class sighting {
  * @param Uuid| string $newSightingUserId
  * @throws \RangeException if the $newSightingUserId is not positive
  * @throws \TypeError if the profile ID is not
- */
+ **/
 	public function setSightingUserProfileId(Uuid $birdSightingUserProfileId): void {
 		try {
 			$Uuid = self::validateUuid($newSightingUserProfileId);
@@ -150,7 +150,7 @@ class sighting {
 /**
  * accessor method for the sighting species Id
  * @return Uuid sighting species Id
- */
+ **/
 	public function getSightingSpeciesId(): Uuid {
 		return $this->sightingSpeciesId;
 	}
@@ -161,7 +161,7 @@ class sighting {
 	 * @param Uuid| string $newSightingSpeciesId
 	 * @throws \RangeException if the $newSightingSpeciesId is not positive
 	 * @throws \TypeError if the profile ID is not
-	 */
+	 **/
 	public function setSightingSpeciesId(Uuid $sightingSpeciesId): void {
 		try {
 			$Uuid = self::validateUuid($newSightingSpeciesId);
@@ -175,7 +175,7 @@ class sighting {
 /**
  * accessor method for the common name
  * @return string of bird common name
- */
+ **/
 	public function getSightingComName(): string {
 		return $this->sightingComName;
 	}
@@ -203,7 +203,7 @@ class sighting {
 /** accessor for scientific name
  *
  * @return string for sighting sci name
- */
+ **/
 	public function getSightingSciName(): string {
 		return $this->sightingSciName;
 	}
@@ -329,7 +329,7 @@ class sighting {
  * @throws \InvalidArgumentException if the url is not a string or is insecure
  * @throws \RangeException if the url is > 255 characters
  * @throws \TypeError if the url is not a string
- */
+ **/
 	public function setSightingBirdPhoto(string $sightingBirdPhoto): void {
 		$newSightingBirdPhoto = trim($newSightingBirdPhoto);
 		$newSightingBirdPhoto = filter_var($newSightingBirdPhoto, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -338,13 +338,13 @@ class sighting {
 		}
 		$this->sightingBirdPhoto = $newSightingBirdPhoto;
 	}
-	/**
-	 * inserts this sighting into mySQL
-	 *
-	 * @param \PDO $pdo PDO connection object
-	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError if $pdo is not a PDO connection object
-	 **/
+/**
+ * inserts this sighting into mySQL
+ *
+ * @param \PDO $pdo PDO connection object
+ * @throws \PDOException when mySQL related errors occur
+ * @throws \TypeError if $pdo is not a PDO connection object
+ **/
 	public function insert(\PDO $pdo) : void {
 
 		// create query template
@@ -357,13 +357,13 @@ class sighting {
 		$statement->execute($parameters);
 	}
 
-	/**
-	 * deletes this sighting from mySQL
-	 *
-	 * @param \PDO $pdo PDO connection object
-	 * @throws \PDOException when mySQL related errors occur
-	 * @throws \TypeError if $pdo is not a PDO connection object
-	 **/
+/**
+ * deletes this sighting from mySQL
+ *
+ * @param \PDO $pdo PDO connection object
+ * @throws \PDOException when mySQL related errors occur
+ * @throws \TypeError if $pdo is not a PDO connection object
+ **/
 	public function delete(\PDO $pdo) : void {
 
 		// create query template
