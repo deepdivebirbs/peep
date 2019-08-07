@@ -20,22 +20,22 @@ class favorite implements \JsonSerializable {
 	/**
 	 * this is taken from the user id of the user that is adding the bird to their favorites; this is a foreign key
 	 */
-	private $favoriteUserId;
+	private $favoriteUserProfileId;
 
 	/**
 	 * constructor for this favorite class
 	 *
 	 * @param string $newFavoriteSpeciesId id of the bird species that the user is saving (foreign key)
-	 * @param string $newFavoriteUserId id of the user who is saving this bird (foreign key)
+	 * @param string $newFavoriteUserProfileId id of the user who is saving this bird (foreign key)
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \TypeError if data types violate type hints
 	 * @throws \Exception if some other exception occurs
 	 */
 
-	public function __construct($newFavoriteSpeciesId, $newFavoriteUserId) {
+	public function __construct($newFavoriteSpeciesId, $newFavoriteUserProfileId) {
 	try {
 		$this->setNewFavoriteSpeciesId($newFavoriteSpeciesId);
-		$this->setNewFavoriteUserId($newFavoriteUserId);
+		$this->setNewFavoriteUserProfileId($newFavoriteUserProfileId);
 	}
 		//this is the part where we determine what exception type is thrown, if any
 	catch (\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception)  {
@@ -70,25 +70,25 @@ class favorite implements \JsonSerializable {
 	}
 
 	/**
-	 * accessor method for favoriteUserId
-	 * @return string Uuid value of FavoriteUserId
+	 * accessor method for favoriteUserProfileId
+	 * @return string uuid value of favoriteUserProfileId
 	 */
-	public function getFavoriteUserId():Uuid {
-		return ($this->favoriteUserId);
+	public function getFavoriteUserProfileId():Uuid {
+		return ($this->favoriteUserProfileId);
 	}
 	/**
-	 * mutator method for favoriteUserId
-	 * @param Uuid|string $newFavoriteUserId
-	 * $throws \TypeError if $newFavoriteUserId is not a Uuid or string
+	 * mutator method for favoriteUserProfileId
+	 * @param Uuid|string $newFavoriteUserProfileId
+	 * $throws \TypeError if $newFavoriteUserProfileId is not a Uuid or string
 	 */
-	public function setNewFavoriteUserId ($newFavoriteUserId): void {
+	public function setNewFavoriteUserProfileId ($newFavoriteUserProfileId): void {
 	try {
-			$uuid = self::validateUuid($newFavoriteUserId);
+			$uuid = self::validateUuid($newFavoriteUserProfileId);
 		} catch (\invalidArgumentException |\RangeException|\Exception|\TypeError $exception){
 			$exceptionType=get_class($exception);
 		throw(new$exceptionType($exception->getMessage(),0,$exception));
 		}
-		$this->favoriteUserId=$uuid;
+		$this->favoriteUserProfileId=$uuid;
 	}
 	/*
 	 * inserts this favorite bird into mySQL
@@ -99,13 +99,13 @@ class favorite implements \JsonSerializable {
 	 */
 	public function insert (\PDO $pdo) : void {
 		//template for query
-		$query = "INSERT INTO favorite(favoriteSpeciesId, favoriteUserId) 
-		VALUES (:favoriteSpeciesId, :FavoriteUserId )";
+		$query = "INSERT INTO favorite(favoriteSpeciesId, favoriteUserProfileId) 
+		VALUES (:favoriteSpeciesId, :FavoriteUserProfileId )";
 		$statement = $pdo->prepare($query);
 
 		//binds member variables to the placeholders in the template. getbytes converts string into bytes
 		$parameters= [ "favoriteSpeciesId"=>$this->favoriteSpeciesId->getBytes(),
-			"favoriteUserId"=>$this->favoriteUserId->getBytes()];
+			"favoriteUserProfileId"=>$this->favoriteUserProfileId->getBytes()];
 		$statement->execute($parameters);
 	}
 	/**
@@ -116,26 +116,26 @@ class favorite implements \JsonSerializable {
 	 */
 	public function delete (\PDO $pdo) : void {
 		//create query template
-		$query = "DELETE FROM favorite WHERE favoriteUserId=:favoriteSpeciesId";
+		$query = "DELETE FROM favorite WHERE favoriteUserProfileId=:favoriteSpeciesId";
 		$statement = $pdo->prepare($query);
 		//binds the member variables to the placeholder in the template
 		$parameters = ["favoriteBirdList"=>$this->getBytes()];
 		$statement->execute($parameters);
 	}
 
-	public static function getAllFavoritebyUserId (\PDO $pdo, $favoriteUserId): ?favorite{
+	public static function getAllFavoritebyUserProfileId (\PDO $pdo, $favoriteUserProfileId): ?favorite{
 		//create query template
-		$query = "SELECT favoriteSpeciesId, favoriteUserId FROM favoriteBirdList WHERE favoriteUserId =:favoriteUserId";
+		$query = "SELECT favoriteSpeciesId, favoriteUserProfileId FROM favoriteBirdList WHERE favoriteUserProfileId =:favoriteUserProfileId";
 		$statement=$pdo->prepare($query);
-		// bind the favoriteUserId to the place holder in the template
-		$parameters = ["favoriteUserid" => $favoriteUserId ->getBytes ()];
+		// bind the favoriteUserProfileId to the place holder in the template
+		$parameters = ["favoriteUserProfileId" => $favoriteUserProfileId ->getBytes ()];
 		$statement ->execute($parameters);
 		//build an array of favorites
 		$favoriteBirdList = new \SplFixedArray($statement->rowCount());
 		$statement ->setFetchMode(\PDO::FETCH_ASSOC);
 		while (($row=$statement->fetch())!==false) {
 			try {
-				$favorite = new favorite($row ["favoriteSpeciesId"], $row["favoriteUserId"]);
+				$favorite = new favorite($row ["favoriteSpeciesId"], $row["favoriteUserProfileId"]);
 			} catch (\Exception $exception) {
 				throw (new \PDOException($exception->getMessage(),$exception));
 			}
@@ -146,6 +146,6 @@ class favorite implements \JsonSerializable {
 	public function jsonSerialize() : array {
 	$fields =get_object_vars ($this);
 
-	$fields ["favoriteUserId"] = $this->favoriteUserId->toString();
+	$fields ["favoriteUserProfileId"] = $this->favoriteUserProfileId->toString();
 	}
 }
