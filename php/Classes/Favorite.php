@@ -2,10 +2,12 @@
 namespace Birbs\Peep;
 
 /**
- * adds required dependencies
+ * This table is an example of data collected and stored
+ * about an author for the purpose of categorizing them
  */
+
 require_once "autoload.php";
-require_once (dirname(__DIR__,1) . "/vendor/autoload.php");
+require_once(dirname(__DIR__,1)."/vendor/autoload.php");
 
 use Ramsey\Uuid\Uuid;
 class favorite implements \JsonSerializable {
@@ -31,8 +33,8 @@ class favorite implements \JsonSerializable {
 
 	public function __construct($newFavoriteSpeciesId, $newFavoriteUserId) {
 	try {
-		$this->setFavoriteSpeciesId($newFavoriteSpeciesId);
-		$this->setFavoriteUserId($newFavoriteUserId);
+		$this->setNewFavoriteSpeciesId($newFavoriteSpeciesId);
+		$this->setNewFavoriteUserId($newFavoriteUserId);
 	}
 		//this is the part where we determine what exception type is thrown, if any
 	catch (\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception)  {

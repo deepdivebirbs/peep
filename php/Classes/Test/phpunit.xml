@@ -1,0 +1,7 @@
+<phpunit>
+	<testsuites>
+		<textsuite name="Favorite">
+			<file>FavoriteTest.php</file>
+		</textsuite>
+	</testsuites>
+</phpunit>
