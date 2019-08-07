@@ -4,8 +4,6 @@ namespace Birbs\Peep;
 require_once("autoload.php");
 require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 
-use http\Params;
-use Birbs\Peep\ValidateDate;
 use Ramsey\Uuid\Uuid;
 /**
  * This is the Sighting class. It will handle user-submitted bird sightings to the correct table.
@@ -18,26 +16,28 @@ class sighting {
 	use ValidateDate;
 
 /**
- * id for this sighting; pk
+ * id for this sighting; primary key
  * @var Uuid $sightingId
  **/
 	private $sightingId;
 /**
- * id for the user who is submitting this sighting; fk
+ * id for the user who is submitting this sighting; foreign key
  * @var Uuid $sightingUserProfileId
  **/
 	private $sightingUserProfileId;
 /**
- * id for the bird species table; fk
+ * id for the bird species table; foreign key
  * @var Uuid $sightingSpeciesId
  **/
 	private $sightingSpeciesId;
 /**
+ * TODO delete comName everywhere
  * this is the common name for the bird submitted in the sighting
  * @var string $sightingComName
  */
 	private $sightingComName;
 /**
+ * TODO delete sciName everywhere
  * this is the scientific name for the bird submitted in the sighting
  * @var string $sightingSciName
  **/
@@ -64,9 +64,10 @@ class sighting {
 	private $sightingBirdPhoto;
 
 /**
+ * TODO add new to all my guys
  * constructor for this sighting
  *
- * @param string|Uuid $sightingId of this sighting or null if a new sighting
+ * @param string|Uuid $newSightingId of this sighting or null if a new sighting
  * @param string|Uuid $sightingUserProfileId of the Profile that posted this sighting
  * @param string|Uuid $sightingSpeciesId
  * @param string $sightingComName common name of the bird sighted
@@ -110,19 +111,19 @@ class sighting {
 
 /**
  * mutator method for sighting ID
- * @param Uuid| string $sightingId value of sighting ID
+ * @param Uuid $sightingId value of sighting ID
  * @throws \RangeException if $sightingId is no positive
  * @throws \TypeError if the sighting ID is not Uuid
  **/
-	public function setSightingId(Uuid $sightingId): void {
+	public function setSightingId($newSightingId): void {
 			try {
-				$Uuid = self::validateUuid($newSightingId);
+				$uuid = self::validateUuid($newSightingId);
 			} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 				$exceptionType = get_class($exception);
 				throw(new $exceptionType($exception->getMessage(), 0, $exception));
 			}
 			//convert and store the sighting ID
-			$this->sightingId = $Uuid;
+			$this->sightingId = $uuid;
 	}
 
 /** accessor method for Sighting user profile ID
@@ -135,18 +136,18 @@ class sighting {
 /**
  *mutator method for sighting user profile ID
  *
- * @param Uuid| string $newSightingUserId
+ * @param Uuid| string $newSightingUserProfileId
  * @throws \RangeException if the $newSightingUserId is not positive
  * @throws \TypeError if the profile ID is not Uuid
  **/
-	public function setSightingUserProfileId(Uuid $birdSightingUserProfileId): void {
+	public function setSightingUserProfileId(Uuid $newSightingUserProfileId): void {
 		try {
-			$Uuid = self::validateUuid($newSightingUserProfileId);
+			$uuid = self::validateUuid($newSightingUserProfileId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-		$this->sightingUserProfileId = $Uuid;
+		$this->sightingUserProfileId = $uuid;
 	}
 
 /**
@@ -164,14 +165,14 @@ class sighting {
 	 * @throws \RangeException if the $newSightingSpeciesId is not positive
 	 * @throws \TypeError if the profile ID is not
 	 **/
-	public function setSightingSpeciesId(Uuid $sightingSpeciesId): void {
+	public function setSightingSpeciesId(Uuid $newSightingSpeciesId): void {
 		try {
-			$Uuid = self::validateUuid($newSightingSpeciesId);
+			$uuid = self::validateUuid($newSightingSpeciesId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-		$this->sightingSpeciesId = $Uuid;
+		$this->sightingSpeciesId = $uuid;
 	}
 
 /**
@@ -241,21 +242,21 @@ class sighting {
 /**
  * mutator method for sighting LocX
  *
- * @param float $sightingLocX
+ * @param float $newSightingLocX
  * @throws \InvalidArgumentException if sightingLocX is not a float
  * @throws \RangeException if not to the thousandths decimal place
  * @throws \TypeError if sightingLocX is not a float
  **/
-	public function setSightingLocX(float $sightingLocX) {
+	public function setSightingLocX(float $newSightingLocX) {
 		//check if it's a float
-		if(empty($sightingLocX) === true) {
+		if(empty($newSightingLocX) === true) {
 			throw(new \InvalidArgumentException("Location data is empty"));
 		}
-//waiting for if statement to check the thousandths decimal place to throw range exception
-		if(is_float($sightingLocX) !== true) {
+		//waiting for if statement to check the thousandths decimal place to throw range exception
+		if(is_float($newSightingLocX) !== true) {
 			throw(new \TypeError("location data is not valid"));
 		}
-		$this->sightingLocX = $newsightingLocX;
+		$this->sightingLocX = $newSightingLocX;
 	}
 
 /**
@@ -284,7 +285,7 @@ class sighting {
 		if(is_float($sightingLocY) !== true) {
 			throw(new \TypeError("location data is not valid"));
 		}
-		$this->sightingLocY = $newsightingLocY;
+		$this->sightingLocY = $newSightingLocY;
 	}
 
 /**
@@ -302,8 +303,9 @@ class sighting {
  * @param \DateTime|string|null $newSightingDateTime Sighting as a DateTime object or string (or null to load the current time)
  * @throws \InvalidArgumentException if $newDateTime is not a valid object or string
  * @throws \RangeException if $newSightingDateTime is a date that does not exist
- * @throws \Exception
- **/
+ * @throws \Exception find out why i would throw this exception
+ *
+ */
 	public function setSightingDateTime(\DateTime $newSightingDateTime): void {
 		if($newSightingDateTime === null) {
 			$this->sightingDateTime = new \DateTime();
@@ -312,7 +314,7 @@ class sighting {
 
 		try {
 				$newSightingDateTime = self::validateDateTime($newSightingDateTime);
-		} catch(\InvalidArgumentException | \RangeException $exception) {
+		} catch(\InvalidArgumentException | \RangeException | \Exception $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
@@ -376,17 +378,19 @@ class sighting {
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holder in the template
+		//TODO delete the extra parameters
 		$parameters = ["sightingId" => $this->sightingId->getBytes(), "sightingUserProfileId" => $this->sightingUserProfileId->getBytes(), "sightingSpeciesId" => $this->sightingSpeciesId->getBytes(), "sightingComName" => $this->sightingComName, "sightingSciName" => $this->sightingSciName, "sightingLocX" => $this->sightingLocX, "sightingLocY" => $this->sightingLocY, "sightingDateTime" => $this->sightingDateTime, "sightingBirdPhoto" => $this->sightingBirdPhoto];
 		$statement->execute($parameters);
 	}
 
 
-	// this is the jsonserialize part of the class
+	// this is the jsonserialize part of the class (check the example)
 	public function jsonSerialize() : array {
 		$fields = get_object_vars($this);
 
 		$fields["sightingId"] = $this->sightingId->toString();
 		$fields["sightingUserProfileId"] = $this->sightingUserProfileId->toString();
+		//TODO cast the third string
 
 
 
