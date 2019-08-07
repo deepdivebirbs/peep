@@ -5,21 +5,19 @@ namespace Birbs\Peep;
 // Require our external local classes
 require_once("autoload.php");
 require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
+//require_once("ValidateDate.php");
+//require_once ("ValidateUuid.php");
 
 use Ramsey\Uuid\Uuid;
-
-/*
-use http\Exception\BadQueryStringException;
-use http\Exception\InvalidArgumentException;
-use \PDO;
-use \PDOException;
-*/
 
 /**
  * This class takes API data from the Ebirds API at https://confluence.cornell.edu/display/CLOISAPI/eBirdAPIs and parses
  * the data into usable chunks and inserts that data into the table as specified.
  **/
 class BirdSpecies {
+
+	use ValidateUuid;
+	use ValidateDate;
 
 	//Define variables
 	// private $birdId;
@@ -179,12 +177,13 @@ class BirdSpecies {
 	 */
 	public function setspeciesComName($speciesspeciesComName) : void {
 		// Check if $speciesspeciesComName is NULL.
-		if(empty($speciesspeciesComName) !== true) {
-			throw(new \InvalidArgumentException('speciesComName cannot be NULL!'));
+		if(empty($speciesspeciesComName) === true) {
+			var_dump($speciesspeciesComName);
+			throw(new \InvalidArgumentException('speciesComName cannot be empty!'));
 		}
 
-		// Check if $speciesspeciesComName is string.
-		if(get_class($speciesspeciesComName) !== 'string') {
+		// Check if $speciesSpeciesComName is string.
+		if(gettype($speciesspeciesComName) !== 'string') {
 			throw(new \TypeError('speciesComName must be string.'));
 		}
 		$this->speciesComName = $speciesspeciesComName;
@@ -202,7 +201,7 @@ class BirdSpecies {
 		}
 
 		// Check if $speciesspeciesSciName is a string.
-		if(get_class($speciesspeciesSciName) !== 'string') {
+		if(gettype($speciesspeciesSciName) !== 'string') {
 			throw(new \TypeError('speciesSciName must be a string.'));
 		}
 		$this->speciesSciName = $speciesspeciesSciName;
@@ -214,16 +213,30 @@ class BirdSpecies {
 	 * @throws \TypeError if $speciesLocX or $speciesLocY are not floats.
 	 */
 	public function setLocData($speciesLocX, $speciesLocY) {
-		if(empty($speciesLocX) || empty($speciesLocX)) {
-			throw(new \InvalidArgumentException("$speciesLocX and locY must not be NULL"));
+
+		//echo(var_dump($speciesLocX, $speciesLocY));
+		// Check if $speciesLocX is NULL.
+		if(is_null($speciesLocX)) {
+			throw(new \InvalidArgumentException("speciesLocX cannot be NULL"));
+		}
+
+		// Check if empty.
+		if(empty($speciesLocX) || empty($speciesLocY)) {
+			throw(new \InvalidArgumentException('$speciesLocX and $speciesLocY must not be NULL'));
 		}
 
 		if(is_float($speciesLocX) !== true && is_float($speciesLocY) !== true) {
-			throw(new \TypeError("$speciesLocX and locY must both be floats."));
+			throw(new \TypeError('$speciesLocX and speciesLocY must both be floats.'));
 		}
-
-		$this->$speciesLocX = $speciesLocX;
+		$this->speciesLocX = $speciesLocX;
 		$this->speciesLocY = $speciesLocY;
+	}
+
+	/**
+	 * @param $speciesPhoto
+	 */
+	public function setSpeciesPhotoUrl($speciesPhoto) : void {
+
 	}
 
 	/**
@@ -239,7 +252,7 @@ class BirdSpecies {
 		}
 
 		// Check if $datetime is a datetime object.
-		if(get_class($dateTime) !== 'datetime') {
+		if(gettype($dateTime) !== 'datetime') {
 			throw(new \InvalidArgumentException("Date Time must be a \DateTime object."));
 		}
 
@@ -297,9 +310,6 @@ class BirdSpecies {
 		// Define the insert query
 		$query = "INSERT INTO birdSpecies(speciesCode, commonName, speciesSciName, locationX, locationY, dateTime, birdPhoto) VALUES(:speciesCode, :speciesComName, :speciesSciName, :locData)";
 		$statement = $pdo->prepare($query);
-
-		echo get_class($query);
-		echo get_class($statement);
 
 		$params = ["speciesCode" => $this->speciesCode, "commonName" => $this->speciesComName, "speciesSciName" => $this->speciesSciName, "speciesLocX" => $this->speciesLocX, "speciesLocY" => $this->speciesLocY];
 		$statement->execute($params);
