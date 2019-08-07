@@ -11,6 +11,7 @@ require_once(dirname(__DIR__,1)."/vendor/autoload.php");
 
 use Ramsey\Uuid\Uuid;
 class favorite implements \JsonSerializable {
+	// TODO JsonSerializable not implemented, needed to figure out how to do so for UUID stringification or can I remove?
 	use ValidateUuid;
 	/**
 	 *this is the species code of the bird that the user is adding to their favorites; this is a foreign key
@@ -24,8 +25,8 @@ class favorite implements \JsonSerializable {
 	/**
 	 * constructor for this favorite class
 	 *
-	 * @param string $newFavoriteSpeciesId id of the bird species that the user is saving
-	 * @param string $newFavoriteUserId id of the user who is saving this bird
+	 * @param string $newFavoriteSpeciesId id of the bird species that the user is saving (foreign key)
+	 * @param string $newFavoriteUserId id of the user who is saving this bird (foreign key)
 	 * @throws InvalidArgumentException if data types are not valid
 	 * @throws \TypeError if data types violate type hints
 	 * @throws \Exception if some other exception occurs
@@ -69,7 +70,7 @@ class favorite implements \JsonSerializable {
 	}
 
 	/**
-	 * accessormethod for favoriteUserId
+	 * accessor method for favoriteUserId
 	 * @return string Uuid value of FavoriteUserId
 	 */
 	public function getFavoriteUserId():Uuid {
