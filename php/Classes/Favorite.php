@@ -27,7 +27,7 @@ class favorite implements \JsonSerializable {
 	 *
 	 * @param string $newFavoriteSpeciesId id of the bird species that the user is saving (foreign key)
 	 * @param string $newFavoriteUserId id of the user who is saving this bird (foreign key)
-	 * @throws InvalidArgumentException if data types are not valid
+	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \TypeError if data types violate type hints
 	 * @throws \Exception if some other exception occurs
 	 */
