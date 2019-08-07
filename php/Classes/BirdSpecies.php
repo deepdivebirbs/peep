@@ -48,6 +48,7 @@ class BirdSpecies {
 
 	/**
 	 * BirdSpecies constructor.
+	 * @param $speciesId
 	 * @param $speciesCode
 	 * @param $speciesComName
 	 * @param $speciesSciName
@@ -60,14 +61,16 @@ class BirdSpecies {
 	 * @throws \Exception
 	 * @throws \TypeError
 	 */
-	public function __construct($speciesId, $speciesCode, $speciesComName, $speciesSciName, $speciesLocX, $speciesLocY,$speciesDateTime, $speciesPhoto) {
+	public function __construct($speciesId, $speciesCode, $speciesComName, $speciesSciName, $speciesLocX, $speciesLocY, $speciesDateTime, $speciesPhoto) {
 		try {
 			// Call all of the setters and create the object.
+			$this->setSpeciesId($speciesId);
 			$this->setSpeciesCode($speciesCode);
 			$this->setspeciesComName($speciesComName);
 			$this->setspeciesSciName($speciesSciName);
 			$this->setLocData($speciesLocX, $speciesLocY);
-			$this->setSpeciesId($speciesId);
+			$this->setSpeciesDateTime($speciesDateTime);
+			$this->setSpeciesPhotoUrl($speciesPhoto);
 
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
@@ -82,36 +85,37 @@ class BirdSpecies {
 	/**
 	 * @return Uuid
 	 */
-	public function getSpeciesId() : Uuid {
+	public function getSpeciesId(): Uuid {
 		return $this->speciesCode;
 	}
+
 	/**
 	 * Gets the speciesCode and returns it.
 	 *
 	 * @return string
 	 */
-	public function getSpeciesCode() : string {
+	public function getSpeciesCode(): string {
 		return $this->speciesCode;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getSpeciesComName() : string {
+	public function getSpeciesComName(): string {
 		return $this->speciesComName;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getspeciesSciName() : string {
+	public function getspeciesSciName(): string {
 		return $this->speciesSciName;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getLocData() : string {
+	public function getLocData(): string {
 		// Create string from location data
 		$locString = $this->speciesLocX . $this->speciesLocY;
 		return $locString;
@@ -120,14 +124,14 @@ class BirdSpecies {
 	/**
 	 * @return \DateTime
 	 */
-	public function getSpeciesDateTime() : \DateTime {
+	public function getSpeciesDateTime(): int {
 		return $this->speciesDateTime;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getSpeciesPhoto() : string {
+	public function getSpeciesPhoto(): string {
 		return $this->speciesPhoto;
 	}
 
@@ -137,13 +141,13 @@ class BirdSpecies {
 
 	/**
 	 * @param $speciesId
-	 * @throws \InvalidArgumentException if $speciesId isn't a UUID or not formatted correctly.
+	 * @return void
 	 * @throws \RangeException if the UUID is too short or too long.
 	 * @throws \TypeError if $speciesId isn't a UUID.
 	 * @throws \Exception if any other exception is called.
-	 * @return void
+	 * @throws \InvalidArgumentException if $speciesId isn't a UUID or not formatted correctly.
 	 */
-	public function setSpeciesId($speciesId) : void {
+	public function setSpeciesId($speciesId): void {
 		try {
 			$uuid = self::validateUuid($speciesId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -158,13 +162,13 @@ class BirdSpecies {
 	 * @throws \TypeError if $speciesCode isn't a string
 	 * @throws \RangeException if $speciesCode is less than 6 characters
 	 */
-	public function setSpeciesCode($speciesCode) : void {
+	public function setSpeciesCode($speciesCode): void {
 		// Check if speciesCode is a string.
 		if(gettype($speciesCode) !== 'string') {
 			throw(new \TypeError("speciesCode must be a string."));
 		}
 
-		if (strlen($speciesCode) < 6) {
+		if(strlen($speciesCode) < 6) {
 			throw(new \RangeException("speciesCode must be at least 6 characters."));
 		}
 		$this->speciesCode = $speciesCode;
@@ -175,7 +179,7 @@ class BirdSpecies {
 	 * @throws \InvalidArgumentException if $speciesspeciesComName is NULL
 	 * @throws \TypeError if $speciesspeciesComName isn't a string
 	 */
-	public function setspeciesComName($speciesspeciesComName) : void {
+	public function setspeciesComName($speciesspeciesComName): void {
 		// Check if $speciesspeciesComName is NULL.
 		if(empty($speciesspeciesComName) === true) {
 			var_dump($speciesspeciesComName);
@@ -194,7 +198,7 @@ class BirdSpecies {
 	 * @throws \InvalidArgumentException if $speciesspeciesSciName is NULL
 	 * @throws \TypeError if $speciesspeciesSciName isn't a string
 	 */
-	public function setspeciesSciName($speciesspeciesSciName) : void {
+	public function setspeciesSciName($speciesspeciesSciName): void {
 		// Check if $speciesspeciesSciName is NULL.
 		if(is_null($speciesspeciesSciName)) {
 			throw(new \InvalidArgumentException('speciesSciName cannot be null.'));
@@ -235,8 +239,16 @@ class BirdSpecies {
 	/**
 	 * @param $speciesPhoto
 	 */
-	public function setSpeciesPhotoUrl($speciesPhoto) : void {
+	public function setSpeciesPhotoUrl($speciesPhoto): void {
+		if(empty($speciesPhoto)) {
+			throw(new \InvalidArgumentException('$speciesPhoto must not be empty!'));
+		}
 
+		if(gettype($speciesPhoto) !== 'string') {
+			throw(new \TypeError('$speciesPhoto must be a string!'));
+		}
+
+		$this->speciesPhoto = $speciesPhoto;
 	}
 
 	/**
@@ -252,29 +264,27 @@ class BirdSpecies {
 		}
 
 		// Check if $datetime is a datetime object.
-		if(gettype($dateTime) !== 'datetime') {
+		if(get_class($dateTime) !== 'DateTime') {
 			throw(new \InvalidArgumentException("Date Time must be a \DateTime object."));
 		}
 
 		// Get current datetime.
-		$currentDate = new \DateTime();
+		$currentDate = new \DateTime("now", new \DateTimeZone("America/Denver"));
 
-		// Compare current date with given date and throw an error if given date is > than today's date.
-		if($dateTime->getTimestamp() > $currentDate->getTimestamp()) {
-			throw(new \RangeException("Date must not be in future."));
-		}
+		// TODO Compare current date with given date and throw an error if given date is > than today's date.
+
 		$this->speciesDateTime = $dateTime;
 	}
 
 	/**
 	 * @param $speciesCode
-	 * @throws \RangeException if $speciesCode is > or < 6 characters.
 	 * @throws \InvalidArgumentException if $speciesCode is NULL.
 	 * @throws \PDOException if something is wrong with the PDO object.
 	 * @throws \Exception if any other exception happens.
+	 * @throws \RangeException if $speciesCode is > or < 6 characters.
 	 * @return \Ramsey\Uuid\
 	 */
-	public function getBirdBySpeciesId(\PDO $pdo,string $speciesCode) : Uuid {
+	public function getBirdBySpeciesId(\PDO $pdo, string $speciesCode): Uuid {
 		if(empty($speciesCode)) {
 			throw(new \InvalidArgumentException("speciesCode must not be empty."));
 		}
@@ -302,11 +312,12 @@ class BirdSpecies {
 	}
 
 	//Insert and Delete functions.
+
 	/**
 	 * Insert Function
 	 * @param \PDO $pdo
 	 */
-	public function insert(\PDO $pdo) : void {
+	public function insert(\PDO $pdo): void {
 		// Define the insert query
 		$query = "INSERT INTO birdSpecies(speciesCode, commonName, speciesSciName, locationX, locationY, dateTime, birdPhoto) VALUES(:speciesCode, :speciesComName, :speciesSciName, :locData)";
 		$statement = $pdo->prepare($query);
@@ -319,4 +330,5 @@ class BirdSpecies {
 		// Delete some stuff...
 	}
 }
+
 ?>
