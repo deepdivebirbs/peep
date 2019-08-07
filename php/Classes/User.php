@@ -3,6 +3,7 @@
 
 namespace birbs\peep;
 require_once("autoload.php");
+require_once (dirname(__DIR__,1)."/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 
 
@@ -88,7 +89,7 @@ class UserProfile {
 		 * @param int $newUserProfileId new value of userProfileId
 		 * @throws UnexpectedValueException if $newUserProfileId is not an Int. (Should actually be binary)
 		 */
-	public function setuserProfileId(string $newUserProfileId): void {
+	public function setUserProfileId(string $newUserProfileId): void {
 		try {
 			$uuid = self::validateUuid($newUserProfileId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -162,20 +163,20 @@ class UserProfile {
 	 * @param string $newUserAuthorizationToken new value of userProfileAuthenticationToken
 	 * @throws \InvalidArgumentException if $newUserAuthorizationToken is empty or insecure
 	 */
-	public function setUserAuthorizationToken(string $newUserAuthorizationToken): void{
-		$newUserAuthorizationToken = strtolower(trim($newUserAuthorizationToken));
-		$newUserAuthorizationToken = filter_var($newUserAuthorizationToken, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-		if(empty($newUserAuthorizationToken) === true) {
+	public function setUserAuthenticationToken(string $newUserAuthenticationToken): void{
+		$newUserAuthenticationToken = strtolower(trim($newUserAuthenticationToken));
+		$newUserAuthenticationToken = filter_var($newUserAuthenticationToken, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newUserAuthenticationToken) === true) {
 			throw(new \InvalidArgumentException("input is empty"));
 		}
-		if(ctype_xdigit($newUserAuthorizationToken) === false) {
+		if(ctype_xdigit($newUserAuthenticationToken) === false) {
 			throw(new\RangeException("user activation is not valid"));
 		}
-		if(strlen($newUserAuthorizationToken) !== 32) {
+		if(strlen($newUserAuthenticationToken) !== 32) {
 			throw(new\RangeException("user activation token has to be 32 characters."));
 		}
 
-		$this->userProfileAuthenticationToken = $newUserAuthorizationToken;
+		$this->userProfileAuthenticationToken = $newUserAuthenticationToken;
 	}
 
 	/**
@@ -198,12 +199,13 @@ class UserProfile {
  *
  * @param $newUserProfileId, $newUserName, $newFirstName, $newLastName, $newUserEmail, $newUserAuthenticationToken, $newUserHash
  */
-public function __construct(string $newUserProfileId, string $newUserName, string $newLastName, string $newUserEmail, string $newUserAuthenticationToken, string $newUserHash) {
-		$this->setuserProfileId($newUserProfileId);
+public function __construct(string $newUserProfileId, string $newUserName, string $newFirstName, string $newLastName, string $newUserEmail, string $newUserAuthenticationToken, string $newUserHash) {
+		$this->setUserProfileId($newUserProfileId);
 		$this->setUserName($newUserName);
+		$this->setFirstName($newFirstName);
 		$this->setLastName($newLastName);
 		$this->setUserEmail($newUserEmail);
-		$this->setUserAuthorizationToken($newUserAuthenticationToken);
+		$this->setUserAuthenticationToken($newUserAuthenticationToken);
 		$this->setUserHash($newUserHash);
 	}
 
