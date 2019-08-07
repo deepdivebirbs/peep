@@ -255,7 +255,7 @@ class sighting {
 		if(is_float($sightingLocX) !== true) {
 			throw(new \TypeError("location data is not valid"));
 		}
-		$this->sightingLocX = $sightingLocX;
+		$this->sightingLocX = $newsightingLocX;
 	}
 
 /**
@@ -284,7 +284,7 @@ class sighting {
 		if(is_float($sightingLocY) !== true) {
 			throw(new \TypeError("location data is not valid"));
 		}
-		$this->sightingLocY = $sightingLocY;
+		$this->sightingLocY = $newsightingLocY;
 	}
 
 /**
@@ -296,19 +296,20 @@ class sighting {
 		return $this->sightingDateTime;
 	}
 
-	/**
-	 * mutator method for sighting datetime
-	 *
-	 * @param \DateTime|string|null $newSightingDateTime Sighting as a DateTime object or string (or null to load the current time)
-	 * @throws \InvalidArgumentException if $newDateTime is not a valid object or string
-	 * @throws \RangeException if $newSightingDateTime is a date that does not exist
-	 * @throws \Exception
-	 **/
-	public function setsightingDateTime(\DateTime $sightingDateTime): void {
-		if($sightingDateTime === null) {
+/**
+ * mutator method for sighting datetime
+ *
+ * @param \DateTime|string|null $newSightingDateTime Sighting as a DateTime object or string (or null to load the current time)
+ * @throws \InvalidArgumentException if $newDateTime is not a valid object or string
+ * @throws \RangeException if $newSightingDateTime is a date that does not exist
+ * @throws \Exception
+ **/
+	public function setSightingDateTime(\DateTime $newSightingDateTime): void {
+		if($newSightingDateTime === null) {
 			$this->sightingDateTime = new \DateTime();
 			return;
 		}
+
 		try {
 				$newSightingDateTime = self::validateDateTime($newSightingDateTime);
 		} catch(\InvalidArgumentException | \RangeException $exception) {
@@ -357,7 +358,7 @@ class sighting {
 
 		// bind the member variables to the place holders in the template
 		$formattedDate = $this->sightingDateTime->format("Y-m-d H:i:s.u");
-		$parameters = ["sightingId" => $this->sightingId->getBytes(), "sightingUserProfileId" => $this->sightingUserProfileId->getBytes(), "sightingSpeciesId" => $this->sightingSpeciesId->getBytes(), "sightingComName" => $this->sightingComName, "sightingSciName" => $this->sightingSciName, "sightingLocX" => $this->sightingLocX, "sightingLocY" => $this->sightingLocY, "sightingDateTime" => $this->sightingDateTime, "sightingBirdPhoto" => $this->sightingBirdPhoto];
+		$parameters = ["sightingId" => $this->sightingId->getBytes(), "sightingUserProfileId" => $this->sightingUserProfileId->getBytes(), "sightingSpeciesId" => $this->sightingSpeciesId->getBytes(), "sightingComName" => $this->sightingComName, "sightingSciName" => $this->sightingSciName, "sightingLocX" => $this->sightingLocX, "sightingLocY" => $this->sightingLocY, "sightingDateTime" => $formattedDate, "sightingBirdPhoto" => $this->sightingBirdPhoto];
 		$statement->execute($parameters);
 	}
 
@@ -396,3 +397,4 @@ class sighting {
 
 	}
 }
+
