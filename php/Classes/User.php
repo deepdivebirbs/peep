@@ -31,7 +31,7 @@ class UserProfile {
 
 	/**
 	 * accessor method for userProfileId
-	 * @return $userProfileId - should fit in Binary.
+	 * @return Uuid value of userProfileId - should fit in Binary.
 	 */
 	public function getUserProfileId() :Uuid {
 		return ($this->userProfileId);
@@ -48,7 +48,7 @@ class UserProfile {
 
 	/**
 	 * accessor method for userProfileEmail
-	 * @return $userProfileEmail - should fit in varChar(128)
+	 * @return string userProfileEmail - should fit in varChar(128)
 	 */
 	public function getUserProfileEmail() :string {
 		return ($this->userProfileEmail);
@@ -56,7 +56,7 @@ class UserProfile {
 
 	/**
 	 * accessor method for userProfileFirstName
-	 * @return $userProfileFirstName - should fit in varChar(32)
+	 * @return  string userProfileFirstName - should fit in varChar(32)
 	 */
 	public function getUserProfileFirstName() :string {
 		return ($this->userProfileFirstName);
@@ -73,7 +73,7 @@ class UserProfile {
 
 	/**
 	 * accessor method for userProfileLastName
-	 * @return $userProfileLastName - should fit in varChar(32).
+	 * @return string userProfileLastName - should fit in varChar(32).
 	 */
 	public function getUserProfileLastName() :string {
 		return ($this->userProfileLastName);
@@ -81,7 +81,7 @@ class UserProfile {
 
 	/**
 	 * accessor method for userProfileName
-	 * @return $userProfileName - should fit in varchar(32).
+	 * @return string userProfileName - should fit in varchar(32).
 	 */
 	public function getUserProfileName() :string {
 		return ($this->userProfileName);
@@ -94,7 +94,7 @@ class UserProfile {
 		 * @param int $newUserProfileId new value of userProfileId
 		 * @throws UnexpectedValueException if $newUserProfileId is not an Int. (Should fit into a binary)
 		 */
-	public function setUserProfileId(string $newUserProfileId): void {
+	public function setUserProfileId(int $newUserProfileId): void {
 		try {
 			$uuid = self::validateUuid($newUserProfileId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -107,7 +107,7 @@ class UserProfile {
 	/**
 	 * Mutator method for userProfileAuthenticationToken. Needs additional sanitizing
 	 *
-	 * @param string $newUserAuthorizationToken new value of userProfileAuthenticationToken
+	 * @param string newUserAuthorizationToken new value of userProfileAuthenticationToken
 	 * @throws \InvalidArgumentException if $newUserAuthorizationToken is empty or insecure
 	 */
 	public function setUserProfileAuthenticationToken(string $newUserProfileAuthenticationToken): void{
@@ -128,7 +128,7 @@ class UserProfile {
 	/**
 	 * Mutator method for userProfileEmail. Needs additional sanitizing
 	 *
-	 * @param string $newUserEmail new value of UserEmail
+	 * @param string newUserEmail new value of UserEmail
 	 * @throws \InvalidArgumentException if input is empty or insecure
 	 */
 	public function setUserProfileEmail(string $newUserProfileEmail): void{
@@ -143,7 +143,7 @@ class UserProfile {
 	/**
 	 * Mutator method for userProfileFirstName. Needs additional sanitizing
 	 *
-	 * @param string $newFirstName new value of FirstName
+	 * @param string newFirstName new value of FirstName
 	 * @throws \InvalidArgumentException if input is empty or insecure
 	 */
 	public function setUserProfileFirstName(string $newUserProfileFirstName): void{
@@ -158,8 +158,8 @@ class UserProfile {
 	/**
 	 * Mutator method for userProfileHash. Needs additional sanitizing
 	 *
-	 * @param string $newUserHash new value of userProfileHash
-	 * @throws \InvalidArgumentException if $newUserHash is empty or insecure
+	 * @param string newUserHash new value of userProfileHash
+	 * @throws \InvalidArgumentException if newUserHash is empty or insecure
 	 */
 	public function setUserProfileHash(string $newUserProfileHash): void{
 		$newUserProfileHash = trim($newUserProfileHash);
@@ -173,7 +173,7 @@ class UserProfile {
 	/**
 	 * Mutator method for userProfileLastName. Needs additional sanitizing
 	 *
-	 * @param string $newLastName new value of userProfileLastName
+	 * @param string newLastName new value of userProfileLastName
 	 * @throws \InvalidArgumentException if input is empty or insecure
 	 */
 	public function setUserProfileLastName(string $newUserProfileLastName): void{
@@ -188,7 +188,7 @@ class UserProfile {
 	/**
 	 * Mutator method for userProfileName. Needs additional sanitizing
 	 *
-	 * @param string $newUserName new value of UserName
+	 * @param string newUserName new value of UserName
 	 * @throws \InvalidArgumentException if input is empty or insecure
 	 */
 	public function setUserProfileName(string $newUserProfileName): void{
@@ -203,9 +203,9 @@ class UserProfile {
 /**
  * Constructor method for User object
  *
- * @param $newUserProfileId, $newUserName, $newFirstName, $newLastName, $newUserEmail, $newUserAuthenticationToken, $newUserHash
+ * @param int newUserProfileId, string newUserName, string newFirstName, string newLastName, string newUserEmail, string newUserAuthenticationToken, string newUserHash
  */
-public function __construct(string $newUserProfileId, string $newUserProfileName, string $newUserProfileFirstName, string $newUserProfileLastName, string $newUserProfileEmail, string $newUserProfileAuthenticationToken, string $newUserProfileHash) {
+public function __construct(int $newUserProfileId, string $newUserProfileName, string $newUserProfileFirstName, string $newUserProfileLastName, string $newUserProfileEmail, string $newUserProfileAuthenticationToken, string $newUserProfileHash) {
 		$this->setUserProfileId($newUserProfileId);
 		$this->setUserProfileName($newUserProfileName);
 		$this->setUserProfileFirstName($newUserProfileFirstName);
