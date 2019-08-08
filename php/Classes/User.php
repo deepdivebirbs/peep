@@ -36,6 +36,7 @@ class UserProfile {
 	public function getUserProfileId() :Uuid {
 		return ($this->userProfileId);
 	}
+
 	/**
 	 * Accessor method for userProfileAuthenticationToken.
 	 *
@@ -44,6 +45,7 @@ class UserProfile {
 	public function getUserProfileAuthenticationToken(): string {
 		return ($this->userProfileAuthenticationToken);
 	}
+
 	/**
 	 * accessor method for userProfileEmail
 	 * @return $userProfileEmail - should fit in varChar(128)
@@ -51,6 +53,7 @@ class UserProfile {
 	public function getUserProfileEmail() :string {
 		return ($this->userProfileEmail);
 	}
+
 	/**
 	 * accessor method for userProfileFirstName
 	 * @return $userProfileFirstName - should fit in varChar(32)
@@ -58,6 +61,7 @@ class UserProfile {
 	public function getUserProfileFirstName() :string {
 		return ($this->userProfileFirstName);
 	}
+
 	/**
 	 * Accessor method for userProfileHash.
 	 *
@@ -66,6 +70,7 @@ class UserProfile {
 	public function getUserProfileHash(): string {
 		return ($this->userProfileHash);
 	}
+
 	/**
 	 * accessor method for userProfileLastName
 	 * @return $userProfileLastName - should fit in varChar(32).
@@ -73,6 +78,7 @@ class UserProfile {
 	public function getUserProfileLastName() :string {
 		return ($this->userProfileLastName);
 	}
+
 	/**
 	 * accessor method for userProfileName
 	 * @return $userProfileName - should fit in varchar(32).
@@ -80,8 +86,6 @@ class UserProfile {
 	public function getUserProfileName() :string {
 		return ($this->userProfileName);
 	}
-
-
 
 
 		/**
@@ -99,6 +103,7 @@ class UserProfile {
 		}
 		$this->userProfileId = $uuid;
 	}
+
 	/**
 	 * Mutator method for userProfileAuthenticationToken. Needs additional sanitizing
 	 *
@@ -119,6 +124,7 @@ class UserProfile {
 		}
 		$this->userProfileAuthenticationToken = $newUserProfileAuthenticationToken;
 	}
+
 	/**
 	 * Mutator method for userProfileEmail. Needs additional sanitizing
 	 *
@@ -133,6 +139,7 @@ class UserProfile {
 		}
 		$this->userProfileEmail = $newUserProfileEmail;
 	}
+
 	/**
 	 * Mutator method for userProfileFirstName. Needs additional sanitizing
 	 *
@@ -147,6 +154,7 @@ class UserProfile {
 		}
 		$this->userProfileFirstName = $newUserProfileFirstName;
 	}
+
 	/**
 	 * Mutator method for userProfileHash. Needs additional sanitizing
 	 *
@@ -161,6 +169,7 @@ class UserProfile {
 		}
 		$this->userProfileHash = $newUserProfileHash;
 	}
+
 	/**
 	 * Mutator method for userProfileLastName. Needs additional sanitizing
 	 *
