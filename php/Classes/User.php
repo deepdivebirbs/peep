@@ -191,8 +191,6 @@ class UserProfile {
 		$this->userProfileName = $newUserProfileName;
 	}
 
-
-
 /**
  * Constructor method for User object
  *
@@ -208,7 +206,24 @@ public function __construct(string $newUserProfileId, string $newUserProfileName
 		$this->setUserProfileHash($newUserProfileHash);
 	}
 
+	/**
+	 * inserts a userProfile into mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function insert(\PDO $pdo) : void {
 
+		// create query template
+		$query = "INSERT INTO userProfile(userProfileId, userProfileName, userProfileFirstName, userProfileLastName, userProfileEmail, userProfileAuthenticationToken, userProfileHash) VALUES(:userProfileId, :userProfileName, :userProfileFirstName, :UserProfileLastName, :userProfileEmail, :userProfileAuthenticationToken, :userProfileHash)";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holders in the template
+		//$formattedDate = $this->tweetDate->format("Y-m-d H:i:s.u");
+		$parameters = ["userProfileId" => $this->userProfileId->getBytes(), "userProfileName" => $this->userProfileName->getBytes(), "userProfileFirstName" => $this->userProfileFirstName, "userProfileLastName" => $this->userProfileLastName, "userProfileEmail" => $this->userProfileEmail, "userProfileAuthenticationToken" => $this->userProfileAuthenticationToken, "userProfileHash" => $this->userProfileHash];
+		$statement->execute($parameters);
+	}
 
 
 }
