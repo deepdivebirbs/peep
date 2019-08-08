@@ -12,24 +12,22 @@ class UserProfile {
 
 	/**
 	 * @var $userProfileId, the primary key and index
+	 * @var $userProfileAuthenticationToken, needed for security purposes
+	 * @var $userProfileEmail, other information stored about the user
+	 * @var $userProfileFirstName, other information stored about the the user
+	 * @var $userProfileHash, needed for security purposes
+	 * @var $userProfileLastName, other information stored about the the user
+	 * @var $userProfileName, a unique identifier, but not the key
 	 */
 	private $userProfileId;
-
-	/**
-	 * @var  $userProfileName, a unique identifier, but not the key
-	 */
-	private $userProfileName;
-	/**
-	 * @var $userProfileFirstName, $userProfileLastName, $userProfileEmail, other information stored by the user
-	 */
-	private $userProfileFirstName;
-	private $userProfileLastName;
-	private $userProfileEmail;
-	/**
-	 * @var $userProfileAuthenticationToken, $userProfileHash, needed for security purposes
-	 */
 	private $userProfileAuthenticationToken;
+	private $userProfileEmail;
+	private $userProfileFirstName;
 	private $userProfileHash;
+	private $userProfileLastName;
+	private $userProfileName;
+
+
 
 	/**
 	 * accessor method for userProfileId
@@ -39,25 +37,12 @@ class UserProfile {
 		return ($this->userProfileId);
 	}
 	/**
-	 * accessor method for userProfileName
-	 * @return $userProfileName - should fit in varchar(32).
+	 * Accessor method for userProfileAuthenticationToken.
+	 *
+	 * @return string userProfileAuthenticationToken
 	 */
-	public function getUserProfileName() :string {
-		return ($this->userProfileName);
-	}
-	/**
-	 * accessor method for userProfileFirstName
-	 * @return $userProfileFirstName - should fit in varChar(32)
-	 */
-	public function getUserProfileFirstName() :string {
-		return ($this->userProfileFirstName);
-	}
-	/**
-	 * accessor method for userProfileLastName
-	 * @return $userProfileLastName - should fit in varChar(32).
-	 */
-	public function getUserProfileLastName() :string {
-		return ($this->userProfileLastName);
+	public function getUserProfileAuthenticationToken(): string {
+		return ($this->userProfileAuthenticationToken);
 	}
 	/**
 	 * accessor method for userProfileEmail
@@ -67,12 +52,11 @@ class UserProfile {
 		return ($this->userProfileEmail);
 	}
 	/**
-	 * Accessor method for userActivationToken.
-	 *
-	 * @return string userActivationToken
+	 * accessor method for userProfileFirstName
+	 * @return $userProfileFirstName - should fit in varChar(32)
 	 */
-	public function getUserProfileAuthenticationToken(): string {
-		return ($this->userProfileAuthenticationToken);
+	public function getUserProfileFirstName() :string {
+		return ($this->userProfileFirstName);
 	}
 	/**
 	 * Accessor method for userProfileHash.
@@ -82,12 +66,29 @@ class UserProfile {
 	public function getUserProfileHash(): string {
 		return ($this->userProfileHash);
 	}
+	/**
+	 * accessor method for userProfileLastName
+	 * @return $userProfileLastName - should fit in varChar(32).
+	 */
+	public function getUserProfileLastName() :string {
+		return ($this->userProfileLastName);
+	}
+	/**
+	 * accessor method for userProfileName
+	 * @return $userProfileName - should fit in varchar(32).
+	 */
+	public function getUserProfileName() :string {
+		return ($this->userProfileName);
+	}
+
+
+
 
 		/**
 		 * Mutator method for userProfileId
 		 *
 		 * @param int $newUserProfileId new value of userProfileId
-		 * @throws UnexpectedValueException if $newUserProfileId is not an Int. (Should actually be binary)
+		 * @throws UnexpectedValueException if $newUserProfileId is not an Int. (Should fit into a binary)
 		 */
 	public function setUserProfileId(string $newUserProfileId): void {
 		try {
@@ -96,66 +97,7 @@ class UserProfile {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-
 		$this->userProfileId = $uuid;
-	}
-	/**
-	 * Mutator method for userProfileName. Needs additional sanitizing
-	 *
-	 * @param string $newUserName new value of UserName
-	 * @throws \InvalidArgumentException if input is empty or insecure
-	 */
-	public function setUserProfileName(string $newUserProfileName): void{
-		$newUserProfileName = trim($newUserProfileName);
-		$newUserProfileName = filter_var($newUserProfileName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-		if(empty($newUserProfileName) === true) {
-			throw(new \InvalidArgumentException("input is empty or insecure"));
-		}
-		$this->userProfileName = $newUserProfileName;
-	}
-
-	/**
-	 * Mutator method for userProfileFirstName. Needs additional sanitizing
-	 *
-	 * @param string $newFirstName new value of FirstName
-	 * @throws \InvalidArgumentException if input is empty or insecure
-	 */
-	public function setUserProfileFirstName(string $newUserProfileFirstName): void{
-		$newUserProfileFirstName = trim($newUserProfileFirstName);
-		$newUserProfileFirstName = filter_var($newUserProfileFirstName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-		if(empty($newUserProfileFirstName) === true) {
-			throw(new \InvalidArgumentException("input is empty or insecure"));
-		}
-		$this->userProfileFirstName = $newUserProfileFirstName;
-	}
-
-	/**
-	 * Mutator method for userProfileLastName. Needs additional sanitizing
-	 *
-	 * @param string $newLastName new value of userProfileLastName
-	 * @throws \InvalidArgumentException if input is empty or insecure
-	 */
-	public function setUserProfileLastName(string $newUserProfileLastName): void{
-		$newUserProfileLastName = trim($newUserProfileLastName);
-		$newUserProfileLastName = filter_var($newUserProfileLastName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-		if(empty($newUserProfileLastName) === true) {
-			throw(new \InvalidArgumentException("input is empty or insecure"));
-		}
-		$this->userProfileLastName = $newUserProfileLastName;
-	}
-	/**
-	 * Mutator method for userProfileEmail. Needs additional sanitizing
-	 *
-	 * @param string $newUserEmail new value of UserEmail
-	 * @throws \InvalidArgumentException if input is empty or insecure
-	 */
-	public function setUserProfileEmail(string $newUserProfileEmail): void{
-		$newUserProfileEmail = trim($newUserProfileEmail);
-		$newUserProfileEmail = filter_var($newUserProfileEmail, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-		if(empty($newUserProfileEmail) === true) {
-			throw(new \InvalidArgumentException("input is empty or insecure"));
-		}
-		$this->userProfileEmail = $newUserProfileEmail;
 	}
 	/**
 	 * Mutator method for userProfileAuthenticationToken. Needs additional sanitizing
@@ -175,10 +117,36 @@ class UserProfile {
 		if(strlen($newUserProfileAuthenticationToken) !== 32) {
 			throw(new\RangeException("user activation token has to be 32 characters."));
 		}
-
 		$this->userProfileAuthenticationToken = $newUserProfileAuthenticationToken;
 	}
-
+	/**
+	 * Mutator method for userProfileEmail. Needs additional sanitizing
+	 *
+	 * @param string $newUserEmail new value of UserEmail
+	 * @throws \InvalidArgumentException if input is empty or insecure
+	 */
+	public function setUserProfileEmail(string $newUserProfileEmail): void{
+		$newUserProfileEmail = trim($newUserProfileEmail);
+		$newUserProfileEmail = filter_var($newUserProfileEmail, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newUserProfileEmail) === true) {
+			throw(new \InvalidArgumentException("input is empty or insecure"));
+		}
+		$this->userProfileEmail = $newUserProfileEmail;
+	}
+	/**
+	 * Mutator method for userProfileFirstName. Needs additional sanitizing
+	 *
+	 * @param string $newFirstName new value of FirstName
+	 * @throws \InvalidArgumentException if input is empty or insecure
+	 */
+	public function setUserProfileFirstName(string $newUserProfileFirstName): void{
+		$newUserProfileFirstName = trim($newUserProfileFirstName);
+		$newUserProfileFirstName = filter_var($newUserProfileFirstName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newUserProfileFirstName) === true) {
+			throw(new \InvalidArgumentException("input is empty or insecure"));
+		}
+		$this->userProfileFirstName = $newUserProfileFirstName;
+	}
 	/**
 	 * Mutator method for userProfileHash. Needs additional sanitizing
 	 *
@@ -193,6 +161,37 @@ class UserProfile {
 		}
 		$this->userProfileHash = $newUserProfileHash;
 	}
+	/**
+	 * Mutator method for userProfileLastName. Needs additional sanitizing
+	 *
+	 * @param string $newLastName new value of userProfileLastName
+	 * @throws \InvalidArgumentException if input is empty or insecure
+	 */
+	public function setUserProfileLastName(string $newUserProfileLastName): void{
+		$newUserProfileLastName = trim($newUserProfileLastName);
+		$newUserProfileLastName = filter_var($newUserProfileLastName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newUserProfileLastName) === true) {
+			throw(new \InvalidArgumentException("input is empty or insecure"));
+		}
+		$this->userProfileLastName = $newUserProfileLastName;
+	}
+
+	/**
+	 * Mutator method for userProfileName. Needs additional sanitizing
+	 *
+	 * @param string $newUserName new value of UserName
+	 * @throws \InvalidArgumentException if input is empty or insecure
+	 */
+	public function setUserProfileName(string $newUserProfileName): void{
+		$newUserProfileName = trim($newUserProfileName);
+		$newUserProfileName = filter_var($newUserProfileName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newUserProfileName) === true) {
+			throw(new \InvalidArgumentException("input is empty or insecure"));
+		}
+		$this->userProfileName = $newUserProfileName;
+	}
+
+
 
 /**
  * Constructor method for User object
