@@ -91,10 +91,10 @@ class UserProfile {
 		/**
 		 * Mutator method for userProfileId
 		 *
-		 * @param int $newUserProfileId new value of userProfileId
+		 * @param string|Uuid $newUserProfileId new value of userProfileId
 		 * @throws UnexpectedValueException if $newUserProfileId is not an Int. (Should fit into a binary)
 		 */
-	public function setUserProfileId(int $newUserProfileId): void {
+	public function setUserProfileId(string $newUserProfileId): void {
 		try {
 			$uuid = self::validateUuid($newUserProfileId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -203,9 +203,9 @@ class UserProfile {
 /**
  * Constructor method for User object
  *
- * @param int newUserProfileId, string newUserName, string newFirstName, string newLastName, string newUserEmail, string newUserAuthenticationToken, string newUserHash
+ * @param string|Uuid newUserProfileId, string newUserName, string newFirstName, string newLastName, string newUserEmail, string newUserAuthenticationToken, string newUserHash
  */
-public function __construct(int $newUserProfileId, string $newUserProfileName, string $newUserProfileFirstName, string $newUserProfileLastName, string $newUserProfileEmail, string $newUserProfileAuthenticationToken, string $newUserProfileHash) {
+public function __construct( $newUserProfileId, string $newUserProfileName, string $newUserProfileFirstName, string $newUserProfileLastName, string $newUserProfileEmail, string $newUserProfileAuthenticationToken, string $newUserProfileHash) {
 		$this->setUserProfileId($newUserProfileId);
 		$this->setUserProfileName($newUserProfileName);
 		$this->setUserProfileFirstName($newUserProfileFirstName);
