@@ -11,7 +11,7 @@ use Ramsey\Uuid\Uuid;
  * @version 1.0
  **/
 
-class sighting {
+class Sighting implements \jsonSerializable {
 	use ValidateUuid;
 	use ValidateDate;
 
@@ -20,62 +20,53 @@ class sighting {
  * @var Uuid $sightingId
  **/
 	private $sightingId;
-/**
- * id for the user who is submitting this sighting; foreign key
- * @var Uuid $sightingUserProfileId
- **/
-	private $sightingUserProfileId;
+
 /**
  * id for the bird species table; foreign key
  * @var Uuid $sightingSpeciesId
  **/
 	private $sightingSpeciesId;
+
 /**
- * TODO delete comName everywhere
- * this is the common name for the bird submitted in the sighting
- * @var string $sightingComName
- */
-	private $sightingComName;
-/**
- * TODO delete sciName everywhere
- * this is the scientific name for the bird submitted in the sighting
- * @var string $sightingSciName
+ * id for the user who is submitting this sighting; foreign key
+ * @var Uuid $sightingUserProfileId
  **/
-	private $sightingSciName;
-/**
+	private $sightingUserProfileId;
+
+	/**
+	 * this is the photo of the bird uploaded with the bird sighting
+	 * @var string $sightingBirdPhoto
+	 **/
+	private $sightingBirdPhoto;
+
+	/**
+	 * this is the date and time of a bird sighting
+	 * @var \DateTime $sightingDateTime
+	 */
+	private $sightingDateTime;
+
+	/**
  * this is the latitude for the location data of a bird sighting
  * @var float $sightingLocX
  **/
 	private $sightingLocX;
+
 /**
  * this is the longitude for the location data of a bird sighting
  * @var float $sightingLocY
  */
 	private $sightingLocY;
-/**
- * this is the date and time of a bird sighting
- * @var \DateTime $sightingDateTime
- */
-	private $sightingDateTime;
-/**
- * this is the photo of the bird uploaded with the bird sighting
- * @var string $sightingBirdPhoto
- **/
-	private $sightingBirdPhoto;
 
 /**
- * TODO add new to all my guys
  * constructor for this sighting
  *
  * @param string|Uuid $newSightingId of this sighting or null if a new sighting
- * @param string|Uuid $sightingUserProfileId of the Profile that posted this sighting
- * @param string|Uuid $sightingSpeciesId
- * @param string $sightingComName common name of the bird sighted
- * @param string $sightingSciName scientific name of the bird sighted
- * @param float $sightingLocX
- * @param float $sightingLocY
- * @param \DateTime|string|null $sightingDateTime date and time sighting was sent or null if set to current date and time
- * @param string $sightingBirdPhoto
+ * @param string|Uuid $newSightingSpeciesId
+ * @param string|Uuid $newSightingUserProfileId of the Profile that posted this sighting
+ * @param string $newSightingBirdPhoto
+ * @param \DateTime|string|null $newSightingDateTime date and time sighting was sent or null if set to current date and time
+ * @param float $newSightingLocX
+ * @param float $newSightingLocY
  * @throws \InvalidArgumentException if data types are not valid
  * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
  * @throws \TypeError if data types violate type hints
@@ -85,14 +76,12 @@ class sighting {
 	public function __construct($newSightingId, $newSightingUserProfileId, $newSightingSpeciesId, string $newSightingComName, string $newSightingSciName, float $newSightingLocX, float $newSightingLocY, \DateTime $newSightingDateTime, string $newSightingBirdPhoto) {
 		try {
 			$this->setSightingId($newSightingId);
-			$this->setSightingUserProfileId($newSightingUserProfileId);
 			$this->setSightingSpeciesId($newSightingSpeciesId);
-			$this->setSightingComName($newSightingComName);
-			$this->setSightingSciName($newSightingSciName);
+			$this->setSightingUserProfileId($newSightingUserProfileId);
+			$this->setSightingBirdPhoto($newSightingBirdPhoto);
+			$this->setSightingDateTime($newSightingDateTime);
 			$this->setSightingLocX($newSightingLocX);
 			$this->setSightingLocY($newSightingLocY);
-			$this->setSightingDateTime($newSightingDateTime);
-			$this->setSightingBirdPhoto($newSightingBirdPhoto);
 		}
 			//determine what exception type was thrown
 		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -100,6 +89,7 @@ class sighting {
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 	}
+//accessors in alphabetical order
 
 /**
  * accessor method for sightingId
@@ -110,20 +100,11 @@ class sighting {
 	}
 
 /**
- * mutator method for sighting ID
- * @param Uuid $sightingId value of sighting ID
- * @throws \RangeException if $sightingId is no positive
- * @throws \TypeError if the sighting ID is not Uuid
+ * accessor method for the sighting species Id
+ * @return Uuid sighting species Id
  **/
-	public function setSightingId($newSightingId): void {
-			try {
-				$uuid = self::validateUuid($newSightingId);
-			} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-				$exceptionType = get_class($exception);
-				throw(new $exceptionType($exception->getMessage(), 0, $exception));
-			}
-			//convert and store the sighting ID
-			$this->sightingId = $uuid;
+	public function getSightingSpeciesId(): Uuid {
+		return $this->sightingSpeciesId;
 	}
 
 /** accessor method for Sighting user profile ID
@@ -134,28 +115,58 @@ class sighting {
 	}
 
 /**
- *mutator method for sighting user profile ID
+ * accessor for sighting birdPhoto
  *
- * @param Uuid| string $newSightingUserProfileId
- * @throws \RangeException if the $newSightingUserId is not positive
- * @throws \TypeError if the profile ID is not Uuid
+ * @return string value of the bird photo url
  **/
-	public function setSightingUserProfileId(Uuid $newSightingUserProfileId): void {
+	public function getSightingBirdPhoto(): string {
+		return $this->sightingBirdPhoto;
+	}
+
+/**
+ * accessor for sighting dateTime
+ *
+ * @return \DateTime value for sighting date time
+ **/
+	public function getSightingDateTime(): \DateTime {
+		return $this->sightingDateTime;
+	}
+
+/**
+ * accessor for sighting LocX
+ *
+ * @return float for sightingLocX
+ **/
+	public function getSightingLocX(): float {
+		return $this->sightingLocX;
+	}
+
+	/**
+	 * accessor for sighting LocY
+	 *
+	 * @return float for sightingLocY
+	 **/
+	public function getSightingLocY(): float {
+		return $this->sightingLocY;
+	}
+
+//mutators in alphabetical order
+
+/**
+ * mutator method for sighting ID
+ * @param Uuid $sightingId value of sighting ID
+ * @throws \RangeException if $sightingId is no positive
+ * @throws \TypeError if the sighting ID is not Uuid
+ **/
+	public function setSightingId($newSightingId): void {
 		try {
-			$uuid = self::validateUuid($newSightingUserProfileId);
+			$uuid = self::validateUuid($newSightingId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-		$this->sightingUserProfileId = $uuid;
-	}
-
-/**
- * accessor method for the sighting species Id
- * @return Uuid sighting species Id
- **/
-	public function getSightingSpeciesId(): Uuid {
-		return $this->sightingSpeciesId;
+		//convert and store the sighting ID
+		$this->sightingId = $uuid;
 	}
 
 	/**
@@ -175,68 +186,62 @@ class sighting {
 		$this->sightingSpeciesId = $uuid;
 	}
 
-/**
- * accessor method for the common name
- * @return string of bird common name
- **/
-	public function getSightingComName(): string {
-		return $this->sightingComName;
-	}
-
-/**
- * mutator method for the common name
- *
- * @param string for $newSightingComName
- * @throws \InvalidArgumentException if not a string
- * @throws \RangeException if the common name is longer than 64 chars
- * @throws \TypeError if the common name is not a string
- **/
-	public function setSightingComName(string $newSightingComName) {
-		$newSightingComName = trim($newSightingComName);
-		$newSightingComName = filter_var($newSightingComName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-		if(empty($newSightingComName) === true) {
-			throw(new \InvalidArgumentException("Common Name is empty or insecure"));
+	/**
+	 *mutator method for sighting user profile ID
+	 *
+	 * @param Uuid| string $newSightingUserProfileId
+	 * @throws \RangeException if the $newSightingUserId is not positive
+	 * @throws \TypeError if the profile ID is not Uuid
+	 **/
+	public function setSightingUserProfileId(Uuid $newSightingUserProfileId): void {
+		try {
+			$uuid = self::validateUuid($newSightingUserProfileId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-			if(strlen($newSightingComName) > 64) {
-				throw(new \RangeException("Common Name is too long"));
-			}
-			$this->sightingComName = $newSightingComName;
-		}
-
-/** accessor for scientific name
- *
- * @return string for sighting sci name
- **/
-	public function getSightingSciName(): string {
-		return $this->sightingSciName;
-	}
-
-/** mutator method for scientific name
- *
- * @param string for $newSightingSciName
- * @throws \InvalidArgumentException if not a string
- * @throws \RangeException if the scientific name is longer than 64 chars
- * @throws \TypeError if the scientific name is not a string
- **/
-	public function setSightingSciName(string $newSightingSciName) {
-	$newSightingSciName = trim($newSightingSciName);
-	$newSightingSciName = filter_var($newSightingSciName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	if(empty($newSightingSciName) === true) {
-		throw(new \InvalidArgumentException("Scientific name is empty or insecure"));
-	}
-	if(strlen($newSightingSciName) > 64) {
-		throw(new \RangeException("Scientific name is too long"));
-	}
-	$this->sightingSciName = $newSightingSciName;
+		$this->sightingUserProfileId = $uuid;
 	}
 
 /**
- * accessor for sighting LocX
+ * mutator method for the bird photo url
  *
- * @return float for sightingLocX
+ * @param string $birdPhoto new value of bird photo url
+ * @throws \InvalidArgumentException if the url is not a string or is insecure
+ * @throws \RangeException if the url is > 255 characters
+ * @throws \TypeError if the url is not a string
  **/
-	public function getSightingLocX(): float {
-		return $this->sightingLocX;
+	public function setSightingBirdPhoto(string $sightingBirdPhoto): void {
+		$newSightingBirdPhoto = trim($newSightingBirdPhoto);
+		$newSightingBirdPhoto = filter_var($newSightingBirdPhoto, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(strlen($newSightingBirdPhoto) > 255) {
+			throw(new \RangeException("image content is too large"));
+		}
+		$this->sightingBirdPhoto = $newSightingBirdPhoto;
+	}
+
+/**
+ * mutator method for sighting datetime
+ *
+ * @param \DateTime|string|null $newSightingDateTime Sighting as a DateTime object or string (or null to load the current time)
+ * @throws \InvalidArgumentException if $newDateTime is not a valid object or string
+ * @throws \RangeException if $newSightingDateTime is a date that does not exist
+ * @throws \Exception find out why i would throw this exception
+ *
+ */
+	public function setSightingDateTime(\DateTime $newSightingDateTime): void {
+		if($newSightingDateTime === null) {
+			$this->sightingDateTime = new \DateTime();
+			return;
+		}
+
+		try {
+			$newSightingDateTime = self::validateDateTime($newSightingDateTime);
+		} catch(\InvalidArgumentException | \RangeException | \Exception $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+		$this->sightingDateTime = $newSightingDateTime;
 	}
 
 /**
@@ -260,15 +265,6 @@ class sighting {
 	}
 
 /**
- * accessor for sighting LocY
- *
- * @return float for sightingLocY
- **/
-	public function getSightingLocY(): float {
-		return $this->sightingLocY;
-	}
-
-/**
  * mutator method for sighting LocY
  *
  * @param float $sightingLocY
@@ -289,63 +285,6 @@ class sighting {
 	}
 
 /**
- * accessor for sighting dateTime
- *
- * @return \DateTime value for sighting date time
- **/
-	public function getSightingDateTime(): \DateTime {
-		return $this->sightingDateTime;
-	}
-
-/**
- * mutator method for sighting datetime
- *
- * @param \DateTime|string|null $newSightingDateTime Sighting as a DateTime object or string (or null to load the current time)
- * @throws \InvalidArgumentException if $newDateTime is not a valid object or string
- * @throws \RangeException if $newSightingDateTime is a date that does not exist
- * @throws \Exception find out why i would throw this exception
- *
- */
-	public function setSightingDateTime(\DateTime $newSightingDateTime): void {
-		if($newSightingDateTime === null) {
-			$this->sightingDateTime = new \DateTime();
-			return;
-		}
-
-		try {
-				$newSightingDateTime = self::validateDateTime($newSightingDateTime);
-		} catch(\InvalidArgumentException | \RangeException | \Exception $exception) {
-			$exceptionType = get_class($exception);
-			throw(new $exceptionType($exception->getMessage(), 0, $exception));
-		}
-		$this->sightingDateTime = $newSightingDateTime;
-	}
-
-/**
- * accessor for sighting birdPhoto
- *
- * @return string value of the bird photo url
- **/
-	public function getSightingBirdPhoto(): string {
-		return $this->sightingBirdPhoto;
-	}
-/**
- * mutator method for the bird photo url
- *
- * @param string $birdPhoto new value of bird photo url
- * @throws \InvalidArgumentException if the url is not a string or is insecure
- * @throws \RangeException if the url is > 255 characters
- * @throws \TypeError if the url is not a string
- **/
-	public function setSightingBirdPhoto(string $sightingBirdPhoto): void {
-		$newSightingBirdPhoto = trim($newSightingBirdPhoto);
-		$newSightingBirdPhoto = filter_var($newSightingBirdPhoto, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-		if(strlen($newSightingBirdPhoto) > 255) {
-				throw(new \RangeException("image content is too large"));
-		}
-		$this->sightingBirdPhoto = $newSightingBirdPhoto;
-	}
-/**
  * inserts this sighting into mySQL
  *
  * @param \PDO $pdo PDO connection object
@@ -355,12 +294,12 @@ class sighting {
 	public function insert(\PDO $pdo) : void {
 
 		// create query template
-		$query = "INSERT INTO sighting(sightingId,sightingUserProfileId, sightingSpeciesId, sightingComName, sightingSciName, sightingLocX, sightingLocY, sightingDateTime, sightingBirdPhoto) VALUES(:sightingId, :sightingUserProfileId, :sightingSpeciesId, :sightingComName, :sightingSciName, :sightingLocX, :sightingLocY, :sightingDateTime, :sightingBirdPhoto)";
+		$query = "INSERT INTO sighting(sightingId,sightingSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY) VALUES(:sightingId, :sightingSpeciesId, :sightingUserProfileId, :sightingBirdPhoto, :sightingDateTime, :sightingLocX, :sightingLocY)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
 		$formattedDate = $this->sightingDateTime->format("Y-m-d H:i:s.u");
-		$parameters = ["sightingId" => $this->sightingId->getBytes(), "sightingUserProfileId" => $this->sightingUserProfileId->getBytes(), "sightingSpeciesId" => $this->sightingSpeciesId->getBytes(), "sightingComName" => $this->sightingComName, "sightingSciName" => $this->sightingSciName, "sightingLocX" => $this->sightingLocX, "sightingLocY" => $this->sightingLocY, "sightingDateTime" => $formattedDate, "sightingBirdPhoto" => $this->sightingBirdPhoto];
+		$parameters = ["sightingId" => $this->sightingId->getBytes(), "sightingSpeciesId" => $this->sightingSpeciesId->getBytes(),"sightingUserProfileId" => $this->sightingUserProfileId->getBytes(), "sightingBirdPhoto" => $this->sightingBirdPhoto, "sightingDateTime" => $formattedDate, "sightingLocX" => $this->sightingLocX, "sightingLocY" => $this->sightingLocY];
 		$statement->execute($parameters);
 	}
 
@@ -378,11 +317,9 @@ class sighting {
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holder in the template
-		//TODO delete the extra parameters
-		$parameters = ["sightingId" => $this->sightingId->getBytes(), "sightingUserProfileId" => $this->sightingUserProfileId->getBytes(), "sightingSpeciesId" => $this->sightingSpeciesId->getBytes(), "sightingComName" => $this->sightingComName, "sightingSciName" => $this->sightingSciName, "sightingLocX" => $this->sightingLocX, "sightingLocY" => $this->sightingLocY, "sightingDateTime" => $this->sightingDateTime, "sightingBirdPhoto" => $this->sightingBirdPhoto];
+		$parameters = ["sightingId" => $this->sightingId->getBytes()];
 		$statement->execute($parameters);
 	}
-
 
 	// this is the jsonserialize part of the class (check the example)
 	public function jsonSerialize() : array {
@@ -390,15 +327,12 @@ class sighting {
 
 		$fields["sightingId"] = $this->sightingId->toString();
 		$fields["sightingUserProfileId"] = $this->sightingUserProfileId->toString();
-		//TODO cast the third string
-
-
+		$fields["sightingSpeciesId"] = $this->sightingSpeciesId->toString();
 
 		//format the date so that the front end can consume it
 		$fields["sightingDateTime"] = round(floatval($this->sightingDateTime->format("U.u")) * 1000);
 		echo get_class($fields);
 		return($fields);
-
 	}
-}
+} //class closing bracket
 
