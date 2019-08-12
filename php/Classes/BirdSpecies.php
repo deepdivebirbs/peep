@@ -197,7 +197,9 @@ class BirdSpecies {
 	}
 
 	/**
-	 * @param $speciesPhoto
+	 * Sets the value of $speciesPhoto.
+	 *
+	 * @param  $speciesPhoto $ holds the URL of a photo as a string.
 	 * @throws \InvalidArgumentException if $speciesPhoto is NULL.
 	 * @throws \RangeException if $speciesPhoto is empty.
 	 * @throws \TypeError if $speciesPhoto is NOT a string.
@@ -224,8 +226,6 @@ class BirdSpecies {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-
-
 		$this->speciesPhoto = $speciesPhoto;
 	}
 
@@ -267,12 +267,45 @@ class BirdSpecies {
 		return $bird->speciesId;
 	}
 
+	/**
+	 * Gets all birds in species table and returns them in a \SplitFixedArray.
+	 *
+	 * @param \PDO $pdo
+	 * @return \SplFixedArray
+	 */
+	public function getAllBirds(\PDO $pdo): \SplFixedArray {
+		// Create mySQL query
+		$query = "SELECT speciesId, speciesCode, speciesComName, speciesSciName, speciesPhoto FROM peep";
+
+		// Prepare mySQL query
+		$statement = $pdo->prepare($query);
+
+		// Create array of birds
+		$birds = new \SplFixedArray();
+
+		// Set PDO fetch mode to FETCH_ASSOC.
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+
+		// Loop through the table until there are no more birds to fetch.
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$bird = new BirdSpecies($row["speciesId"], $row["speciesCode"], $row["speciesComName"], $row["speciesSciName"], $row["speciesPhoto"]);
+				$birds[$birds->key()] = $bird;
+				$birds->next();
+			} catch(\Exception $exception) {
+				$exceptionType = get_class($exception);
+				throw(new $exceptionType($exception->getMessage(), 0, $exception));
+			}
+		}
+		return $birds;
+	}
+
 	//Insert, delete, and update functions.
 
 	/**
 	 * Inserts data into the mySQL table.
 	 *
-	 * @param \PDO $pdo
+	 * @param \PDO $pdo PHP Data Object
 	 * @returns void
 	 */
 	public function insert(\PDO $pdo): void {
