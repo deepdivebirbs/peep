@@ -10,7 +10,6 @@ namespace Birbs\Peep;
 require_once "autoload.php";
 require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 
-use http\Exception\BadQueryStringException;
 use Ramsey\Uuid\Uuid;
 
 class Favorite implements \JsonSerializable {
@@ -151,7 +150,7 @@ class Favorite implements \JsonSerializable {
 			throw (new \PDOException($exception->getMessage(),0, $exception));
 		}
 		//create query template
-		$query = "SELECT favoriteSpeciesId, favoriteUserProfileId FROM favorite WHERE favoriteUserProfileId =:favoriteUserProfileId";
+		$query = "SELECT favoriteSpeciesId, favoriteUserProfileId FROM favorite WHERE favoriteUserProfileId = :favoriteUserProfileId";
 		$statement = $pdo->prepare($query);
 
 		// bind the favoriteUserProfileId to the place holder in the template
