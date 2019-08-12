@@ -2,8 +2,6 @@
 
 namespace Birbs\Peep;
 
-// TODO Work on documentation!
-
 // Require our external local classes
 require_once("autoload.php");
 require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
@@ -269,7 +267,7 @@ class BirdSpecies {
 		return $bird->speciesId;
 	}
 
-	//Insert and Delete functions.
+	//Insert, delete, and update functions.
 
 	/**
 	 * Inserts data into the mySQL table.
@@ -301,6 +299,26 @@ class BirdSpecies {
 
 		// Set values
 		$values = ["speciesId" => $this->speciesId];
+
+		// Execute statement
+		$statement->execute($values);
+	}
+
+	/**
+	 * Updates the values stored in the database.
+	 *
+	 * @param \PDO $pdo
+	 * @returns void
+	 */
+	public function update(\PDO $pdo): void {
+		// Create mySQL query
+		$query = "UPDATE peep SET speciesId = :speciesId, speciesCode = :speciesCode, speciesComName = :speciesComName, speciesSciName = :speciesSciName, speciesPhoto = :speciesPhoto";
+
+		// Prepare mySQL query
+		$statement = $pdo->prepare($query);
+
+		// Set values
+		$values = ["speciesId" => $this->speciesId->getBytes(), "speciesCode" => $this->speciesCode, "speciesComName" => $this->speciesComName, "speciesSciName" => $this->speciesSciName, "speciesPhoto" => $this->speciesPhoto];
 
 		// Execute statement
 		$statement->execute($values);
