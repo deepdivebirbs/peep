@@ -1,5 +1,4 @@
 <?php
-
 namespace Birbs\Peep;
 
 // Require our external local classes
@@ -367,5 +366,4 @@ class BirdSpecies {
 		return $fields;
 	}
 }
-
 ?>
