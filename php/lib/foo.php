@@ -1,7 +1,7 @@
 <?php
 namespace Birbs\Peep;
 
-require_once (dirname(__DIR__, 1) . "/Classes/sighting.php");
+require_once (dirname(__DIR__, 1) . "/Classes/Sighting.php");
 
 /**
  * @var sighting $foo instantiation test

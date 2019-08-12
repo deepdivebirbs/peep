@@ -154,7 +154,7 @@ class Sighting implements \jsonSerializable {
 
 /**
  * mutator method for sighting ID
- * @param Uuid $sightingId value of sighting ID
+ * @param Uuid $newSightingId value of sighting ID
  * @throws \RangeException if $sightingId is no positive
  * @throws \TypeError if the sighting ID is not Uuid
  **/
@@ -206,14 +206,14 @@ class Sighting implements \jsonSerializable {
 /**
  * mutator method for the bird photo url
  *
- * @param string $birdPhoto new value of bird photo url
+ * @param string $newSightingBirdPhoto new value of bird photo url
  * @throws \InvalidArgumentException if the url is not a string or is insecure
  * @throws \RangeException if the url is > 255 characters
  * @throws \TypeError if the url is not a string
  **/
-	public function setSightingBirdPhoto(string $sightingBirdPhoto): void {
+	public function setSightingBirdPhoto(string $newSightingBirdPhoto): void {
 		$newSightingBirdPhoto = trim($newSightingBirdPhoto);
-		$newSightingBirdPhoto = filter_var($newSightingBirdPhoto, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		$newSightingBirdPhoto = filter_var($newSightingBirdPhoto, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES, FILTER_SANITIZE_URL, FILTER_VALIDATE_URL);
 		if(strlen($newSightingBirdPhoto) > 255) {
 			throw(new \RangeException("image content is too large"));
 		}
@@ -321,7 +321,7 @@ class Sighting implements \jsonSerializable {
 		$statement->execute($parameters);
 	}
 
-	// this is the jsonserialize part of the class (check the example)
+	// this is the jsonSerialize part of the class (check the example)
 	public function jsonSerialize() : array {
 		$fields = get_object_vars($this);
 
