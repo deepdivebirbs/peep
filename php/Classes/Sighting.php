@@ -272,13 +272,13 @@ class Sighting implements \jsonSerializable {
  * @throws \RangeException if not to the thousandths decimal place
  * @throws \TypeError if sightingLocY is not a float
  **/
-	public function setSightingLocY(float $sightingLocY) {
+	public function setSightingLocY(float $newSightingLocY) {
 		//check if it's a float
-		if(empty($sightingLocY) === true) {
+		if(empty($newSightingLocY) === true) {
 			throw(new \InvalidArgumentException("Location data is empty"));
 		}
 //waiting for if statement to check the thousandths decimal place to throw range exception
-		if(is_float($sightingLocY) !== true) {
+		if(is_float($newSightingLocY) !== true) {
 			throw(new \TypeError("location data is not valid"));
 		}
 		$this->sightingLocY = $newSightingLocY;
