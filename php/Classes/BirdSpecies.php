@@ -5,7 +5,6 @@ namespace Birbs\Peep;
 require_once("autoload.php");
 require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 
-use mysql_xdevapi\Exception;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -52,8 +51,8 @@ class BirdSpecies {
 			// Call all of the setters and create the object.
 			$this->setSpeciesId($speciesId);
 			$this->setSpeciesCode($speciesCode);
-			$this->setspeciesComName($speciesComName);
-			$this->setspeciesSciName($speciesSciName);
+			$this->setSpeciesComName($speciesComName);
+			$this->setSpeciesSciName($speciesSciName);
 			$this->setSpeciesPhotoUrl($speciesPhoto);
 
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -72,7 +71,7 @@ class BirdSpecies {
 	 * @return Uuid
 	 */
 	public function getSpeciesId(): Uuid {
-		return $this->speciesCode;
+		return $this->speciesId;
 	}
 
 	/**
@@ -312,7 +311,7 @@ class BirdSpecies {
 		$query = "INSERT INTO birdSpecies(speciesCode, commonName, speciesSciName, birdPhoto) VALUES(:speciesCode, :speciesComName, :speciesSciName, :birdPhoto)";
 		$statement = $pdo->prepare($query);
 
-		$params = ["speciesCode" => $this->speciesCode, "commonName" => $this->speciesComName, "speciesSciName" => $this->speciesSciName, "speciesLocX" => $this->speciesLocX, "speciesLocY" => $this->speciesLocY];
+		$params = ["speciesId" => $this->speciesId, "speciesCode" => $this->speciesCode, "commonName" => $this->speciesComName, "speciesSciName" => $this->speciesSciName, "speciesPhoto" => $this->speciesPhoto];
 		$statement->execute($params);
 	}
 
@@ -351,6 +350,7 @@ class BirdSpecies {
 
 		// Set values
 		$values = ["speciesId" => $this->speciesId->getBytes(), "speciesCode" => $this->speciesCode, "speciesComName" => $this->speciesComName, "speciesSciName" => $this->speciesSciName, "speciesPhoto" => $this->speciesPhoto];
+		//echo(gettype($this->speciesId));
 
 		// Execute statement
 		$statement->execute($values);

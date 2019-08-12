@@ -14,7 +14,7 @@ use Ramsey\Uuid\Uuid;
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
  * @package Edu\Cnm\Misquote
  **/
-trait ValidateUuid {
+trait  ValidateUuid {
 	/**
 	 * validates a uuid irrespective of format
 	 *
