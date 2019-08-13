@@ -52,7 +52,6 @@ use TestCaseTrait;
 		$dataset->addTable("species");
 		// the second parameter is required because like is also a SQL keyword and is the only way PHPUnit can query the like table
 		$dataset->addTable("sighting");
-
 		$dataset->addTable("favorite");
 		return ($dataset);
 	}
