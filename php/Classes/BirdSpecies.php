@@ -17,7 +17,6 @@ class BirdSpecies {
 	use ValidateDate;
 
 	//Define variables
-	// private $speciesId;
 
 	// speciesId is the main identifier for a bird species on the site.
 	public $speciesId;
@@ -79,7 +78,7 @@ class BirdSpecies {
 	 *
 	 * @return string
 	 */
-	public function getSpeciesCode() : string {
+	public function getSpeciesCode(): string {
 		return $this->speciesCode;
 	}
 
@@ -88,7 +87,7 @@ class BirdSpecies {
 	 *
 	 * @return string
 	 */
-	public function getSpeciesComName() : string {
+	public function getSpeciesComName(): string {
 		return $this->speciesComName;
 	}
 
@@ -97,7 +96,7 @@ class BirdSpecies {
 	 *
 	 * @return string
 	 */
-	public function getSpeciesSciName() : string {
+	public function getSpeciesSciName(): string {
 		return $this->speciesSciName;
 	}
 
@@ -106,7 +105,7 @@ class BirdSpecies {
 	 *
 	 * @return string
 	 */
-	public function getSpeciesPhoto() : string {
+	public function getSpeciesPhoto(): string {
 		return $this->speciesPhoto;
 	}
 
@@ -124,7 +123,7 @@ class BirdSpecies {
 	 * @throws \Exception if any other exception is called.
 	 * @throws \InvalidArgumentException if $speciesId isn't a UUID or not formatted correctly.
 	 */
-	public function setSpeciesId($speciesId) : void {
+	public function setSpeciesId($speciesId): void {
 		try {
 			$uuid = self::validateUuid($speciesId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -181,29 +180,29 @@ class BirdSpecies {
 	 * @throws \InvalidArgumentException if $speciesSciName is NULL
 	 * @throws \TypeError if $speciesSciName isn't a string
 	 */
-	public function setSpeciesSciName($speciesSciName): void {
+	public function setSpeciesSciName($newSpeciesSciName): void {
 		// Check if $speciesSciName is NULL.
-		if(is_null($speciesSciName)) {
+		if(is_null($newSpeciesSciName)) {
 			throw(new \InvalidArgumentException('speciesSciName cannot be null.'));
 		}
 
 		// Check if $speciesSciName is a string.
-		if(gettype($speciesSciName) !== 'string') {
+		if(gettype($newSpeciesSciName) !== 'string') {
 			throw(new \TypeError('speciesSciName must be a string.'));
 		}
-		$this->speciesSciName = $speciesSciName;
+		$this->speciesSciName = $newSpeciesSciName;
 	}
 
 	/**
 	 * Sets the value of $speciesPhoto.
 	 *
 	 * @param  $speciesPhoto $ holds the URL of a photo as a string.
-	 * @throws \InvalidArgumentException if $speciesPhoto is NULL.
+	 * @return void
 	 * @throws \RangeException if $speciesPhoto is empty.
 	 * @throws \TypeError if $speciesPhoto is NOT a string.
-	 * @return void
+	 * @throws \InvalidArgumentException if $speciesPhoto is NULL.
 	 */
-	public function setSpeciesPhotoUrl($speciesPhoto) : void {
+	public function setSpeciesPhotoUrl($speciesPhoto): void {
 
 		if(is_null($speciesPhoto)) {
 			throw(new \InvalidArgumentException('$speciesPhoto must not be NULL.'));
@@ -232,11 +231,11 @@ class BirdSpecies {
 	 *
 	 * @param $speciesId
 	 * @param $pdo
-	 * @throws \InvalidArgumentException if $speciesCode is NULL.
+	 * @return \Ramsey\Uuid\
 	 * @throws \PDOException if something is wrong with the PDO object.
 	 * @throws \Exception if any other exception happens.
 	 * @throws \RangeException if $speciesCode is > or < 6 characters.
-	 * @return \Ramsey\Uuid\
+	 * @throws \InvalidArgumentException if $speciesCode is NULL.
 	 */
 	public function getBirdBySpeciesId(\PDO $pdo, string $speciesId): Uuid {
 		if(empty($speciesId)) {
@@ -248,7 +247,7 @@ class BirdSpecies {
 		}
 
 		// Create an SQL query to send for the speciesCodes.
-		$query = "SELECT speciesCode, speciesComName, speciesSciName FROM peep WHERE speciesId = :speciesId";
+		$query = "SELECT speciesCode, speciesComName, speciesSciName FROM species WHERE speciesId = :speciesId";
 		$statement = $pdo->prepare($query);
 
 		$birds = new \SplFixedArray($statement->rowCount());
@@ -273,7 +272,7 @@ class BirdSpecies {
 	 */
 	public function getAllBirds(\PDO $pdo): \SplFixedArray {
 		// Create mySQL query
-		$query = "SELECT speciesId, speciesCode, speciesComName, speciesSciName, speciesPhoto FROM peep";
+		$query = "SELECT speciesId, speciesCode, speciesComName, speciesSciName, speciesPhoto FROM species";
 
 		// Prepare mySQL query
 		$statement = $pdo->prepare($query);
@@ -307,12 +306,20 @@ class BirdSpecies {
 	 * @returns void
 	 */
 	public function insert(\PDO $pdo): void {
-		// Define the insert query
-		$query = "INSERT INTO birdSpecies(speciesCode, commonName, speciesSciName, birdPhoto) VALUES(:speciesCode, :speciesComName, :speciesSciName, :birdPhoto)";
+		// Define create mySQL query
+		$query = "INSERT INTO species(speciesId, speciesCode, speciesComName, speciesSciName, speciesPhoto) VALUES(:speciesId, :speciesCode, :speciesComName, :speciesSciName, :speciesPhoto)";
+
+		// Prepare mySQL query
 		$statement = $pdo->prepare($query);
 
-		$params = ["speciesId" => $this->speciesId, "speciesCode" => $this->speciesCode, "commonName" => $this->speciesComName, "speciesSciName" => $this->speciesSciName, "speciesPhoto" => $this->speciesPhoto];
-		$statement->execute($params);
+		// Set values
+		$values = ["speciesId" => $this->speciesId, "speciesCode" => $this->speciesCode, "speciesComName" => $this->speciesComName, "speciesSciName" => $this->speciesSciName, "speciesPhoto" => $this->speciesPhoto];
+
+		// Bind values?
+
+
+		// Execute statement
+		$statement->execute($values);
 	}
 
 	/**
@@ -323,7 +330,7 @@ class BirdSpecies {
 	 */
 	public function delete(\PDO $pdo): void {
 		// Create mySQL query
-		$query = "DELETE FROM peep WHERE speciesId = :speciesId";
+		$query = "DELETE FROM species WHERE speciesId = :speciesId";
 
 		// Prepare mySQL query
 		$statement = $pdo->prepare($query);
@@ -343,14 +350,13 @@ class BirdSpecies {
 	 */
 	public function update(\PDO $pdo): void {
 		// Create mySQL query
-		$query = "UPDATE peep SET speciesId = :speciesId, speciesCode = :speciesCode, speciesComName = :speciesComName, speciesSciName = :speciesSciName, speciesPhoto = :speciesPhoto";
+		$query = "UPDATE species SET speciesId = :speciesId, speciesCode = :speciesCode, speciesComName = :speciesComName, speciesSciName = :speciesSciName, speciesPhoto = :speciesPhoto";
 
 		// Prepare mySQL query
 		$statement = $pdo->prepare($query);
 
 		// Set values
 		$values = ["speciesId" => $this->speciesId->getBytes(), "speciesCode" => $this->speciesCode, "speciesComName" => $this->speciesComName, "speciesSciName" => $this->speciesSciName, "speciesPhoto" => $this->speciesPhoto];
-		//echo(gettype($this->speciesId));
 
 		// Execute statement
 		$statement->execute($values);
@@ -366,4 +372,3 @@ class BirdSpecies {
 		return $fields;
 	}
 }
-?>
