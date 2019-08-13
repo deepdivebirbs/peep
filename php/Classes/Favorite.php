@@ -113,7 +113,9 @@ class Favorite implements \JsonSerializable {
 
 		//binds member variables to the placeholders in the template. getbytes converts string into bytes
 		$parameters = ["favoriteSpeciesId" => $this->favoriteSpeciesId->getBytes(),
-			"favoriteUserProfileId" => $this->favoriteUserProfileId->getBytes()];
+			"favoriteUserProfileId" => $this->favoriteUserProfileId->getBytes()]
+
+		;
 		$statement->execute($parameters);
 	}
 
@@ -127,7 +129,7 @@ class Favorite implements \JsonSerializable {
 	public function delete(\PDO $pdo): void {
 
 		//create query template
-		$query = "DELETE FROM favorite WHERE favoriteUserProfileId = :favoriteUserProfileId and = favoriteSpeciesId = :favoriteSpeciesId";
+		$query = "DELETE FROM favorite WHERE favoriteUserProfileId = :favoriteUserProfileId AND favoriteSpeciesId = :favoriteSpeciesId";
 		$statement = $pdo->prepare($query);
 
 		//binds the member variables to the placeholder in the template
@@ -163,8 +165,10 @@ class Favorite implements \JsonSerializable {
 		while(($row = $statement->fetch()) !== false) {
 			try {
 				$favorite = new Favorite($row ["favoriteSpeciesId"], $row["favoriteUserProfileId"]);
-				$favorites[$favorite->key()]= $favorite;
+				$favorites[$favorites->key()] = $favorite;
 				$favorites->next();
+
+				echo gettype ($favorites);
 			} catch(\Exception $exception) {
 				//if row couldn't be converted, rethrow it
 				throw (new \PDOException($exception->getMessage(), 0, $exception));
