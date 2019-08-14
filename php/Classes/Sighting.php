@@ -355,6 +355,15 @@ try {
 	}
 }
 
+/**get an array of all sightings by user profile
+ *
+ *
+ *
+ *
+ **/
+
+public static function getSightingsBySightingUserProfileId
+
 	// this is the jsonSerialize part of the class (check the example)
 	public function jsonSerialize() : array {
 		$fields = get_object_vars($this);
