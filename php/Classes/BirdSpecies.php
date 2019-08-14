@@ -106,7 +106,7 @@ class BirdSpecies {
 	 * @return string
 	 */
 	public function getSpeciesPhoto(): string {
-		return $this->speciesPhoto;
+		return $this->speciesPhotoUrl;
 	}
 
 	/**
@@ -196,34 +196,34 @@ class BirdSpecies {
 	/**
 	 * Sets the value of $speciesPhoto.
 	 *
-	 * @param  $speciesPhoto $ holds the URL of a photo as a string.
+	 * @param  $speciesPhotoUrl $ holds the URL of a photo as a string.
 	 * @return void
 	 * @throws \RangeException if $speciesPhoto is empty.
 	 * @throws \TypeError if $speciesPhoto is NOT a string.
 	 * @throws \InvalidArgumentException if $speciesPhoto is NULL.
 	 */
-	public function setSpeciesPhotoUrl($speciesPhoto): void {
+	public function setSpeciesPhotoUrl($speciesPhotoUrl): void {
 
-		if(is_null($speciesPhoto)) {
-			throw(new \InvalidArgumentException('$speciesPhoto must not be NULL.'));
+		if(is_null($speciesPhotoUrl)) {
+			throw(new \InvalidArgumentException('$speciesPhotoUrl must not be NULL.'));
 		}
 
-		if(empty($speciesPhoto)) {
-			throw(new \RangeException('$speciesPhoto must not be empty.'));
+		if(empty($speciesPhotoUrl)) {
+			throw(new \RangeException('$speciesPhotoUrl must not be empty.'));
 		}
 
-		if(gettype($speciesPhoto) !== 'string') {
+		if(gettype($speciesPhotoUrl) !== 'string') {
 			throw(new \TypeError('$speciesPhoto must be a string.'));
 		}
 
 		// Check if a valid URL is given.
 		try {
-			$speciesPhoto = filter_var($speciesPhoto, FILTER_VALIDATE_URL);
+			$speciesPhoto = filter_var($speciesPhotoUrl, FILTER_VALIDATE_URL);
 		} catch(\InvalidArgumentException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-		$this->speciesPhoto = $speciesPhoto;
+		$this->speciesPhotoUrl = $speciesPhotoUrl;
 	}
 
 	/**
