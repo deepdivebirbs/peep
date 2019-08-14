@@ -105,7 +105,7 @@ class BirdSpecies {
 	 *
 	 * @return string
 	 */
-	public function getSpeciesPhoto(): string {
+	public function getSpeciesPhotoUrl(): string {
 		return $this->speciesPhotoUrl;
 	}
 
@@ -231,19 +231,22 @@ class BirdSpecies {
 	 *
 	 * @param $speciesId
 	 * @param $pdo
-	 * @return \Ramsey\Uuid\
 	 * @throws \PDOException if something is wrong with the PDO object.
 	 * @throws \Exception if any other exception happens.
 	 * @throws \RangeException if $speciesCode is > or < 6 characters.
 	 * @throws \InvalidArgumentException if $speciesCode is NULL.
+	 * @return Uuid
 	 */
 	public function getBirdBySpeciesId(\PDO $pdo, string $speciesId): Uuid {
 		if(empty($speciesId)) {
 			throw(new \InvalidArgumentException("speciesCode must not be empty."));
 		}
 
-		if(strlen($speciesId) < 6 ?? strlen($speciesId) > 6) {
-			throw(new \RangeException("speciesCode must be no more or less than 6 characters."));
+		try {
+			$speciesId = self::validateUuid($speciesId);
+		} catch(\PDOException | \RangeException | \InvalidArgumentException | \Exception $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 
 		// Create an SQL query to send for the speciesCodes.
