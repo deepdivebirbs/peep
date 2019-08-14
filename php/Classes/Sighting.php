@@ -73,7 +73,7 @@ class Sighting implements \jsonSerializable {
  * @throws \Exception if some other exception occurs
  * @Documentation https://php.net/manual/en/language.oop5.decon.php
  **/
-	public function __construct($newSightingId, $newSightingUserProfileId, $newSightingSpeciesId, string $newSightingComName, string $newSightingSciName, float $newSightingLocX, float $newSightingLocY, \DateTime $newSightingDateTime, string $newSightingBirdPhoto) {
+	public function __construct($newSightingId, $newSightingUserProfileId, $newSightingSpeciesId, float $newSightingLocX, float $newSightingLocY, \DateTime $newSightingDateTime, string $newSightingBirdPhoto) {
 		try {
 			$this->setSightingId($newSightingId);
 			$this->setSightingSpeciesId($newSightingSpeciesId);
@@ -213,9 +213,9 @@ class Sighting implements \jsonSerializable {
  **/
 	public function setSightingBirdPhoto(string $newSightingBirdPhoto): void {
 		$newSightingBirdPhoto = trim($newSightingBirdPhoto);
-		$newSightingBirdPhoto = filter_var($newSightingBirdPhoto, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES, FILTER_SANITIZE_URL, FILTER_VALIDATE_URL);
+		$newSightingBirdPhoto = filter_var($newSightingBirdPhoto, FILTER_SANITIZE_URL, FILTER_VALIDATE_URL);
 		if(strlen($newSightingBirdPhoto) > 255) {
-			throw(new \RangeException("image content is too large"));
+			throw(new \RangeException("image link is insecure, is not a url, or is too long"));
 		}
 		$this->sightingBirdPhoto = $newSightingBirdPhoto;
 	}
@@ -257,7 +257,6 @@ class Sighting implements \jsonSerializable {
 		if(empty($newSightingLocX) === true) {
 			throw(new \InvalidArgumentException("Location data is empty"));
 		}
-		//waiting for if statement to check the thousandths decimal place to throw range exception
 		if(is_float($newSightingLocX) !== true) {
 			throw(new \TypeError("location data is not valid"));
 		}
@@ -277,7 +276,6 @@ class Sighting implements \jsonSerializable {
 		if(empty($newSightingLocY) === true) {
 			throw(new \InvalidArgumentException("Location data is empty"));
 		}
-//waiting for if statement to check the thousandths decimal place to throw range exception
 		if(is_float($newSightingLocY) !== true) {
 			throw(new \TypeError("location data is not valid"));
 		}
@@ -320,6 +318,42 @@ class Sighting implements \jsonSerializable {
 		$parameters = ["sightingId" => $this->sightingId->getBytes()];
 		$statement->execute($parameters);
 	}
+
+	//gets a single sighting by sightingId
+	/**
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $sighingIdto search for the sighting
+	 * @return sightingBySightingI|null sighting or null if sighting is not found
+	 * @throws \PDOException where there are MySQL-related errors found
+	 * @throws \TypeError when a variable is not found to be the right data type
+	 **/
+public static function getSightingBySightingId(\PDO $pdo, $sightingId) : ?Sighting {
+//sanitize the sighting before searching
+try {
+		$sightingId = self::validateUuid($sightingId);
+	} catch (\InvalidArgumentException | \RangeException | \TypeError | \Exception $exception) {
+	throw(new \PDOException($exception->getMessage(), 0, $exception));
+	}
+	//create the query template
+	$query = "SELECT sightingId, sightingSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY FROM sighting WHERE sightingId = :sightingId";
+	$statement =$pdo->prepare($query);
+	//bind the sightingId to the template placeholder
+	$parameters = ["sightingId" => $sightingId->getBytes()];
+	$statement->execute($parameters);
+	//grab the sighting from MySQL
+	try {
+		$sighting = null;
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		$row = $statement->fetch();
+		if($row !== false) {
+			$todo = new Sighting($row["sightingId"], $row["sightingSpeciesId"], $row["sightingUserProfileId"], $row["sightingBirdPhoto"], $row["sightingDateTime"], $row["sightingLocX"], $row["sightingLocY"]);
+		}
+	} catch(\Exception $exception) {
+	//if the row can't be converted,rethrow it
+		throw(new \PDOException($exception->getMessage(), 0, $exception));
+		return($sighting);
+	}
+}
 
 	// this is the jsonSerialize part of the class (check the example)
 	public function jsonSerialize() : array {
