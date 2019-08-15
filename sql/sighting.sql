@@ -1,3 +1,5 @@
+ALTER DATABASE peep CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
 DROP TABLE IF EXISTS sighting;
 
 create table sighting (
@@ -8,7 +10,6 @@ create table sighting (
 	sightingDateTime DATETIME (6) NOT NULL,
 	sightingLocX FLOAT (6, 3) NOT NULL,
 	sightingLocY FLOAT (6, 3) NOT NULL,
-
 
 	unique(sightingId),
 	primary key(sightingId),

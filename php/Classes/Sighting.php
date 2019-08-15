@@ -323,7 +323,7 @@ class Sighting implements \jsonSerializable {
 	/**
 	 * @param \PDO $pdo PDO connection object
 	 * @param Uuid|string $sighingIdto search for the sighting
-	 * @return sightingBySightingI|null sighting or null if sighting is not found
+	 * @return sightingBySightingId|null sighting or null if sighting is not found
 	 * @throws \PDOException where there are MySQL-related errors found
 	 * @throws \TypeError when a variable is not found to be the right data type
 	 **/
@@ -334,12 +334,14 @@ try {
 	} catch (\InvalidArgumentException | \RangeException | \TypeError | \Exception $exception) {
 	throw(new \PDOException($exception->getMessage(), 0, $exception));
 	}
+
 	//create the query template
 	$query = "SELECT sightingId, sightingSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY FROM sighting WHERE sightingId = :sightingId";
 	$statement =$pdo->prepare($query);
 	//bind the sightingId to the template placeholder
 	$parameters = ["sightingId" => $sightingId->getBytes()];
 	$statement->execute($parameters);
+
 	//grab the sighting from MySQL
 	try {
 		$sighting = null;
@@ -349,20 +351,42 @@ try {
 			$todo = new Sighting($row["sightingId"], $row["sightingSpeciesId"], $row["sightingUserProfileId"], $row["sightingBirdPhoto"], $row["sightingDateTime"], $row["sightingLocX"], $row["sightingLocY"]);
 		}
 	} catch(\Exception $exception) {
+
 	//if the row can't be converted,rethrow it
 		throw(new \PDOException($exception->getMessage(), 0, $exception));
-		return($sighting);
 	}
+		return($sighting);
 }
 
 /**get an array of all sightings by user profile
  *
- *
- *
- *
+ * @param \PDO $pdo PDO connection object
+ * @return \SplFixedArray SplFixedArray of sightings found or null if not found
+ * @throws \PDOException when MySQL errors occur
+ * @throws \TypeError when the variables are not the correct data type
  **/
 
-public static function getSightingsBySightingUserProfileId
+public static function getSightingsBySightingUserProfileId(\PDO $pdo) :\SplFixedArray {
+//create the query template
+	$query = "SELECT sightingId, sightingSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY";
+	$statement = $pdo->prepare($query);
+	$statement->execute();
+
+//build an array of sightings
+	$sightings = new \SplFixedArray($statement->rowCount());
+	$statement->setFetchMode(\PDO::FETCH_ASSOC);
+	while(($row = $statement->fetch()) !== false) {
+		try {
+			$sighting = new Sighting($row["sightingId"], $row["sightingSpeciesId"], $row["sightingUserProfileId"], $row["sightingBirdPhoto"], $row["sightingDateTime"], $row["sightingLocX"], $row["sightingLocY"]);
+			$sightings[$sightings->key()] = $sighting;
+			$sightings->next();
+		} catch(\Exception $exception) {
+//if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+	}
+	return($sightings);
+}
 
 	// this is the jsonSerialize part of the class (check the example)
 	public function jsonSerialize() : array {
