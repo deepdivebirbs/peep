@@ -18,7 +18,7 @@ create table userProfile(
 	unique (userProfileName)
 );
 
-CREATE TABLE species(
+CREATE TABLE birdSpecies(
 	speciesId BINARY(16) NOT NULL,
 	speciesCode VARCHAR(6) NOT NULL,
 	speciesComName VARCHAR(64) NULL,

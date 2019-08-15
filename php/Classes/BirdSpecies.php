@@ -1,4 +1,5 @@
 <?php
+
 namespace Birbs\Peep;
 
 // Require our external local classes
@@ -227,17 +228,17 @@ class BirdSpecies {
 	}
 
 	/**
-	 * Gets a bird by the bird's
+	 * Gets a bird by the bird's species id
 	 *
 	 * @param $speciesId
 	 * @param $pdo
-	 * @throws \PDOException if something is wrong with the PDO object.
+	 * @return Uuid
 	 * @throws \Exception if any other exception happens.
 	 * @throws \RangeException if $speciesCode is > or < 6 characters.
 	 * @throws \InvalidArgumentException if $speciesCode is NULL.
-	 * @return Uuid
+	 * @throws \PDOException if something is wrong with the PDO object.
 	 */
-	public function getBirdBySpeciesId(\PDO $pdo, string $speciesId): Uuid {
+	public function getBirdBySpeciesId(\PDO $pdo, string $speciesId): ?BirdSpecies {
 		if(empty($speciesId)) {
 			throw(new \InvalidArgumentException("speciesCode must not be empty."));
 		}
@@ -253,7 +254,7 @@ class BirdSpecies {
 		$query = "SELECT speciesCode, speciesComName, speciesSciName FROM species WHERE speciesId = :speciesId";
 		$statement = $pdo->prepare($query);
 
-		$birds = new \SplFixedArray($statement->rowCount());
+		$bird = new \SplFixedArray($statement->rowCount());
 
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 
@@ -264,7 +265,7 @@ class BirdSpecies {
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
 		}
-		return $bird->speciesId;
+		return $this;
 	}
 
 	/**
