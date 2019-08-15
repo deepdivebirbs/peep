@@ -5,7 +5,7 @@
     "swiftmailer/swiftmailer": "@stable",
     "lcobucci/jwt": "3.2",
     "ramsey/uuid": "@stable",
-    "ext-json": "@stable",
+    "ext-json": " @stable",
     "ext-pdo": "@stable"
   },
   "scripts":{
