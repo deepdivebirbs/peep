@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS sighting;
 DROP TABLE IF EXISTS favorite;
 
 CREATE TABLE species(
-	speciesId BINARY(32) NOT NULL,
+	speciesId BINARY(16) NOT NULL,
 	speciesCode VARCHAR(6) NOT NULL,
 	speciesComName VARCHAR(64) NULL,
 	speciesSciName VARCHAR(64) NULL,
