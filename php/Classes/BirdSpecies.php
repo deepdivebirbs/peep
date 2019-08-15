@@ -316,7 +316,7 @@ class BirdSpecies {
 		$statement = $pdo->prepare($query);
 
 		// Set values
-		$values = ["speciesId" => $this->speciesId, "speciesCode" => $this->speciesCode, "speciesComName" => $this->speciesComName, "speciesSciName" => $this->speciesSciName, "speciesPhoto" => $this->speciesPhoto];
+		$values = ["speciesId" => $this->speciesId->getBytes(), "speciesCode" => $this->speciesCode, "speciesComName" => $this->speciesComName, "speciesSciName" => $this->speciesSciName, "speciesPhoto" => $this->speciesPhoto];
 
 		// Bind values?
 
