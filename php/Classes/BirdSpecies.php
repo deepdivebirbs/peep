@@ -31,8 +31,8 @@ class BirdSpecies {
 	// speciesSciName holds the value of the scientific latin name given to the bird.  Ex. Columbidae.
 	public $speciesSciName;
 
-	// speciesPhoto holds the URL that the bird pic is stored.
-	public $speciesPhoto;
+	// speciesPhotoUrl holds the URL that the bird pic is stored.
+	public $speciesPhotoUrl;
 
 	/**
 	 * BirdSpecies constructor.
@@ -40,20 +40,20 @@ class BirdSpecies {
 	 * @param $speciesCode the code given by the eBirds API to each sighting.
 	 * @param $speciesComName the common name given to a bird.
 	 * @param $speciesSciName the scientific name given to a bird.
-	 * @param $speciesPhoto the URL where the photo of the bird can be found.
+	 * @param $speciesPhotoUrl the URL where the photo of the bird can be found.
 	 * @throws \InvalidArgumentException if any arguments are invalid.
 	 * @throws \RangeException if any arguments are out of specified range.
 	 * @throws \Exception if any other Exception is caught.
 	 * @throws \TypeError if any argument given is of the wrong type.
 	 */
-	public function __construct($speciesId, $speciesCode, $speciesComName, $speciesSciName, $speciesPhoto) {
+	public function __construct($speciesId, $speciesCode, $speciesComName, $speciesSciName, $speciesPhotoUrl) {
 		try {
 			// Call all of the setters and create the object.
 			$this->setSpeciesId($speciesId);
 			$this->setSpeciesCode($speciesCode);
 			$this->setSpeciesComName($speciesComName);
 			$this->setSpeciesSciName($speciesSciName);
-			$this->setSpeciesPhotoUrl($speciesPhoto);
+			$this->setspeciesPhotoUrl($speciesPhotoUrl);
 
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
@@ -195,36 +195,36 @@ class BirdSpecies {
 	}
 
 	/**
-	 * Sets the value of $speciesPhoto.
+	 * Sets the value of $speciesPhotoUrl.
 	 *
-	 * @param  $speciesPhotoUrl $ holds the URL of a photo as a string.
+	 * @param  $speciesPhotoUrlUrl $ holds the URL of a photo as a string.
 	 * @return void
-	 * @throws \RangeException if $speciesPhoto is empty.
-	 * @throws \TypeError if $speciesPhoto is NOT a string.
-	 * @throws \InvalidArgumentException if $speciesPhoto is NULL.
+	 * @throws \RangeException if $speciesPhotoUrl is empty.
+	 * @throws \TypeError if $speciesPhotoUrl is NOT a string.
+	 * @throws \InvalidArgumentException if $speciesPhotoUrl is NULL.
 	 */
-	public function setSpeciesPhotoUrl($speciesPhotoUrl): void {
+	public function setSpeciesPhotoUrl($speciesPhotoUrlUrl): void {
 
-		if(is_null($speciesPhotoUrl)) {
-			throw(new \InvalidArgumentException('$speciesPhotoUrl must not be NULL.'));
+		if(is_null($speciesPhotoUrlUrl)) {
+			throw(new \InvalidArgumentException('$speciesPhotoUrlUrl must not be NULL.'));
 		}
 
-		if(empty($speciesPhotoUrl)) {
-			throw(new \RangeException('$speciesPhotoUrl must not be empty.'));
+		if(empty($speciesPhotoUrlUrl)) {
+			throw(new \RangeException('$speciesPhotoUrlUrl must not be empty.'));
 		}
 
-		if(gettype($speciesPhotoUrl) !== 'string') {
-			throw(new \TypeError('$speciesPhoto must be a string.'));
+		if(gettype($speciesPhotoUrlUrl) !== 'string') {
+			throw(new \TypeError('$speciesPhotoUrl must be a string.'));
 		}
 
 		// Check if a valid URL is given.
 		try {
-			$speciesPhoto = filter_var($speciesPhotoUrl, FILTER_VALIDATE_URL);
+			$speciesPhotoUrl = filter_var($speciesPhotoUrlUrl, FILTER_VALIDATE_URL);
 		} catch(\InvalidArgumentException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-		$this->speciesPhotoUrl = $speciesPhotoUrl;
+		$this->speciesPhotoUrlUrl = $speciesPhotoUrlUrl;
 	}
 
 	/**
@@ -251,21 +251,23 @@ class BirdSpecies {
 		}
 
 		// Create an SQL query to send for the speciesCodes.
-		$query = "SELECT speciesCode, speciesComName, speciesSciName FROM species WHERE speciesId = :speciesId";
+		$query = "SELECT speciesCode, speciesComName, speciesSciName FROM birdSpecies WHERE speciesId = :speciesId";
 		$statement = $pdo->prepare($query);
 
 		$bird = new \SplFixedArray($statement->rowCount());
 
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
-
-		while(($row = $statement->fetch()) !== false) {
-			try {
-				$bird = new BirdSpecies($row["speciesId"], $row["speciesCode"], $row["speciesComName"], $row["speciesSciName"], $row["speciesPhoto"]);
-			} catch(\Exception $exception) {
-				throw(new \PDOException($exception->getMessage(), 0, $exception));
+		try {
+			$birdSpecies = null;
+			$row = $statement->fetch();
+			if($row !== false) {
+				$birdSpecies = new BirdSpecies($row["speciesId"], $row["speciesCode"], $row[$this->speciesComName], $row["speciesSciName"], $row["speciesPhotoUrl"]);
 			}
+		} catch(\Exception $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-		return $this;
+		return($birdSpecies);
 	}
 
 	/**
@@ -276,7 +278,7 @@ class BirdSpecies {
 	 */
 	public function getAllBirds(\PDO $pdo): \SplFixedArray {
 		// Create mySQL query
-		$query = "SELECT speciesId, speciesCode, speciesComName, speciesSciName, speciesPhoto FROM species";
+		$query = "SELECT speciesId, speciesCode, speciesComName, speciesSciName, speciesPhotoUrl FROM birdSpecies";
 
 		// Prepare mySQL query
 		$statement = $pdo->prepare($query);
@@ -290,7 +292,7 @@ class BirdSpecies {
 		// Loop through the table until there are no more birds to fetch.
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$bird = new BirdSpecies($row["speciesId"], $row["speciesCode"], $row["speciesComName"], $row["speciesSciName"], $row["speciesPhoto"]);
+				$bird = new BirdSpecies($row["speciesId"], $row["speciesCode"], $row["speciesComName"], $row["speciesSciName"], $row["speciesPhotoUrl"]);
 				$birds[$birds->key()] = $bird;
 				$birds->next();
 			} catch(\Exception $exception) {
@@ -311,13 +313,13 @@ class BirdSpecies {
 	 */
 	public function insert(\PDO $pdo): void {
 		// Define create mySQL query
-		$query = "INSERT INTO species(speciesId, speciesCode, speciesComName, speciesSciName, speciesPhoto) VALUES(:speciesId, :speciesCode, :speciesComName, :speciesSciName, :speciesPhoto)";
+		$query = "INSERT INTO birdSpecies(speciesId, speciesCode, speciesComName, speciesSciName, speciesPhotoUrl) VALUES(:speciesId, :speciesCode, :speciesComName, :speciesSciName, :speciesPhotoUrl)";
 
 		// Prepare mySQL query
 		$statement = $pdo->prepare($query);
 
 		// Set values
-		$values = ["speciesId" => $this->speciesId->getBytes(), "speciesCode" => $this->speciesCode, "speciesComName" => $this->speciesComName, "speciesSciName" => $this->speciesSciName, "speciesPhoto" => $this->speciesPhoto];
+		$values = ["speciesId" => $this->speciesId->getBytes(), "speciesCode" => $this->speciesCode, "speciesComName" => $this->speciesComName, "speciesSciName" => $this->speciesSciName, "speciesPhotoUrl" => $this->speciesPhotoUrl];
 
 		// Bind values?
 
@@ -334,7 +336,7 @@ class BirdSpecies {
 	 */
 	public function delete(\PDO $pdo): void {
 		// Create mySQL query
-		$query = "DELETE FROM species WHERE speciesId = :speciesId";
+		$query = "DELETE FROM birdSpecies WHERE speciesId = :speciesId";
 
 		// Prepare mySQL query
 		$statement = $pdo->prepare($query);
@@ -354,13 +356,13 @@ class BirdSpecies {
 	 */
 	public function update(\PDO $pdo): void {
 		// Create mySQL query
-		$query = "UPDATE species SET speciesId = :speciesId, speciesCode = :speciesCode, speciesComName = :speciesComName, speciesSciName = :speciesSciName, speciesPhoto = :speciesPhoto";
+		$query = "UPDATE birdSpecies SET speciesId = :speciesId, speciesCode = :speciesCode, speciesComName = :speciesComName, speciesSciName = :speciesSciName, speciesPhotoUrl = :speciesPhotoUrl";
 
 		// Prepare mySQL query
 		$statement = $pdo->prepare($query);
 
 		// Set values
-		$values = ["speciesId" => $this->speciesId->getBytes(), "speciesCode" => $this->speciesCode, "speciesComName" => $this->speciesComName, "speciesSciName" => $this->speciesSciName, "speciesPhoto" => $this->speciesPhoto];
+		$values = ["speciesId" => $this->speciesId->getBytes(), "speciesCode" => $this->speciesCode, "speciesComName" => $this->speciesComName, "speciesSciName" => $this->speciesSciName, "speciesPhotoUrl" => $this->speciesPhotoUrl];
 
 		// Execute statement
 		$statement->execute($values);

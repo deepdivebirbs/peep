@@ -58,7 +58,7 @@ class BirdSpeciesTest extends PeepTest {
 
 	public function testSpeciesInsert(): void {
 		// Get rows for some reason
-		$rowCount = $this->getConnection()->getRowCount("species");
+		$rowCount = $this->getConnection()->getRowCount("birdSpecies");
 
 		// Create new BirdSpecies object and insert it into the database
 		$testSpecies = new BirdSpecies($this->VALID_SPECIES_ID, $this->VALID_SPECIES_CODE, $this->VALID_SPECIES_COM_NAME, $this->VALID_SPECIES_SCI_NAME, $this->VALID_SPECIES_PHOTO_URL);
@@ -69,7 +69,7 @@ class BirdSpeciesTest extends PeepTest {
 		$species = $testSpecies->getBirdBySpeciesId($this->getPDO(), $testSpecies->getSpeciesId());
 
 		// Check if a row was indeed added to the table
-		$this->assertEquals($rowCount + 1, $this->getConnection()->getRowCount("species"));
+		$this->assertEquals($rowCount + 1, $this->getConnection()->getRowCount("birdSpecies"));
 
 		// Compare inserted ID to $this->VALID_SPECIES_ID
 		$this->assertEquals($testSpecies->getSpeciesId(), $this->VALID_SPECIES_ID);
