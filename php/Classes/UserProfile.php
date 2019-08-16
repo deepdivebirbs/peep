@@ -252,6 +252,36 @@ public function __construct( $newUserProfileId, string $newUserProfileName, stri
 		$statement->execute($parameters);
 	}
 
+	public function getUserProfileById(\PDO $pdo , string $userId ): ?userProfile{
+		// sanitize the tweetId before searching
+		try {
+			$userId = self::validateUuid($userId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+
+		// create query template
+		$query = "SELECT userProfileId, userProfileName, userProfileFirstName, userProfileLastName, userProfileEmail, userProfileAuthenticationToken, userProfileHash FROM userProfile WHERE userProfileId = :userId";
+		$pdoStatement = $pdo->prepare($query);
+
+		// bind the user id to the place holder in the template
+		$parameters = ["userProfileId" => $userProfileId->getBytes()];
+		$pdoStatement->execute($parameters);
+
+		// grab the statement from mySQL
+		try {
+			$user = null;
+			$pdoStatement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $pdoStatement->fetch();
+			if($row !== false) {
+				$user = new userProfile($row["userProfileId"], $row["userProfileName"], $row["userProfileFirstName"], $row["userProfileLastName"], $row["userProfileEmail"], $row["userProfileAuthenticationToken"], $row["userProfileHash"]);
+			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($user);
+	}
 
 
 
