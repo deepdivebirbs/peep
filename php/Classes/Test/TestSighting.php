@@ -17,46 +17,33 @@ require_once (dirname(__DIR__, 1) . "/autoload.php");
 
 class SightingTest extends PeepTest {
 	/**
-	 *Sighting ID that identifies the sighting; this is for the foreign key relations
-	 * @var sightingId Sighting ID
+	 * User profile that created the sighting; this is for foreign key relations
+	 * @var userProfile User Profile
 	 **/
-	protected $sightingId = null;
+	protected $userProfile = null;
 
 	/**
-	 * Sighting Species ID that identifies the bird from the Species class
-	 * @var sightingSpeciesId Sighting Species ID
-	 **/
-	protected $sightingSpeciesId = null;
+	 * This is the species that was used to fill in the sighting being tested
+	 * @var birdSpecies Species from the API
+	 */
 
 	/**
-	 * Sighting User Profile ID which binds the sighting to the user who submitted it
-	 * @var sightingProfileUserId Sighting Profile User ID
+	 * User Profile authentication token used to create the user profile for this test sighting
+	 * @var userProfileAuthenticationToken User Profile Authentication Token
 	 **/
-	protected $sightingProfileUserId = null;
+	protected $userProfileAuthenticationToken = null;
 
 	/**
-	 * Sighting Bird Photo URL, which the user uploads at the time of sighting
-	 * @var sightingBirdPhoto Sighting Bird Photo URL
+	 * User Profile hash used to create the user profile for this test sighting
+	 * @var userProfileHash User Profile Hash
 	 **/
-	protected $sightingBirdPhoto = null;
+	protected $userProfileHash = null;
 
 	/**
 	 * Sighting Date Time, which is when the sighting was entered into the table
 	 * @var sightingDateTime Sighting Date and Time
 	 **/
 	protected $sightingDateTime = null;
-
-	/**
-	 * Sighting Location X (latitude), which is the latitude of the sighting
-	 * @var sightingLocX Sighting Location X, which is latitude
-	 **/
-	protected $sightingLocX = null;
-
-	/**
-	 * Sighting Location Y (longitude), which is the longitude of the sighting
-	 * @var sightingLocY Sighting Location Y, which is longitude
-	 **/
-	protected $sightingLocY = null;
 
 	/**
 	 * create dependent objects before running each test
@@ -73,18 +60,22 @@ class SightingTest extends PeepTest {
 
 		// create a salt and a hash for the mocked profile
 		$password = "abc123";
-		$this->VALID_HASH = password_hash($password, PASSWORD_ARGON21, ["time_cost" => 384]);
-		$this->VALID_ACTIVATION = bin2hex(random_bytes(16));
+		$this->VALID_USERPROFILEHASH = userProfileHash($password, PASSWORD_ARGON21, ["time_cost" => 384]);
+		$this->VALID_USERPROFILEACTIVATIONTOKEN = bin2hex(random_bytes(16));
 
 		//create and insert the mocked profile
-		$this->profile = new Profile(generateUuidV4(), null,"@phpunit", "test@phpunit.de",$this->VALID_HASH, "+15058675309");
+		$this->userProfile = new userProfile(generateUuidV4(), "Bird Lady", "Cardi", "Nal","cardib@gsnail.com", null, $this->VALID_USERPROFILEHASH);
 		$this->profile->insert($this->getPDO());
+
+		//create and insert the mocked species
+		$this->birdSpecies = new birdSpecies(generateUuidV4(), "pingym", "Pinyon Jay", "Gymnorhinus cyanocephalus", "photo.url/bird");
+		$this->birdSpecies->insert($this->getPDO());
 
 		//create the and insert the mocked sighting
 		$this->sighting = new Sighting(generateUuidV4(), $this->sightingSpeciesId, $this->sightingProfileUserId , $this->sightingBirdPhoto, $this->sightingDateTime, $this->$sightingLocX, $this->$sightingLocY);
 
 		//calculate the date (just use the time the unit test was set up)
-		$this->VALID_LIKEDATE = \DateTime();
+		$this->VALID = \DateTime();
 
 	} //public final function end curly
 
