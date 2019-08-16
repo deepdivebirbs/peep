@@ -197,34 +197,35 @@ class BirdSpecies {
 	/**
 	 * Sets the value of $speciesPhotoUrl.
 	 *
-	 * @param  $speciesPhotoUrlUrl $ holds the URL of a photo as a string.
+	 * @param  $speciesPhotoUrl $ holds the URL of a photo as a string.
 	 * @return void
 	 * @throws \RangeException if $speciesPhotoUrl is empty.
 	 * @throws \TypeError if $speciesPhotoUrl is NOT a string.
 	 * @throws \InvalidArgumentException if $speciesPhotoUrl is NULL.
 	 */
-	public function setSpeciesPhotoUrl($speciesPhotoUrlUrl): void {
+	public function setSpeciesPhotoUrl($speciesPhotoUrl): void {
 
-		if(is_null($speciesPhotoUrlUrl)) {
+		if(is_null($speciesPhotoUrl)) {
 			throw(new \InvalidArgumentException('$speciesPhotoUrlUrl must not be NULL.'));
 		}
 
-		if(empty($speciesPhotoUrlUrl)) {
-			throw(new \RangeException('$speciesPhotoUrlUrl must not be empty.'));
+		if(empty($speciesPhotoUrl)) {
+			throw(new \RangeException('$speciesPhotoUrl must not be empty.'));
 		}
 
-		if(gettype($speciesPhotoUrlUrl) !== 'string') {
+		if(gettype($speciesPhotoUrl) !== 'string') {
 			throw(new \TypeError('$speciesPhotoUrl must be a string.'));
 		}
 
 		// Check if a valid URL is given.
 		try {
-			$speciesPhotoUrl = filter_var($speciesPhotoUrlUrl, FILTER_VALIDATE_URL);
+			trim($speciesPhotoUrl);
+			$speciesPhotoUrl = filter_var($speciesPhotoUrl, FILTER_VALIDATE_URL);
 		} catch(\InvalidArgumentException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-		$this->speciesPhotoUrlUrl = $speciesPhotoUrlUrl;
+		$this->speciesPhotoUrl = $speciesPhotoUrl;
 	}
 
 	/**
@@ -232,20 +233,21 @@ class BirdSpecies {
 	 *
 	 * @param $speciesId
 	 * @param $pdo
-	 * @return Uuid
 	 * @throws \Exception if any other exception happens.
 	 * @throws \RangeException if $speciesCode is > or < 6 characters.
 	 * @throws \InvalidArgumentException if $speciesCode is NULL.
 	 * @throws \PDOException if something is wrong with the PDO object.
+	 * @throws \TypeError if NULL is returned
+	 * @return BirdSpecies
 	 */
-	public function getBirdBySpeciesId(\PDO $pdo, string $speciesId): ?BirdSpecies {
+	public function getSpeciesBySpeciesId(): ?BirdSpecies {
 		if(empty($speciesId)) {
-			throw(new \InvalidArgumentException("speciesCode must not be empty."));
+			throw(new \InvalidArgumentException("speciesId must not be empty."));
 		}
 
 		try {
-			$speciesId = self::validateUuid($speciesId);
-		} catch(\PDOException | \RangeException | \InvalidArgumentException | \Exception $exception) {
+			$validSpeciesId = self::validateUuid($speciesId);
+		} catch(\PDOException | \RangeException | \InvalidArgumentException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
@@ -254,18 +256,21 @@ class BirdSpecies {
 		$query = "SELECT speciesCode, speciesComName, speciesSciName FROM birdSpecies WHERE speciesId = :speciesId";
 		$statement = $pdo->prepare($query);
 
-		$bird = new \SplFixedArray($statement->rowCount());
+		// Set values
+		$values = ["speciesId" => $validSpeciesId->getBytes()];
+		$statement->execute($values);
 
-		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		try {
 			$birdSpecies = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$birdSpecies = new BirdSpecies($row["speciesId"], $row["speciesCode"], $row[$this->speciesComName], $row["speciesSciName"], $row["speciesPhotoUrl"]);
+				$birdSpecies = new BirdSpecies($row["speciesId"], $row["speciesCode"], $row["speciesComName"], $row["speciesSciName"], $row["speciesPhotoUrl"]);
+				var_dump($birdSpecies);
 			}
 		} catch(\Exception $exception) {
 			$exceptionType = get_class($exception);
-			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+			//throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 		return($birdSpecies);
 	}
@@ -288,6 +293,7 @@ class BirdSpecies {
 
 		// Set PDO fetch mode to FETCH_ASSOC.
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		$statement->execute();
 
 		// Loop through the table until there are no more birds to fetch.
 		while(($row = $statement->fetch()) !== false) {
