@@ -89,6 +89,7 @@ class Sighting implements \jsonSerializable {
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 	}
+
 //accessors in alphabetical order
 
 /**
@@ -323,7 +324,7 @@ class Sighting implements \jsonSerializable {
 	/**
 	 * @param \PDO $pdo PDO connection object
 	 * @param Uuid|string $sighingIdto search for the sighting
-	 * @return sightingBySightingId|null sighting or null if sighting is not found
+	 * @return sighting|null sighting or null if sighting is not found
 	 * @throws \PDOException where there are MySQL-related errors found
 	 * @throws \TypeError when a variable is not found to be the right data type
 	 **/
@@ -360,17 +361,19 @@ try {
 
 /**get an array of all sightings by user profile
  *
+ * @param $sightingUserProfileId
  * @param \PDO $pdo PDO connection object
  * @return \SplFixedArray SplFixedArray of sightings found or null if not found
  * @throws \PDOException when MySQL errors occur
  * @throws \TypeError when the variables are not the correct data type
  **/
 
-public static function getSightingsBySightingUserProfileId(\PDO $pdo) :\SplFixedArray {
+public static function getSightingsBySightingUserProfileId(\PDO $pdo, $sightingUserProfileId) :\SplFixedArray {
 //create the query template
-	$query = "SELECT sightingId, sightingSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY";
+	$query = "SELECT sightingId, sightingSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY FROM sighting WHERE sightingUserProfileId = :sightingUserProfileId";
 	$statement = $pdo->prepare($query);
-	$statement->execute();
+	$parameters = ["sightingsBySightingUserProfileId" => $sightingUserProfileId->getBytes];
+	$statement->execute($parameters);
 
 //build an array of sightings
 	$sightings = new \SplFixedArray($statement->rowCount());
@@ -387,6 +390,38 @@ public static function getSightingsBySightingUserProfileId(\PDO $pdo) :\SplFixed
 	}
 	return($sightings);
 }
+
+/**get an array of all sightings by species ID
+*
+* @param $sightingSpeciesId Uuid|string of species ID
+* @param \PDO $pdo PDO connection object
+* @return \SplFixedArray SplFixedArray of sightings found or null if not found
+* @throws \PDOException when MySQL errors occur
+* @throws \TypeError when the variables are not the correct data type
+**/
+
+	public static function getSightingsBySightingSpeciesId(\PDO $pdo, $sightingSpeciesId) :\SplFixedArray {
+//create the query template
+		$query = "SELECT sightingId, sightingSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY FROM sighting WHERE sightingSpeciesId = :sightingSpeciesId";
+		$statement = $pdo->prepare($query);
+		$parameters = ["sightingsBySightingSpeciesId" => $sightingSpeciesId->getBytes];
+		$statement->execute($parameters);
+
+//build an array of sightings
+		$sightings = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$sighting = new Sighting($row["sightingId"], $row["sightingSpeciesId"], $row["sightingUserProfileId"], $row["sightingBirdPhoto"], $row["sightingDateTime"], $row["sightingLocX"], $row["sightingLocY"]);
+				$sightings[$sightings->key()] = $sighting;
+				$sightings->next();
+			} catch(\Exception $exception) {
+//if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return($sightings);
+	}
 
 	// this is the jsonSerialize part of the class (check the example)
 	public function jsonSerialize() : array {
