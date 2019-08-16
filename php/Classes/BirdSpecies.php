@@ -240,7 +240,7 @@ class BirdSpecies {
 	 * @throws \TypeError if NULL is returned
 	 * @return BirdSpecies
 	 */
-	public function getSpeciesBySpeciesId(): ?BirdSpecies {
+	public function getSpeciesBySpeciesId(\PDO $pdo, $speciesId): ?BirdSpecies {
 		if(empty($speciesId)) {
 			throw(new \InvalidArgumentException("speciesId must not be empty."));
 		}

@@ -9,11 +9,11 @@ use PHPUnit\DbUnit\TestCaseTrait;
 use PHPUnit\DbUnit\DataSet\QueryDataSet;
 use PHPUnit\DbUnit\Database\Connection;
 use PHPUnit\DbUnit\Operation\{Composite, Factory, Operation};
-use Ramsey\Uuid\Uuid;
 
 require_once("PeepTest.php");
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
-require_once(dirname(__DIR__, 1) . "/autoload.php");
+//require_once(dirname(__DIR__, 1) . "/autoload.php");
+require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 
 // Guess unit test classes don't have a __construct()?
 
