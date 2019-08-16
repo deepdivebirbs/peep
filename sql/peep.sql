@@ -6,7 +6,8 @@ DROP TABLE IF EXISTS sighting;
 DROP TABLE IF EXISTS birdSpecies;
 DROP TABLE IF EXISTS userProfile;
 
-create table userProfile(
+
+CREATE TABLE userProfile(
 	userProfileId binary(16) not null,
 	userProfileName varchar(32) not null,
 	userProfileFirstName varchar(32) not null,
@@ -27,7 +28,7 @@ CREATE TABLE birdSpecies(
 	PRIMARY KEY (speciesId)
 );
 
-create table sighting (
+CREATE TABLE sighting (
 	sightingId BINARY (16) NOT NULL,
 	sightingUserProfileId BINARY (16) NOT NULL,
 	sightingBirdSpeciesId BINARY (16) NOT NULL,
