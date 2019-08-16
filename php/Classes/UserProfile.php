@@ -253,7 +253,7 @@ public function __construct( $newUserProfileId, string $newUserProfileName, stri
 	}
 
 	public function getUserProfileById(\PDO $pdo , string $userId ): ?userProfile{
-		// sanitize the tweetId before searching
+		// sanitize the userId before searching
 		try {
 			$userId = self::validateUuid($userId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
