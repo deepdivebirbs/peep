@@ -8,5 +8,19 @@ require_once (dirname(__DIR__, 1) . "/autoload.php");
 
 /**
  * Unit test for UserProfile
+ *
+ * @author Alistair Gillikin
  */
 
+class UserProfileTest extends DataDesignTest {
+
+
+
+
+
+
+
+
+
+
+}

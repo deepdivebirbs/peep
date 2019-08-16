@@ -6,7 +6,7 @@ create table userProfile(
 	userProfileFirstName varchar(32) not null,
 	UserProfileLastName varchar(32) not null,
 	userProfileEmail varchar(128) not null,
-	userProfileAuthenticationToken char(32) not null,
+	userProfileAuthenticationToken char(32),
 	userProfileHash char(97) not null,
 	primary key (userProfileId),
 	unique (userProfileName)
