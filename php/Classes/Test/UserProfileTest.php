@@ -1,10 +1,13 @@
 <?php
 
 namespace Birbs\Peep\Test;
-use Birbs\Peep\BirdSpecies;
-
-require_once("PeepTest.php");
-require_once (dirname(__DIR__, 1) . "/autoload.php");
+use PHPUnit\Framework\TestCase;
+use PHPUnit\DbUnit\TestCaseTrait;
+use PHPUnit\DbUnit\DataSet\QueryDataSet;
+use PHPUnit\DbUnit\Database\Connection;
+use PHPUnit\DbUnit\Operation\{Composite, Factory, Operation};// grab the encrypted properties file
+require_once("/etc/apache2/capstone-mysql/Secrets.php");// grab the class under scrutiny
+require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 
 /**
  * Unit test for UserProfile
