@@ -138,6 +138,45 @@ class Favorite implements \JsonSerializable {
 		$statement->execute($parameters);
 	}
 
+	/**gets a favorite bird by userProfileId and favoriteSpeciesId
+	 * @param \PDO $pdo pdo connection object
+	 * @param string $favoriteUserProfileId profile id to search for
+	 * @param string $favoriteSpeciesId species id to search for
+	 * @return Favorite|null favorite found or null if not found
+	 **/
+
+	public static function getFavoritebyFavoriteUserProfileIdAndFavoriteSpeciesId (\PDO $pdo, string $favoriteUserProfileId, string $favoriteSpeciesId) : ?Favorite {
+		try {
+			$favoriteUserProfileId= self::validateUuid($favoriteUserProfileId);
+		} catch (\InvalidArgumentException |\RangeException |\Exception |\TypeError $exception) {
+			throw (new \PDOException($exception->getMessage(),0, $exception));
+		}
+
+		try {
+			$favoriteSpeciesId= self::validateUuid($favoriteSpeciesId);
+		} catch (\InvalidArgumentException |\RangeException |\Exception |\TypeError $exception) {
+			throw (new \PDOException($exception->getMessage(),0, $exception));
+		}
+
+		//create query template
+		$query = "SELECT favoriteUserProfileId, favoriteSpeciesId FROM favorite WHERE favoriteUserProfileId = :favoriteUserProfileId AND favoriteSpeciesId= :favoriteSpeciesID";
+		$statement = $pdo->prepare($query);
+
+		// bind the userProfileId and the speciesId to their placeholder in the template
+		$parameters = ["favoriteUserProfileId"=>$favoriteUserProfileId->getBytes(), "favoriteSpeciesId"=> $favoriteSpeciesId->getBytes()];
+		$statement->execute($parameters);
+
+		//grab the favorite from mySQL
+	try {
+		$favorite = null;
+		$statement ->setFetchMode(\PDO::FETCH_ASSOC);
+		$row = $statement->fetch();
+		if ($row !==false) {
+			$favorite = new Favorite($row["favoriteUserProfileId"], $row["favoriteSpeciesId"]);
+		}
+	}
+	}
+
 
 	/**
 	 * gets all of a user's favorite birds by userProfileId
