@@ -3,7 +3,7 @@ ALTER DATABASE peep CHARACTER SET utf8 COLLATE utf8_unicode_cli;
 /* ONLY RUN ONCE THIS LINE DELETES THE CURRENT TABLE AND REMAKES IT!! */
 DROP TABLE IF EXISTS favorite;
 DROP TABLE IF EXISTS sighting;
-DROP TABLE IF EXISTS birdSpecies;
+DROP TABLE IF EXISTS species;
 DROP TABLE IF EXISTS userProfile;
 
 create table userProfile(
@@ -18,7 +18,7 @@ create table userProfile(
 	unique (userProfileName)
 );
 
-CREATE TABLE birdSpecies(
+CREATE TABLE species(
 	speciesId BINARY(16) NOT NULL,
 	speciesCode VARCHAR(6) NOT NULL,
 	speciesComName VARCHAR(64) NULL,
@@ -37,7 +37,7 @@ create table sighting (
 	sightingLocY FLOAT (6, 3) NOT NULL,    unique(sightingId),
 	primary key(sightingId),
 	foreign key(sightingUserProfileId) REFERENCES userProfile(userProfileId),
-	foreign key(sightingBirdSpeciesId) REFERENCES birdSpecies(speciesId)
+	foreign key(sightingBirdSpeciesId) REFERENCES species(speciesId)
 );
 
 -- Note that the table FavoriteBirdlist contains two foreign keys, each from a different
@@ -49,7 +49,7 @@ CREATE TABLE favorite (
 	INDEX (favoriteBirdSpeciesId),
 	INDEX (favoriteUserProfileId),
 	-- creates foreign key relations
-	FOREIGN KEY (favoriteBirdSpeciesId) REFERENCES birdSpecies(speciesId),
+	FOREIGN KEY (favoriteBirdSpeciesId) REFERENCES species(speciesId),
 	FOREIGN KEY (favoriteUserProfileId) REFERENCES userProfile(userProfileId),
 	-- creates a  composite foreign key with the two foreign keys that depend on speciesId and userID
 	PRIMARY KEY (favoriteBirdSpeciesId, favoriteUserProfileId)
