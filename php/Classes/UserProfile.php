@@ -283,10 +283,10 @@ public function __construct( $newUserProfileId, string $newUserProfileName, stri
 		return($user);
 	}
 
-	public function getUserProfileByName(\PDO $pdo , string $userName ): ?userProfile{
+	public function getUserProfileByName(\PDO $pdo , string $userProfileName ): ?userProfile{
 		// sanitize the userName before searching
 		try {
-			$userName = self::validateUuid($userName);
+			$userProfileName = self::validateUuid($userProfileName);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
@@ -314,6 +314,6 @@ public function __construct( $newUserProfileId, string $newUserProfileName, stri
 		return($user);
 	}
 
-
+//TODO covert to JSON
 
 }
