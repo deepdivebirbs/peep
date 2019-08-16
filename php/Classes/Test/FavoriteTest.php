@@ -82,8 +82,15 @@ class FavoriteTest extends PeepTest {
 		$favorite ->insert($this->getPDO());
 
 		//grab data from mySQL and enforce fields matching our expectations
-		$pdoFavorite = Favorite::
-	}
+		$pdoFavorite = Favorite::getFavoritebyFavoriteUserProfileIdAndFavoriteSpeciesId($this->getPDO(), $this->userProfile>getUserProfileID(), $this->species->getSpeciesId());
+		$this->assertEquals($numRows + 1, )
+
+
+
+		$this->assertNull($pdoFavorite);
+		$this->assertEquals($numRows, $this->getConnection()->getRowCount('favorite'));
+
+
 
 
 

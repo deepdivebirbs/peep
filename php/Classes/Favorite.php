@@ -167,15 +167,20 @@ class Favorite implements \JsonSerializable {
 		$statement->execute($parameters);
 
 		//grab the favorite from mySQL
-	try {
-		$favorite = null;
-		$statement ->setFetchMode(\PDO::FETCH_ASSOC);
-		$row = $statement->fetch();
-		if ($row !==false) {
-			$favorite = new Favorite($row["favoriteUserProfileId"], $row["favoriteSpeciesId"]);
+		try {
+			$favorite = null;
+			$statement ->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if ($row !==false) {
+				$favorite = new Favorite($row["favoriteUserProfileId"], $row["favoriteSpeciesId"]);
+			}
+		}catch (\Exception $exception){
+			//if the row couldn't be converted, rethrow it
+			throw (new \PDOException($exception->getMessage(),0,$exception));
 		}
+		return ($favorite);
 	}
-	}
+
 
 
 	/**
