@@ -37,6 +37,26 @@ class UserProfileTest extends DataDesignTest {
 	}
 
 
+	public function testUserProfileConstructor() {
+		;
+	}
+
+	public function testUserProfileInsert() {
+		;
+	}
+
+	public function testUserProfileDelete() {
+		;
+	}
+
+	public function testGetUserProfileById() {
+		;
+	}
+
+	public function testGetUserProfileByName() {
+		;
+	}
+
 
 
 

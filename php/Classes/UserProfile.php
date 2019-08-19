@@ -314,7 +314,7 @@ public function __construct( $newUserProfileId, string $newUserProfileName, stri
 		return($user);
 	}
 
-//TODO covert to JSON
+
 	/**
 	 * formats the state variables for JSON serialization
 	 *
