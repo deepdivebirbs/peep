@@ -17,13 +17,13 @@ require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 
 class UserProfileTest extends DataDesignTest {
 
-	protected $profileId;
-	protected $profileAuthenticationToken;
-	protected $profileEmail;
-	protected $profileFirstName;
-	protected $profileHash; //This one in particular will need development
-	protected $profileLastName;
-	protected $profileName;
+	protected $VALID_profileId;
+	protected $VALID_profileAuthenticationToken;
+	protected $VALID_profileEmail;
+	protected $VALID_profileFirstName;
+	protected $VALID_profileHash; //This one in particular will need development
+	protected $VALID_profileLastName;
+	protected $VALID_profileName;
 
 
 
