@@ -79,36 +79,63 @@ class FavoriteTest extends PeepTest {
 
 		//create a new favorite and insert it into the table
 		$favorite = new Favorite($this->userProfile->getUserProfileId(), $this->species->getSpeciesId());
-		$favorite ->insert($this->getPDO());
+		$favorite->insert($this->getPDO());
 
 		//grab data from mySQL and enforce fields matching our expectations
-		$pdoFavorite = Favorite::getFavoritebyFavoriteUserProfileIdAndFavoriteSpeciesId($this->getPDO(), $this->userProfile>getUserProfileID(), $this->species->getSpeciesId());
-		$this->assertEquals($numRows + 1, $this->getPDO(),$this->userProfile->getUserProfileId(), $this->species->getSpeciesId());
-		$this->assertEquals($numRows +1, $this->getConnection()->getRowCount("favorite"));
+		$pdoFavorite = Favorite::getFavoritebyFavoriteUserProfileIdAndFavoriteSpeciesId($this->getPDO(), $this->userProfile > getUserProfileID(), $this->species->getSpeciesId());
+		$this->assertEquals($numRows + 1, $this->getPDO(), $this->userProfile->getUserProfileId(), $this->species->getSpeciesId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("favorite"));
 		$this->assertEquals($pdoFavorite->getFavoriteUserProfileId(), $this->userProfile->getUserProfileId());
 		$this->assertEquals($pdoFavorite->getFavoriteSpeciesId(), $this->species->getSpeciesId());
-
-		/**
-		 * test creating a favorite then deleting it
-		 */
-		public function testDeleteValidFavorite() : void {
-			//counts the number of rows for later
-			$numRows = $this->getConnection()->getRowCount("favorite");
-
-			//creates a new favorite for insertion into mySQL
-			$favorite= new Favorite($this->userProfile->getUserProfileId(), $this->speciesId->getSpeciesId());
-			$favorite
-		}
-
-
-		$this->assertNull($pdoFavorite);
-		$this->assertEquals($numRows, $this->getConnection()->getRowCount('favorite'));
-
-
-
-
-
-
-
-
 	}
+
+	/**
+	 * test creating a favorite then deleting it
+	 */
+	public function testDeleteValidFavorite() : void {
+		//counts the number of rows for later
+		$numRows = $this->getConnection()->getRowCount("favorite");
+
+		//creates a new favorite for insertion into mySQL
+		$favorite= new Favorite($this->userProfile->getUserProfileId(), $this->speciesId->getSpeciesId());
+		$favorite->insert($this->getPDO());
+
+		//delete the favorite from mySQL
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("favorite"));
+		$favorite->delete($this->getPDO());
+
+		//grab the data from mySQL and enforce the Favorite doesn't exit
+		$pdoFavorite = Favorite::getFavoritebyFavoriteUserProfileIdAndFavoriteSpeciesId($this->getPDO(), $this->userProfile->getUserProfileId(), $this->species->getSpeciesId());
+		$this->assertNull($pdoFavorite);
+		$this->assertEquals($numRows, $this->getConnection()->getRowCount("favorite"));
+	}
+
+	/**
+	 * test inserting a Favorite and regrabbing it from mySQL
+	 */
+	public function testGetValidFavoriteByUserProfileIdAndSpeciesId() : void {
+		//count number of rows and safe for later
+		$numRows = $this->getConnection()->getRowCount("favorite");
+
+		//create a new favorite and insert it into mySQL
+		$favorite=new Favorite ($this->userProfile->getUserProfileId(), $this->species->getSpeciesId());
+		$favorite->insert($this->getPDO());
+
+		//grab data from mySQL and enforce that the fields match expectations
+		$pdoFavorite = Favorite::getFavoritebyFavoriteUserProfileIdAndFavoriteSpeciesId($this->getPDO(), $this->userProfile > getUserProfileID(), $this->species->getSpeciesId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("favorite"));
+		$this->assertEquals($pdoFavorite->getFavoriteUserProfileId(),$this->userProfile->getUserProfileId());
+		$this->assertEquals($pdoFavorite->getFavoriteSpeciesId(), $this->species->getSpeciesId());
+	}
+
+	/**
+	 * test grabbing a favorite that does not exist
+	 */
+	public function testGetInvalidFavoriteByUserProfileIdAndSpeciesId () {
+		//grab a user profile id and a species id that exceeds the maximum allowable user profile id and species id
+		$favorite = Favorite::getFavoritebyFavoriteUserProfileIdAndFavoriteSpeciesId($this->getPDO(), generateUuidV4(), generateUuidV4());
+		$this->assertNull($favorite);
+	}
+
+
+}
