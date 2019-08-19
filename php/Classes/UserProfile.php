@@ -7,7 +7,7 @@ require_once(dirname(__DIR__,1) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 
 
-class UserProfile {
+class UserProfile implements \JsonSerializable {
 	use ValidateUuid;
 
 	/**
