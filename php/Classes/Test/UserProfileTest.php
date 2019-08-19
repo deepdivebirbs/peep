@@ -18,14 +18,23 @@ require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 class UserProfileTest extends DataDesignTest {
 
 	protected $VALID_profileId;
-	protected $VALID_profileAuthenticationToken;
+	protected $VALID_AUTHENTICATION;
 	protected $VALID_profileEmail;
 	protected $VALID_profileFirstName;
-	protected $VALID_profileHash; //This one in particular will need development
+	protected $VALID_HASH; //This one in particular will need development
 	protected $VALID_profileLastName;
 	protected $VALID_profileName;
 
-
+	/**
+	 * run the default setup operation to create salt and hash.
+	 */
+	public final function setUp() : void {
+		parent::setUp();
+		//
+		$password = "abc123";
+		$this->VALID_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
+		$this->VALID_AUTHENTICATION = bin2hex(random_bytes(16));
+	}
 
 
 
