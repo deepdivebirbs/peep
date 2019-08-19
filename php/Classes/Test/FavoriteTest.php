@@ -18,7 +18,7 @@ require_once(dirname(__DIR__,2) . "/lib/uuid");
 /**
  * full PHPUnit test for the Favorite class
  *
- * All mySQL/PDO enabled methods are tested for oth valid and invalid outputs
+ * All mySQL/PDO enabled methods are tested for both valid and invalid outputs
  *
  * @see Favorite
  **/
@@ -83,8 +83,22 @@ class FavoriteTest extends PeepTest {
 
 		//grab data from mySQL and enforce fields matching our expectations
 		$pdoFavorite = Favorite::getFavoritebyFavoriteUserProfileIdAndFavoriteSpeciesId($this->getPDO(), $this->userProfile>getUserProfileID(), $this->species->getSpeciesId());
-		$this->assertEquals($numRows + 1, )
+		$this->assertEquals($numRows + 1, $this->getPDO(),$this->userProfile->getUserProfileId(), $this->species->getSpeciesId());
+		$this->assertEquals($numRows +1, $this->getConnection()->getRowCount("favorite"));
+		$this->assertEquals($pdoFavorite->getFavoriteUserProfileId(), $this->userProfile->getUserProfileId());
+		$this->assertEquals($pdoFavorite->getFavoriteSpeciesId(), $this->species->getSpeciesId());
 
+		/**
+		 * test creating a favorite then deleting it
+		 */
+		public function testDeleteValidFavorite() : void {
+			//counts the number of rows for later
+			$numRows = $this->getConnection()->getRowCount("favorite");
+
+			//creates a new favorite for insertion into mySQL
+			$favorite= new Favorite($this->userProfile->getUserProfileId(), $this->speciesId->getSpeciesId());
+			$favorite
+		}
 
 
 		$this->assertNull($pdoFavorite);
@@ -97,4 +111,4 @@ class FavoriteTest extends PeepTest {
 
 
 
-}
+	}
