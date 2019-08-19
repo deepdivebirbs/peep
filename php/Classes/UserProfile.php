@@ -315,5 +315,23 @@ public function __construct( $newUserProfileId, string $newUserProfileName, stri
 	}
 
 //TODO covert to JSON
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 **/
+	public function jsonSerialize() : array {
+		$fields = get_object_vars($this);
+
+		$fields["userProfileId"] = $this->userProfileId->toString();
+		//$fields["userProfileAuthenticationToken"] = $this->userProfileAuthenticationToken->toString();
+		$fields["userProfileEmail"] = $this->userProfileEmail->toString();
+		$fields["userProfileFirstName"] = $this->userProfileFirstName->toString();
+		//$fields["userProfileHash"] = $this->userProfileHash->toString();
+		$fields["userProfileLastName"] = $this->userProfileLastName->toString();
+		$fields["userProfileName"] = $this->userProfileName->toString();
+
+		return($fields);
+	}
 
 }
