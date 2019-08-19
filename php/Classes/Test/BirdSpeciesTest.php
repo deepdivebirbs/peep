@@ -12,8 +12,9 @@ use PHPUnit\DbUnit\Operation\{Composite, Factory, Operation};
 
 require_once("PeepTest.php");
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
-//require_once(dirname(__DIR__, 1) . "/autoload.php");
-require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
+//require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
+require_once(dirname(__DIR__, 1) . "/autoload.php");
+require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 
 // Guess unit test classes don't have a __construct()?
 
@@ -23,35 +24,35 @@ class BirdSpeciesTest extends PeepTest {
 	/**
 	 * A UUID that identifies a bird species in the database.
 	 *
-	 * @var Uuid validSpeciesId
+	 * @var Uuid $VALID_SPECIES_ID
 	 */
-	protected $VALID_SPECIES_ID = "2ae7ea43-c430-4e8f-96f1-f10727bc809f";
+	protected $VALID_SPECIES_ID;
 
 	/**
 	 * A string that represents the given code to a bird species from the Ebirds API.
 	 *
-	 * @var string validSpeciesCode
+	 * @var string $VALID_SPECIES_CODE
 	 */
 	protected $VALID_SPECIES_CODE = "123ABC";
 
 	/**
 	 * A string that is the common non-scientific name of a bird species.
 	 *
-	 * @var string validSpeciesComName
+	 * @var string $VALID_SPECIES_COM_NAME
 	 */
 	protected $VALID_SPECIES_COM_NAME = "Pinyon Jay";
 
 	/**
 	 * A string that is the given scientific name for a bird species.
 	 *
-	 * @var string validScientificName
+	 * @var string $VALID_SPECIES_SCI_NAME
 	 */
 	protected $VALID_SPECIES_SCI_NAME = "Gymnorhinus cyanocephalus";
 
 	/**
 	 * A string that is the URL for a bird species photo.
 	 *
-	 * @var string validSpeciesPhotoUrl
+	 * @var string $VALID_SPECIES_PHOTO_URL
 	 */
 	protected $VALID_SPECIES_PHOTO_URL = "https://ebird.org/species/pinjay";
 
@@ -63,6 +64,8 @@ class BirdSpeciesTest extends PeepTest {
 	 */
 	public function setUp(): void {
 		parent::setUp();
+
+		$this->VALID_SPECIES_ID = generateUuidV4();
 	}
 
 	/**
@@ -70,9 +73,8 @@ class BirdSpeciesTest extends PeepTest {
 	 * @returns void
 	 */
 	public function testSpeciesInsert(): void {
-
 		// Get rows for some reason
-		$rowCount = $this->getConnection()->getRowCount("birdSpecies");
+		$rowCount = $this->getConnection()->getRowCount("species");
 
 		// Create new BirdSpecies object and insert it into the database
 		$testSpecies = new BirdSpecies($this->VALID_SPECIES_ID, $this->VALID_SPECIES_CODE, $this->VALID_SPECIES_COM_NAME, $this->VALID_SPECIES_SCI_NAME, $this->VALID_SPECIES_PHOTO_URL);
@@ -83,7 +85,7 @@ class BirdSpeciesTest extends PeepTest {
 		$pdoBird = $testSpecies->getSpeciesBySpeciesId($this->getPDO(), $testSpecies->getSpeciesId());
 
 		// Check if a row was indeed added to the table
-		$this->assertEquals($rowCount + 1, $this->getConnection()->getRowCount("birdSpecies"));
+		$this->assertEquals($rowCount + 1, $this->getConnection()->getRowCount("species"));
 
 		// Compare inserted ID to $this->VALID_SPECIES_ID
 		$this->assertEquals($pdoBird->getSpeciesId(), $this->VALID_SPECIES_ID);
@@ -100,12 +102,18 @@ class BirdSpeciesTest extends PeepTest {
 		// Compare inserted speciesPhotoUrl to $this->VALID_SPECIES_PHOTO_URL
 		$this->assertEquals($pdoBird->getSpeciesPhotoUrl(), $this->VALID_SPECIES_PHOTO_URL);
 
-		$testSpecies->delete($this->getPDO());
+		// Tear down after test
+		$this->tearDown();
 	}
 
+	/**
+	 * @throws \Exception
+	 */
 	public function testSpeciesUpdate() {
+		$this->VALID_SPECIES_ID = generateUuidV4();
+
 		// Get row count for some reason
-		$rowCount = $this->getConnection()->getRowCount("birdSpecies");
+		$rowCount = $this->getConnection()->getRowCount("species");
 
 		// Create new BirdSpecies and inert it.
 		$testSpecies = new BirdSpecies($this->VALID_SPECIES_ID, $this->VALID_SPECIES_CODE, $this->VALID_SPECIES_COM_NAME, $this->VALID_SPECIES_SCI_NAME, $this->VALID_SPECIES_PHOTO_URL);
@@ -114,7 +122,7 @@ class BirdSpeciesTest extends PeepTest {
 		// Set updated data for $testSpecies.
 		$updatedComName = "Some Bird";
 
-		// Edit common name
+		// Set new speciesComName value
 		$testSpecies->setSpeciesComName($updatedComName);
 
 		// Update the database
@@ -124,22 +132,26 @@ class BirdSpeciesTest extends PeepTest {
 		$pdoBird = $testSpecies->getSpeciesBySpeciesId($this->getPDO(), $this->VALID_SPECIES_ID);
 
 		// Compare all of the values.
-		$this->assertEquals($rowCount + 1, $this->getConnection()->getRowCount("birdSpecies"));
+		$this->assertEquals($rowCount + 1, $this->getConnection()->getRowCount("species"));
 		$this->assertEquals($pdoBird->getSpeciesId(), $this->VALID_SPECIES_ID);
 		$this->assertEquals($pdoBird->getSpeciesCode(), $this->VALID_SPECIES_CODE);
-		$this->assertEquals($pdoBird->getSpeciesComName(), $this->VALID_SPECIES_COM_NAME);
+		$this->assertEquals($pdoBird->getSpeciesComName(), $updatedComName);	// Comparing with UPDATED com name.
 		$this->assertEquals($pdoBird->getSpeciesSciName(), $this->VALID_SPECIES_SCI_NAME);
 		$this->assertEquals($pdoBird->getSpeciesPhotoUrl(), $this->VALID_SPECIES_PHOTO_URL);
 
-		$testSpecies->delete($this->getPDO());
+		// Tear down after test
+		$this->tearDown();
 	}
 
 	/*
-	 * Unit test for my delete method in BirdSpecies
+	 * Unit test for my delete method in BirdSpecies class
 	 */
 	public function testSpeciesDelete(): void {
+		// Generate new UUID
+		$this->VALID_SPECIES_ID = generateUuidV4();
+
 		// Get the row count to compare later
-		$rowCount = $this->getConnection()->getRowCount("birdSpecies");
+		$rowCount = $this->getConnection()->getRowCount("species");
 
 		// Create new BirdSpecies
 		$testSpecies = new BirdSpecies($this->VALID_SPECIES_ID, $this->VALID_SPECIES_CODE, $this->VALID_SPECIES_COM_NAME, $this->VALID_SPECIES_SCI_NAME, $this->VALID_SPECIES_PHOTO_URL);
@@ -148,7 +160,7 @@ class BirdSpeciesTest extends PeepTest {
 		$testSpecies->insert($this->getPDO());
 
 		// Check to see if the number of rows increased.
-		$this->assertEquals($rowCount + 1, $this->getConnection()->getRowCount("birdSpecies"));
+		$this->assertEquals($rowCount + 1, $this->getConnection()->getRowCount("species"));
 
 		// Delete BirdSpecies
 		$testSpecies->delete($this->getPDO());
@@ -159,12 +171,91 @@ class BirdSpeciesTest extends PeepTest {
 		// Check if $testBirdGrab is NULL
 		$this->assertNull($testBirdGrab);
 
-		// Check if is deleted
-		$this->assertEmpty($rowCount, $this->getConnection()->getRowCount("birdSpecies"));
+		// Tear down after test
+		$this->tearDown();
 	}
-/*
-	public function testGetBirdBySpeciesId(): void {
 
+	/**
+	 * @throws \Exception
+	 */
+	public function testGetBirdBySpeciesId(): void {
+		// Generate new UUID.
+		$this->VALID_SPECIES_ID = generateUuidV4();
+
+		// Get row count for later
+		$rowCount = $this->getConnection()->getRowCount("species");
+
+		// Create new BirdSpecies
+		$testSpecies = new BirdSpecies($this->VALID_SPECIES_ID, $this->VALID_SPECIES_CODE, $this->VALID_SPECIES_COM_NAME, $this->VALID_SPECIES_SCI_NAME, $this->VALID_SPECIES_PHOTO_URL);
+
+		// Insert the new BirdSpecies
+		$testSpecies->insert($this->getPDO());
+
+		// Confirm the species has been inserted
+		$this->assertGreaterThan($rowCount, $this->getConnection()->getRowCount("species"));
+
+		// Get the species by it's ID
+		$testGrabSpecies = BirdSpecies::getSpeciesBySpeciesId($this->getPDO(), $this->VALID_SPECIES_ID);
+
+		// Assert that they are the same
+		$this->assertEquals($testGrabSpecies->getSpeciesId(), $this->VALID_SPECIES_ID);
+
+		// Tear down after test
+		$this->tearDown();
 	}
-*/
+
+	/**
+	 * @throws \Exception
+	 */
+	public function testGetAllBirds() {
+		// Generate new UUID
+		$this->VALID_SPECIES_ID = generateUuidV4();
+
+		// Get row count
+		$baseRowCount = $this->getConnection()->getRowCount("species");
+
+		// Create more than one new bird to insert.
+		$testBird1 = new BirdSpecies($this->VALID_SPECIES_ID, $this->VALID_SPECIES_CODE, $this->VALID_SPECIES_COM_NAME, $this->VALID_SPECIES_SCI_NAME, $this->VALID_SPECIES_PHOTO_URL);
+
+		// Re-gen a new UUID
+		$this->VALID_SPECIES_ID = generateUuidV4();
+
+		$testBird2 = new BirdSpecies($this->VALID_SPECIES_ID, $this->VALID_SPECIES_CODE, $this->VALID_SPECIES_COM_NAME, $this->VALID_SPECIES_SCI_NAME, $this->VALID_SPECIES_PHOTO_URL);
+
+		//print_r($newUuid->getBytes());
+
+		// Insert both birds into table.
+		$testBird1->insert($this->getPDO());
+		$testBird2->insert($this->getPDO());
+
+		// Get new row count
+		$newRowCount = $this->getConnection()->getRowCount("species");
+
+		// Confirm both birds are inserted into table.
+		if(($newRowCount > $baseRowCount) !== true) {
+			throw(new \Exception("Ooops"));
+		}
+
+		// Get all of the birds
+		$birdys = BirdSpecies::getAllBirds($this->getPDO());
+
+		//var_dump($birds[0]->getSpeciesId()->getBytes());
+		//var_dump("############################# ", $testBird1->getSpeciesId()->getBytes());
+
+		// Test bird 1
+		$this->assertEquals($testBird1->getSpeciesId()->getBytes(), $birdys[0]->getSpeciesId()->getBytes());
+
+		// Test bird 2
+		$this->assertEquals($testBird2->getSpeciesId()->getBytes(), $birdys[1]->getSpeciesId()->getBytes());
+
+		// Tear down after test
+		$this->tearDown();
+	}
+
+	/**
+	 * tearDown method deletes all test data from the table.
+	 */
+	protected final function tearDown(): void {
+		parent::tearDown();
+	}
 }

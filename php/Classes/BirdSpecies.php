@@ -12,7 +12,7 @@ use Ramsey\Uuid\Uuid;
  * This class takes API data from the Ebirds API at https://confluence.cornell.edu/display/CLOISAPI/eBirdAPIs and parses
  * the data into usable chunks and inserts that data into the table as specified.
  **/
-class BirdSpecies {
+class BirdSpecies implements \JsonSerializable{
 
 	use ValidateUuid;
 	use ValidateDate;
@@ -70,7 +70,7 @@ class BirdSpecies {
 	 *
 	 * @return Uuid
 	 */
-	public function getSpeciesId(): Uuid {
+	public function getSpeciesId(): ?Uuid {
 		return $this->speciesId;
 	}
 
@@ -125,6 +125,7 @@ class BirdSpecies {
 	 * @throws \InvalidArgumentException if $speciesId isn't a UUID or not formatted correctly.
 	 */
 	public function setSpeciesId($speciesId): void {
+		trim($speciesId);
 		try {
 			$uuid = self::validateUuid($speciesId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -253,7 +254,7 @@ class BirdSpecies {
 		}
 
 		// Create an SQL query to send for the speciesCodes.
-		$query = "SELECT speciesCode, speciesComName, speciesSciName FROM birdSpecies WHERE speciesId = :speciesId";
+		$query = "SELECT speciesId, speciesCode, speciesComName, speciesSciName, speciesPhotoUrl FROM species WHERE speciesId = :speciesId";
 		$statement = $pdo->prepare($query);
 
 		// Set values
@@ -264,9 +265,9 @@ class BirdSpecies {
 			$birdSpecies = null;
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
+			//var_dump("Row", $row);
 			if($row !== false) {
 				$birdSpecies = new BirdSpecies($row["speciesId"], $row["speciesCode"], $row["speciesComName"], $row["speciesSciName"], $row["speciesPhotoUrl"]);
-				var_dump($birdSpecies);
 			}
 		} catch(\Exception $exception) {
 			$exceptionType = get_class($exception);
@@ -283,17 +284,19 @@ class BirdSpecies {
 	 */
 	public function getAllBirds(\PDO $pdo): \SplFixedArray {
 		// Create mySQL query
-		$query = "SELECT speciesId, speciesCode, speciesComName, speciesSciName, speciesPhotoUrl FROM birdSpecies";
+		$query = "SELECT speciesId, speciesCode, speciesComName, speciesSciName, speciesPhotoUrl FROM species";
 
 		// Prepare mySQL query
 		$statement = $pdo->prepare($query);
 
+		// Execute statement
+		$statement->execute();
+
 		// Create array of birds
-		$birds = new \SplFixedArray();
+		$birds = new \SplFixedArray($statement->rowCount());
 
 		// Set PDO fetch mode to FETCH_ASSOC.
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
-		$statement->execute();
 
 		// Loop through the table until there are no more birds to fetch.
 		while(($row = $statement->fetch()) !== false) {
@@ -319,7 +322,7 @@ class BirdSpecies {
 	 */
 	public function insert(\PDO $pdo): void {
 		// Define create mySQL query
-		$query = "INSERT INTO birdSpecies(speciesId, speciesCode, speciesComName, speciesSciName, speciesPhotoUrl) VALUES(:speciesId, :speciesCode, :speciesComName, :speciesSciName, :speciesPhotoUrl)";
+		$query = "INSERT INTO species(speciesId, speciesCode, speciesComName, speciesSciName, speciesPhotoUrl) VALUES(:speciesId, :speciesCode, :speciesComName, :speciesSciName, :speciesPhotoUrl)";
 
 		// Prepare mySQL query
 		$statement = $pdo->prepare($query);
@@ -342,13 +345,13 @@ class BirdSpecies {
 	 */
 	public function delete(\PDO $pdo): void {
 		// Create mySQL query
-		$query = "DELETE FROM birdSpecies WHERE speciesId = :speciesId";
+		$query = "DELETE FROM species WHERE speciesId = :speciesId";
 
 		// Prepare mySQL query
 		$statement = $pdo->prepare($query);
 
 		// Set values
-		$values = ["speciesId" => $this->speciesId];
+		$values = ["speciesId" => $this->speciesId->getBytes()];
 
 		// Execute statement
 		$statement->execute($values);
@@ -362,7 +365,7 @@ class BirdSpecies {
 	 */
 	public function update(\PDO $pdo): void {
 		// Create mySQL query
-		$query = "UPDATE birdSpecies SET speciesId = :speciesId, speciesCode = :speciesCode, speciesComName = :speciesComName, speciesSciName = :speciesSciName, speciesPhotoUrl = :speciesPhotoUrl";
+		$query = "UPDATE species SET speciesId = :speciesId, speciesCode = :speciesCode, speciesComName = :speciesComName, speciesSciName = :speciesSciName, speciesPhotoUrl = :speciesPhotoUrl";
 
 		// Prepare mySQL query
 		$statement = $pdo->prepare($query);
