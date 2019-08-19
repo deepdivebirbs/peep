@@ -122,7 +122,7 @@ class FavoriteTest extends PeepTest {
 		$favorite->insert($this->getPDO());
 
 		//grab data from mySQL and enforce that the fields match expectations
-		$pdoFavorite = Favorite::getFavoritebyFavoriteUserProfileIdAndFavoriteSpeciesId($this->getPDO(), $this->userProfile > getUserProfileID(), $this->species->getSpeciesId());
+		$pdoFavorite = Favorite::getFavoriteByFavoriteUserProfileIdAndFavoriteSpeciesId($this->getPDO(), $this->userProfile > getUserProfileID(), $this->species->getSpeciesId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("favorite"));
 		$this->assertEquals($pdoFavorite->getFavoriteUserProfileId(),$this->userProfile->getUserProfileId());
 		$this->assertEquals($pdoFavorite->getFavoriteSpeciesId(), $this->species->getSpeciesId());
@@ -133,9 +133,35 @@ class FavoriteTest extends PeepTest {
 	 */
 	public function testGetInvalidFavoriteByUserProfileIdAndSpeciesId () {
 		//grab a user profile id and a species id that exceeds the maximum allowable user profile id and species id
-		$favorite = Favorite::getFavoritebyFavoriteUserProfileIdAndFavoriteSpeciesId($this->getPDO(), generateUuidV4(), generateUuidV4());
+		$favorite = Favorite::getFavoriteByFavoriteUserProfileIdAndFavoriteSpeciesId($this->getPDO(), generateUuidV4(), generateUuidV4());
 		$this->assertNull($favorite);
 	}
+
+	/**
+	 * test grabbing a favorite by userProfileId
+	 */
+	public function testGetValidFavoriteByUserProfileId (): void {
+		//count the number of rows for later
+		$numRows = $this->getConnection()->getRowCount("favorite");
+
+		//create a new Favorite and insert into mySQL
+		$favorite = new Favorite ($this->userProfile->getUserProfileId(), $this->speciesId->getSpeciesId());
+		$favorite->insert($this->getPDO());
+
+		//grab the data from mySQL and enforce that the fields match our expectations
+		$results = Favorite::getAllFavoriteByUserProfileId($this->getPDO(), $this->userProfile->getUserProfileId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("favorite"));
+		$this->assertCount(1, $results);
+
+		//enforce no other objects are bleeding into the test
+		$this->assertContainsOnlyInstancesOf("Birbs\\Peep\\Favorite", $results);
+
+		//grab the reslt from the array and validate it
+		$pdoFavorite = $results[0];
+		$this->assertEquals($pdoFavorite->getFavoriteUserProfileId(), $this->userProfile->getUserProfileId());
+		$this->assertEquals($pdoFavorite->getFavoriteSpeciesId(), $this->species->getSpeciesId());
+	}
+
 
 
 }

@@ -145,7 +145,7 @@ class Favorite implements \JsonSerializable {
 	 * @return Favorite|null favorite found or null if not found
 	 **/
 
-	public static function getFavoritebyFavoriteUserProfileIdAndFavoriteSpeciesId (\PDO $pdo, string $favoriteUserProfileId, string $favoriteSpeciesId) : ?Favorite {
+	public static function getFavoriteByFavoriteUserProfileIdAndFavoriteSpeciesId (\PDO $pdo, string $favoriteUserProfileId, string $favoriteSpeciesId) : ?Favorite {
 		try {
 			$favoriteUserProfileId= self::validateUuid($favoriteUserProfileId);
 		} catch (\InvalidArgumentException |\RangeException |\Exception |\TypeError $exception) {
