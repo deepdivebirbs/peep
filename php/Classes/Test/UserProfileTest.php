@@ -63,7 +63,18 @@ class UserProfileTest extends DataDesignTest {
 	}
 
 	public function testUserProfileDelete() {
-		;
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("restaurant");
+
+		//generate and add profile object to database
+		$testProfileId = generateUuidv4();
+
+		$testProfile = new UserProfile($testProfileId, $this->VALID_profileName, $this->VALID_profileFirstName, $this->VALID_profileLastName, $this->VALID_profileEmail, $this->VALID_AUTHENTICATION, $this->VALID_HASH);
+		$testProfile->insert($this->getPDO());
+
+		//delete the profile from mySQL
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("userProfile"));
+		$testProfile->delete($this->getPDO());
 	}
 
 	public function testGetUserProfileById() {
