@@ -43,14 +43,14 @@ create table sighting (
 -- Note that the table FavoriteBirdlist contains two foreign keys, each from a different
 -- table that must be created first. These tables are User and BirdSpecies, and the relationship is
 CREATE TABLE favorite (
-	favoriteBirdSpeciesId BINARY(16) NOT NULL,
+	favoriteSpeciesId BINARY(16) NOT NULL,
 	favoriteUserProfileId BINARY (16) NOT NULL,
 	-- creates index before making foreign keys--
-	INDEX (favoriteBirdSpeciesId),
+	INDEX (favoriteSpeciesId),
 	INDEX (favoriteUserProfileId),
 	-- creates foreign key relations
-	FOREIGN KEY (favoriteBirdSpeciesId) REFERENCES species(speciesId),
+	FOREIGN KEY (favoriteSpeciesId) REFERENCES species(speciesId),
 	FOREIGN KEY (favoriteUserProfileId) REFERENCES userProfile(userProfileId),
 	-- creates a  composite foreign key with the two foreign keys that depend on speciesId and userID
-	PRIMARY KEY (favoriteBirdSpeciesId, favoriteUserProfileId)
+	PRIMARY KEY (favoriteSpeciesId, favoriteUserProfileId)
 );
