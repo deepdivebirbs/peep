@@ -40,10 +40,6 @@ class UserProfileTest extends DataDesignTest {
 	}
 
 
-	public function testUserProfileConstructor() {
-		;
-	}
-
 	public function testUserProfileInsert() {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("restaurant");
