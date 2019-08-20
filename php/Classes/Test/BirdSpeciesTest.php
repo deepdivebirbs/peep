@@ -100,9 +100,6 @@ class BirdSpeciesTest extends PeepTest {
 
 		// Compare inserted speciesPhotoUrl to $this->VALID_SPECIES_PHOTO_URL
 		$this->assertEquals($pdoBird->getSpeciesPhotoUrl(), $this->VALID_SPECIES_PHOTO_URL);
-
-		// Tear down after test
-		//$this->tearDown();
 	}
 
 	/**
@@ -137,9 +134,6 @@ class BirdSpeciesTest extends PeepTest {
 		$this->assertEquals($pdoBird->getSpeciesComName(), $updatedComName);	// Comparing with UPDATED com name.
 		$this->assertEquals($pdoBird->getSpeciesSciName(), $this->VALID_SPECIES_SCI_NAME);
 		$this->assertEquals($pdoBird->getSpeciesPhotoUrl(), $this->VALID_SPECIES_PHOTO_URL);
-
-		// Tear down after test
-		//$this->tearDown();
 	}
 
 	/*
@@ -169,9 +163,6 @@ class BirdSpeciesTest extends PeepTest {
 
 		// Check if $testBirdGrab is NULL
 		$this->assertNull($testBirdGrab);
-
-		// Tear down after test
-		//$this->tearDown();
 	}
 
 	/**
@@ -198,9 +189,6 @@ class BirdSpeciesTest extends PeepTest {
 
 		// Assert that they are the same
 		$this->assertEquals($testGrabSpecies->getSpeciesId(), $this->VALID_SPECIES_ID);
-
-		// Tear down after test
-		//$this->tearDown();
 	}
 
 	/**
