@@ -241,7 +241,7 @@ class BirdSpecies implements \JsonSerializable{
 	 * @throws \TypeError if NULL is returned
 	 * @return BirdSpecies
 	 */
-	public function getSpeciesBySpeciesId(\PDO $pdo, $speciesId): ?BirdSpecies {
+	public static function getSpeciesBySpeciesId(\PDO $pdo, $speciesId): ?BirdSpecies {
 		if(empty($speciesId)) {
 			throw(new \InvalidArgumentException("speciesId must not be empty."));
 		}
@@ -282,7 +282,7 @@ class BirdSpecies implements \JsonSerializable{
 	 * @param \PDO $pdo
 	 * @return \SplFixedArray
 	 */
-	public function getAllBirds(\PDO $pdo): \SplFixedArray {
+	public static function getAllBirds(\PDO $pdo): \SplFixedArray {
 		// Create mySQL query
 		$query = "SELECT speciesId, speciesCode, speciesComName, speciesSciName, speciesPhotoUrl FROM species";
 

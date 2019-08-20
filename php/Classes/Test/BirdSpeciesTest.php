@@ -12,7 +12,6 @@ use PHPUnit\DbUnit\Operation\{Composite, Factory, Operation};
 
 require_once("PeepTest.php");
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
-//require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 require_once(dirname(__DIR__, 1) . "/autoload.php");
 require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 
@@ -103,7 +102,7 @@ class BirdSpeciesTest extends PeepTest {
 		$this->assertEquals($pdoBird->getSpeciesPhotoUrl(), $this->VALID_SPECIES_PHOTO_URL);
 
 		// Tear down after test
-		$this->tearDown();
+		//$this->tearDown();
 	}
 
 	/**
@@ -140,7 +139,7 @@ class BirdSpeciesTest extends PeepTest {
 		$this->assertEquals($pdoBird->getSpeciesPhotoUrl(), $this->VALID_SPECIES_PHOTO_URL);
 
 		// Tear down after test
-		$this->tearDown();
+		//$this->tearDown();
 	}
 
 	/*
@@ -172,7 +171,7 @@ class BirdSpeciesTest extends PeepTest {
 		$this->assertNull($testBirdGrab);
 
 		// Tear down after test
-		$this->tearDown();
+		//$this->tearDown();
 	}
 
 	/**
@@ -201,7 +200,7 @@ class BirdSpeciesTest extends PeepTest {
 		$this->assertEquals($testGrabSpecies->getSpeciesId(), $this->VALID_SPECIES_ID);
 
 		// Tear down after test
-		$this->tearDown();
+		//$this->tearDown();
 	}
 
 	/**
@@ -214,48 +213,24 @@ class BirdSpeciesTest extends PeepTest {
 		// Get row count
 		$baseRowCount = $this->getConnection()->getRowCount("species");
 
-		// Create more than one new bird to insert.
-		$testBird1 = new BirdSpecies($this->VALID_SPECIES_ID, $this->VALID_SPECIES_CODE, $this->VALID_SPECIES_COM_NAME, $this->VALID_SPECIES_SCI_NAME, $this->VALID_SPECIES_PHOTO_URL);
+		// Create more than one new bird to insert.  Because how can we get ALL birds if there is only one bird?
+		$testBird = new BirdSpecies($this->VALID_SPECIES_ID, $this->VALID_SPECIES_CODE, $this->VALID_SPECIES_COM_NAME, $this->VALID_SPECIES_SCI_NAME, $this->VALID_SPECIES_PHOTO_URL);
 
-		// Re-gen a new UUID
-		$this->VALID_SPECIES_ID = generateUuidV4();
+		// Insert the test bird
+		$testBird->insert($this->getPDO());
 
-		$testBird2 = new BirdSpecies($this->VALID_SPECIES_ID, $this->VALID_SPECIES_CODE, $this->VALID_SPECIES_COM_NAME, $this->VALID_SPECIES_SCI_NAME, $this->VALID_SPECIES_PHOTO_URL);
+		// Create a split fixed array the size of the table, and populate it with birds
+		//$testBirds = new \SplFixedArray($baseRowCount + 2);
+		$testBirds = BirdSpecies::getAllBirds($this->getPDO());
 
-		//print_r($newUuid->getBytes());
+		// Check if both birds were inserted
+		$this->assertEquals($baseRowCount + 1, $this->getConnection()->getRowCount('species'));
 
-		// Insert both birds into table.
-		$testBird1->insert($this->getPDO());
-		$testBird2->insert($this->getPDO());
-
-		// Get new row count
-		$newRowCount = $this->getConnection()->getRowCount("species");
-
-		// Confirm both birds are inserted into table.
-		if(($newRowCount > $baseRowCount) !== true) {
-			throw(new \Exception("Ooops"));
-		}
-
-		// Get all of the birds
-		$birdys = BirdSpecies::getAllBirds($this->getPDO());
-
-		//var_dump($birds[0]->getSpeciesId()->getBytes());
-		//var_dump("############################# ", $testBird1->getSpeciesId()->getBytes());
-
-		// Test bird 1
-		$this->assertEquals($testBird1->getSpeciesId()->getBytes(), $birdys[0]->getSpeciesId()->getBytes());
-
-		// Test bird 2
-		$this->assertEquals($testBird2->getSpeciesId()->getBytes(), $birdys[1]->getSpeciesId()->getBytes());
-
-		// Tear down after test
-		$this->tearDown();
-	}
-
-	/**
-	 * tearDown method deletes all test data from the table.
-	 */
-	protected final function tearDown(): void {
-		parent::tearDown();
+		// Run checks on the retrieved first retrieved bird.
+		$this->assertEquals($this->VALID_SPECIES_ID, $testBirds[0]->getSpeciesId());
+		$this->assertEquals($this->VALID_SPECIES_CODE, $testBirds[0]->getSpeciesCode());
+		$this->assertEquals($this->VALID_SPECIES_COM_NAME, $testBirds[0]->getSpeciesComName());
+		$this->assertEquals($this->VALID_SPECIES_SCI_NAME, $testBirds[0]->getSpeciesSciName());
+		$this->assertEquals($this->VALID_SPECIES_PHOTO_URL, $testBirds[0]->getSpeciesPhotoUrl());
 	}
 }
