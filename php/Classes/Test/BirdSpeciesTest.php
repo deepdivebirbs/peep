@@ -67,6 +67,16 @@ class BirdSpeciesTest extends PeepTest {
 		$this->VALID_SPECIES_ID = generateUuidV4();
 	}
 
+	public final function tearDown(): void {
+		$this->VALID_SPECIES_ID = null;
+		$this->VALID_SPECIES_CODE = null;
+		$this->VALID_SPECIES_COM_NAME = null;
+		$this->VALID_SPECIES_SCI_NAME = null;
+		$this->VALID_SPECIES_PHOTO_URL = null;
+
+		Factory::DELETE_ALL();
+	}
+
 	/**
 	 * @throws \Exception
 	 * @returns void
