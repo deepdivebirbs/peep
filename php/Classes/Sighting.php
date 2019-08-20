@@ -61,12 +61,12 @@ class Sighting implements \jsonSerializable {
  * constructor for this sighting
  *
  * @param string|Uuid $newSightingId of this sighting or null if a new sighting
- * @param string|Uuid $newSightingSpeciesId
+ * @param string|Uuid $newSightingSpeciesId this is the id of the species
  * @param string|Uuid $newSightingUserProfileId of the Profile that posted this sighting
- * @param string $newSightingBirdPhoto
- * @param \DateTime|string|null $newSightingDateTime date and time sighting was sent or null if set to current date and time
- * @param float $newSightingLocX
- * @param float $newSightingLocY
+ * @param string $newSightingBirdPhoto url of photo
+ * @param \DateTime $newSightingDateTime date and time sighting was sent
+ * @param float $newSightingLocX coordinates for latitude
+ * @param float $newSightingLocY coordinates for longitude
  * @throws \InvalidArgumentException if data types are not valid
  * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
  * @throws \TypeError if data types violate type hints
@@ -156,7 +156,7 @@ class Sighting implements \jsonSerializable {
 /**
  * mutator method for sighting ID
  * @param Uuid $newSightingId value of sighting ID
- * @throws \RangeException if $sightingId is no positive
+ * @throws \RangeException if $sightingId is not positive
  * @throws \TypeError if the sighting ID is not Uuid
  **/
 	public function setSightingId($newSightingId): void {
@@ -173,7 +173,7 @@ class Sighting implements \jsonSerializable {
 	/**
 	 *mutator method for sighting species ID
 	 *
-	 * @param Uuid| string $newSightingSpeciesId
+	 * @param Uuid|string $newSightingSpeciesId Uuid of the species id
 	 * @throws \RangeException if the $newSightingSpeciesId is not positive
 	 * @throws \TypeError if the profile ID is not
 	 **/
@@ -190,7 +190,7 @@ class Sighting implements \jsonSerializable {
 	/**
 	 *mutator method for sighting user profile ID
 	 *
-	 * @param Uuid| string $newSightingUserProfileId
+	 * @param Uuid| string $newSightingUserProfileId uuid of the profile
 	 * @throws \RangeException if the $newSightingUserId is not positive
 	 * @throws \TypeError if the profile ID is not Uuid
 	 **/
@@ -224,10 +224,10 @@ class Sighting implements \jsonSerializable {
 /**
  * mutator method for sighting datetime
  *
- * @param \DateTime|string|null $newSightingDateTime Sighting as a DateTime object or string (or null to load the current time)
+ * @param \DateTime $newSightingDateTime Sighting as a DateTime object
  * @throws \InvalidArgumentException if $newDateTime is not a valid object or string
  * @throws \RangeException if $newSightingDateTime is a date that does not exist
- * @throws \Exception find out why i would throw this exception
+ * @throws \Exception if there is a different kind of error
  *
  */
 	public function setSightingDateTime(\DateTime $newSightingDateTime): void {
@@ -293,7 +293,7 @@ class Sighting implements \jsonSerializable {
 	public function insert(\PDO $pdo) : void {
 
 		// create query template
-		$query = "INSERT INTO sighting(sightingId,sightingSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY) VALUES(:sightingId, :sightingSpeciesId, :sightingUserProfileId, :sightingBirdPhoto, :sightingDateTime, :sightingLocX, :sightingLocY)";
+		$query = "INSERT INTO sighting(sightingId, sightingSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY) VALUES(:sightingId, :sightingSpeciesId, :sightingUserProfileId, :sightingBirdPhoto, :sightingDateTime, :sightingLocX, :sightingLocY)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
@@ -323,7 +323,7 @@ class Sighting implements \jsonSerializable {
 	//gets a single sighting by sightingId
 	/**
 	 * @param \PDO $pdo PDO connection object
-	 * @param Uuid|string $sighingIdto search for the sighting
+	 * @param Uuid|string $sightingId to search for the sighting
 	 * @return sighting|null sighting or null if sighting is not found
 	 * @throws \PDOException where there are MySQL-related errors found
 	 * @throws \TypeError when a variable is not found to be the right data type
@@ -349,7 +349,7 @@ try {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		$row = $statement->fetch();
 		if($row !== false) {
-			$todo = new Sighting($row["sightingId"], $row["sightingSpeciesId"], $row["sightingUserProfileId"], $row["sightingBirdPhoto"], $row["sightingDateTime"], $row["sightingLocX"], $row["sightingLocY"]);
+			$sighting = new Sighting($row["sightingId"], $row["sightingSpeciesId"], $row["sightingUserProfileId"], $row["sightingBirdPhoto"], $row["sightingDateTime"], $row["sightingLocX"], $row["sightingLocY"]);
 		}
 	} catch(\Exception $exception) {
 
@@ -359,7 +359,8 @@ try {
 		return($sighting);
 }
 
-/**get an array of all sightings by user profile
+/**
+ * get an array of all sightings by user profile
  *
  * @param $sightingUserProfileId
  * @param \PDO $pdo PDO connection object
@@ -384,6 +385,7 @@ public static function getSightingsBySightingUserProfileId(\PDO $pdo, $sightingU
 			$sightings[$sightings->key()] = $sighting;
 			$sightings->next();
 		} catch(\Exception $exception) {
+
 //if the row couldn't be converted, rethrow it
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
@@ -404,7 +406,7 @@ public static function getSightingsBySightingUserProfileId(\PDO $pdo, $sightingU
 //create the query template
 		$query = "SELECT sightingId, sightingSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY FROM sighting WHERE sightingSpeciesId = :sightingSpeciesId";
 		$statement = $pdo->prepare($query);
-		$parameters = ["sightingsBySightingSpeciesId" => $sightingSpeciesId->getBytes];
+		$parameters = ["sightingsBySightingSpeciesId" => $sightingSpeciesId->getBytes()];
 		$statement->execute($parameters);
 
 //build an array of sightings
@@ -416,6 +418,7 @@ public static function getSightingsBySightingUserProfileId(\PDO $pdo, $sightingU
 				$sightings[$sightings->key()] = $sighting;
 				$sightings->next();
 			} catch(\Exception $exception) {
+
 //if the row couldn't be converted, rethrow it
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
@@ -423,7 +426,11 @@ public static function getSightingsBySightingUserProfileId(\PDO $pdo, $sightingU
 		return($sightings);
 	}
 
-	// this is the jsonSerialize part of the class (check the example)
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 **/
 	public function jsonSerialize() : array {
 		$fields = get_object_vars($this);
 
