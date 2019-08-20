@@ -2,18 +2,21 @@
 
 
 namespace Birbs\Peep\Test;
+use Birbs\Peep\Favorite;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\DbUnit\TestCaseTrait;
+use PHPUnit\DbUnit\DataSet\QueryDataSet;
+use PHPUnit\DbUnit\Database\Connection;
+use PHPUnit\DbUnit\Operation\{Composite, Factory, Operation};
 
-use Birbs\Peep\ {
-	Favorite
-};
+require_once("PeepTest.php");
+require_once("/etc/apache2/capstone-mysql/Secrets.php");
 
 //gets class under scrutiny
-require_once (dirname(__DIR__) . "/autoload.php");
-
+require_once(dirname(__DIR__, 1) . "/autoload.php");
 
 //gets uuid generator
-require_once(dirname(__DIR__,2) . "/lib/uuid");
-
+require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 
 /**
  * full PHPUnit test for the Favorite class
@@ -57,7 +60,7 @@ class FavoriteTest extends PeepTest {
 
 		//create a salt and hash for mocked profile
 		$password = "abc123";
-		$this->$this->VALID_UserProfileHash = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
+		$this->VALID_UserProfileHash = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
 		$this->VALID_UserProfileAuthenticationToken = bin2hex(random_bytes(16));
 
 		//create and insert mocked profile
