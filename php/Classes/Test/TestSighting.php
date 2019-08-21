@@ -85,6 +85,7 @@ class SightingTest extends PeepTest {
 		$this->$userProfile = null;
 		$this->$userProfileAuthenticationToken = null;
 		$this->$userProfileHash = null;
+		$this->$sightingDateTime = null;
 		
 
 	Factory::DELETE_ALL();
