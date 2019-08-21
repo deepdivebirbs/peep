@@ -1,6 +1,6 @@
 <?php
 namespace Birbs\Peep;
-require_once(dirname(__DIR__,1) . "/vendor/autoload.php");
+require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 /**
  * Trait to validate a uuid
@@ -14,7 +14,7 @@ use Ramsey\Uuid\Uuid;
  * @author Dylan McDonald <dmcdonald21@cnm.edu>
  * @package Edu\Cnm\Misquote
  **/
-trait ValidateUuid {
+trait  ValidateUuid {
 	/**
 	 * validates a uuid irrespective of format
 	 *
