@@ -1,3 +1,5 @@
+ALTER DATABASE peep CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
 drop table if exists userProfile;
 
 create table userProfile(

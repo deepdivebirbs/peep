@@ -6,7 +6,7 @@ require_once("autoload.php");
 require_once(dirname(__DIR__,1) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 
-
+//TODO add dockblock for class
 class UserProfile implements \JsonSerializable {
 	use ValidateUuid;
 
@@ -27,7 +27,33 @@ class UserProfile implements \JsonSerializable {
 	private $userProfileLastName;
 	private $userProfileName;
 
-
+	/**
+	 * Constructor method for User object
+	 *
+	 * @param string|Uuid newUserProfileId,
+	 * @param string newUserName,
+	 * @param string newFirstName,
+	 * @param string newLastName,
+	 * @param string newUserEmail,
+	 * @param string newUserAuthenticationToken,
+	 * @param string newUserHash
+	 * TODO Throws
+	 */
+	public function __construct( $newUserProfileId, string $newUserProfileName, string $newUserProfileFirstName, string $newUserProfileLastName, string $newUserProfileEmail, string $newUserProfileAuthenticationToken, string $newUserProfileHash) {
+		try {
+			$this->setUserProfileId($newUserProfileId);
+			$this->setUserProfileName($newUserProfileName);
+			$this->setUserProfileFirstName($newUserProfileFirstName);
+			$this->setUserProfileLastName($newUserProfileLastName);
+			$this->setUserProfileEmail($newUserProfileEmail);
+			$this->setUserProfileAuthenticationToken($newUserProfileAuthenticationToken);
+			$this->setUserProfileHash($newUserProfileHash);
+		} //The following determines what exception type was thrown
+		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+	}
 
 	/**
 	 * accessor method for userProfileId
@@ -42,7 +68,7 @@ class UserProfile implements \JsonSerializable {
 	 *
 	 * @return string userProfileAuthenticationToken
 	 */
-	public function getUserProfileAuthenticationToken(): string {
+	public function getUserProfileAuthenticationToken(): ?string {
 		return ($this->userProfileAuthenticationToken);
 	}
 
@@ -92,7 +118,10 @@ class UserProfile implements \JsonSerializable {
 		 * Mutator method for userProfileId
 		 *
 		 * @param string|Uuid $newUserProfileId new value of userProfileId
-		 * @throws UnexpectedValueException if $newUserProfileId is not an Int. (Should fit into a binary)
+		 * @throws \InvalidArgumentException if $newUserProfileId is not an Int. (Should fit into a binary)
+		 * @throws \RangeException
+		 * @throws \Exception
+		 * @throws \TypeError
 		 */
 	public function setUserProfileId(string $newUserProfileId): void {
 		try {
@@ -101,7 +130,7 @@ class UserProfile implements \JsonSerializable {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-		$this->userProfileId = $uuid;
+		$this->userProfileId = $uuid; //Once input is converted, userProfileId is set here.
 	}
 
 	/**
@@ -109,6 +138,7 @@ class UserProfile implements \JsonSerializable {
 	 *
 	 * @param string newUserAuthorizationToken new value of userProfileAuthenticationToken
 	 * @throws \InvalidArgumentException if $newUserAuthorizationToken is empty or insecure
+	 * @throws \RangeException if sanitized input is the wrong length or contains invalid characters
 	 */
 	public function setUserProfileAuthenticationToken(string $newUserProfileAuthenticationToken): void{
 		$newUserProfileAuthenticationToken = strtolower(trim($newUserProfileAuthenticationToken));
@@ -130,12 +160,16 @@ class UserProfile implements \JsonSerializable {
 	 *
 	 * @param string newUserEmail new value of UserEmail
 	 * @throws \InvalidArgumentException if input is empty or insecure
+	 * @throws \RangeException if input is too long
 	 */
 	public function setUserProfileEmail(string $newUserProfileEmail): void{
 		$newUserProfileEmail = trim($newUserProfileEmail);
 		$newUserProfileEmail = filter_var($newUserProfileEmail, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newUserProfileEmail) === true) {
 			throw(new \InvalidArgumentException("input is empty or insecure"));
+		}
+		if(strlen($newUserProfileEmail) > 128) {
+			throw(new \RangeException("This email is too long."));
 		}
 		$this->userProfileEmail = $newUserProfileEmail;
 	}
@@ -145,6 +179,7 @@ class UserProfile implements \JsonSerializable {
 	 *
 	 * @param string newFirstName new value of FirstName
 	 * @throws \InvalidArgumentException if input is empty or insecure
+	 * @throws \RangeException if input is too long
 	 */
 	public function setUserProfileFirstName(string $newUserProfileFirstName): void{
 		$newUserProfileFirstName = trim($newUserProfileFirstName);
@@ -152,12 +187,15 @@ class UserProfile implements \JsonSerializable {
 		if(empty($newUserProfileFirstName) === true) {
 			throw(new \InvalidArgumentException("input is empty or insecure"));
 		}
+		if(strlen($newUserProfileFirstName) > 32) {
+			throw(new \RangeException("Unfortunately, this is too long to store."));
+		}
 		$this->userProfileFirstName = $newUserProfileFirstName;
 	}
 
 	/**
 	 * Mutator method for userProfileHash. Needs additional sanitizing
-	 *
+	 * TODO Improve hashing and unhashing
 	 * @param string newUserHash new value of userProfileHash
 	 * @throws \InvalidArgumentException if newUserHash is empty or insecure
 	 */
@@ -175,12 +213,16 @@ class UserProfile implements \JsonSerializable {
 	 *
 	 * @param string newLastName new value of userProfileLastName
 	 * @throws \InvalidArgumentException if input is empty or insecure
+	 * @throws \RangeException if input is too long
 	 */
 	public function setUserProfileLastName(string $newUserProfileLastName): void{
 		$newUserProfileLastName = trim($newUserProfileLastName);
 		$newUserProfileLastName = filter_var($newUserProfileLastName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newUserProfileLastName) === true) {
 			throw(new \InvalidArgumentException("input is empty or insecure"));
+		}
+		if(strlen($newUserProfileLastName) > 32) {
+			throw(new \RangeException("Unfortunately, this is too long to store."));
 		}
 		$this->userProfileLastName = $newUserProfileLastName;
 	}
@@ -190,6 +232,7 @@ class UserProfile implements \JsonSerializable {
 	 *
 	 * @param string newUserName new value of UserName
 	 * @throws \InvalidArgumentException if input is empty or insecure
+	 * @throws \RangeException if input is too long
 	 */
 	public function setUserProfileName(string $newUserProfileName): void{
 		$newUserProfileName = trim($newUserProfileName);
@@ -197,23 +240,13 @@ class UserProfile implements \JsonSerializable {
 		if(empty($newUserProfileName) === true) {
 			throw(new \InvalidArgumentException("input is empty or insecure"));
 		}
+		if(strlen($newUserProfileName) > 32) {
+			throw(new \RangeException("Unfortunately, this is too long to store."));
+		}
 		$this->userProfileName = $newUserProfileName;
 	}
 
-/**
- * Constructor method for User object
- *
- * @param string|Uuid newUserProfileId, string newUserName, string newFirstName, string newLastName, string newUserEmail, string newUserAuthenticationToken, string newUserHash
- */
-public function __construct( $newUserProfileId, string $newUserProfileName, string $newUserProfileFirstName, string $newUserProfileLastName, string $newUserProfileEmail, string $newUserProfileAuthenticationToken, string $newUserProfileHash) {
-		$this->setUserProfileId($newUserProfileId);
-		$this->setUserProfileName($newUserProfileName);
-		$this->setUserProfileFirstName($newUserProfileFirstName);
-		$this->setUserProfileLastName($newUserProfileLastName);
-		$this->setUserProfileEmail($newUserProfileEmail);
-		$this->setUserProfileAuthenticationToken($newUserProfileAuthenticationToken);
-		$this->setUserProfileHash($newUserProfileHash);
-	}
+
 
 	/**
 	 * inserts a userProfile into mySQL
@@ -225,7 +258,7 @@ public function __construct( $newUserProfileId, string $newUserProfileName, stri
 	public function insert(\PDO $pdo) : void {
 
 		// create query template
-		$query = "INSERT INTO userProfile(userProfileId, userProfileName, userProfileFirstName, userProfileLastName, userProfileEmail, userProfileAuthenticationToken, userProfileHash) VALUES(:userProfileId, :userProfileName, :userProfileFirstName, :UserProfileLastName, :userProfileEmail, :userProfileAuthenticationToken, :userProfileHash)";
+		$query = "INSERT INTO userProfile(userProfileId, userProfileName, userProfileFirstName, userProfileLastName, userProfileEmail, userProfileAuthenticationToken, userProfileHash) VALUES(:userProfileId, :userProfileName, :userProfileFirstName, :userProfileLastName, :userProfileEmail, :userProfileAuthenticationToken, :userProfileHash)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
@@ -233,6 +266,8 @@ public function __construct( $newUserProfileId, string $newUserProfileName, stri
 		$parameters = ["userProfileId" => $this->userProfileId->getBytes(), "userProfileName" => $this->userProfileName->getBytes(), "userProfileFirstName" => $this->userProfileFirstName, "userProfileLastName" => $this->userProfileLastName, "userProfileEmail" => $this->userProfileEmail, "userProfileAuthenticationToken" => $this->userProfileAuthenticationToken, "userProfileHash" => $this->userProfileHash];
 		$statement->execute($parameters);
 	}
+
+	//TODO insert UpdatePDO
 
 	/**
 	 * deletes this userProfile from mySQL
