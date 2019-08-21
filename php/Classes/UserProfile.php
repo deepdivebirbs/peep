@@ -4,6 +4,8 @@
 namespace Birbs\Peep;
 require_once("autoload.php");
 require_once(dirname(__DIR__,1) . "/vendor/autoload.php");
+
+use http\Exception\BadConversionException;
 use Ramsey\Uuid\Uuid;
 
 //TODO add dockblock for class
@@ -37,7 +39,11 @@ class UserProfile implements \JsonSerializable {
 	 * @param string newUserEmail,
 	 * @param string newUserAuthenticationToken,
 	 * @param string newUserHash
-	 * TODO Throws
+	 *
+	 * @throws \InvalidArgumentException if one of the inputs is marked as invalid by the setter it was passed to
+	 * @throws \RangeException if a setter finds one
+	 * @throws \TypeError if the input type is wrong
+	 * @throws \Exception if an exeption turns up.
 	 */
 	public function __construct($newUserProfileId, string $newUserProfileName, string $newUserProfileFirstName, string $newUserProfileLastName, string $newUserProfileEmail, string $newUserProfileAuthenticationToken, string $newUserProfileHash) {
 		try {
@@ -288,7 +294,8 @@ class UserProfile implements \JsonSerializable {
 	}
 
 	/**
-	 * TODO Refine docblock
+	 * Takes an ID and pdo object, and returns the profile from the pdo that matches it.
+	 *
 	 * @param \PDO $pdo
 	 * @param string $userId
 	 * @return UserProfile|null
