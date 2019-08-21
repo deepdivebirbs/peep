@@ -273,7 +273,22 @@ class UserProfile implements \JsonSerializable {
 		$statement->execute($parameters);
 	}
 
-	//TODO insert UpdatePDO
+
+	/**
+	 * updates this UserProfile in mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function update(\PDO $pdo) : void {
+		// create query template
+		$query = "UPDATE userProfile SET userProfileId = :userProfileId, userProfileName = :userProfileName, userProfileFirstName = :userProfileFirstName, userProfileLastName = :userProfileLastName, userProfileEmail = :userProfileEmail, userProfileAuthenticationToken = :userProfileAuthenticationToken, userProfileHash = :userProfileHash WHERE userProfileId = :userProfileId";
+		$statement = $pdo->prepare($query);
+
+		$parameters = ["userProfileId" => $this->userProfileId->getBytes(), "userProfileName" => $this->userProfileName->getBytes(), "userProfileFirstName" => $this->userProfileFirstName, "userProfileLastName" => $this->userProfileLastName, "userProfileEmail" => $this->userProfileEmail, "userProfileAuthenticationToken" => $this->userProfileAuthenticationToken, "userProfileHash" => $this->userProfileHash];
+		$statement->execute($parameters);
+	}
 
 	/**
 	 * deletes this userProfile from mySQL
