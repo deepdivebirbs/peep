@@ -17,7 +17,7 @@ require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 
 class UserProfileTest extends PeepTest {
 
-	//TODO docblocks for each variable
+
 	/**
 	 * @var $VALID_profileId - a test profile Id which should be valid. Might not be necessary.
 	 */
@@ -48,7 +48,7 @@ class UserProfileTest extends PeepTest {
 	protected $VALID_profileName = "Mr. User Passes";
 
 	/**
-	 * run the default setup operation to create salt and hash.
+	 * Create dependent objects
 	 */
 	public final function setUp() : void {
 		parent::setUp();
@@ -59,10 +59,12 @@ class UserProfileTest extends PeepTest {
 
 	}
 
-
+	/**
+	 * Tests the Insert function, and checks whether the SQL data matches.
+	 */
 	public function testUserProfileInsert() {
 		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("restaurant");
+		$numRows = $this->getConnection()->getRowCount("userProfile");
 
 		//generate and add profile object to database
 		$testProfileId = generateUuidv4();
@@ -80,6 +82,10 @@ class UserProfileTest extends PeepTest {
 		$this->assertEquals($pdoProfile->getUserProfileEmail(), $this->VALID_profileEmail);
 		$this->assertEquals($pdoProfile->getUserProfileHash(), $this->VALID_HASH);
 		$this->assertEquals($pdoProfile->getUserProfileAuthenticationToken(), $this->VALID_AUTHENTICATION);
+	}
+
+	public function testUserProfileUpdate() {
+		;
 	}
 
 	public function testUserProfileDelete() {
