@@ -15,14 +15,36 @@ require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
  * @author Alistair Gillikin
  */
 
-class UserProfileTest extends DataDesignTest {
+class UserProfileTest extends PeepTest {
 
+	//TODO docblocks for each variable
+	/**
+	 * @var $VALID_profileId - a test profile Id which should be valid. Might not be necessary.
+	 */
 	protected $VALID_profileId;
+	/**
+	 * @var $VALID_AUTHENTICATION - a test Authentication which should be valid. Might not be necessary.
+	 */
 	protected $VALID_AUTHENTICATION;
+	/**
+	 * @var $VALID_profileEmail - a test email which should be valid.
+	 */
 	protected $VALID_profileEmail;
+	/**
+	 * @var $VALID_profileFirstName - a test name which should be valid.
+	 */
 	protected $VALID_profileFirstName;
+	/**
+	 * @var $VALID_HASH - a test hash which should be valid. Might not be necessary.
+	 */
 	protected $VALID_HASH; //This one in particular will need development
+	/**
+	 * @var $VALID_profileLastName - A test last name which should be valid.
+	 */
 	protected $VALID_profileLastName;
+	/**
+	 * @var $VALID_profileName - a test profilename which should be valid.
+	 */
 	protected $VALID_profileName;
 
 	/**
@@ -35,8 +57,6 @@ class UserProfileTest extends DataDesignTest {
 		$this->VALID_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
 		$this->VALID_AUTHENTICATION = bin2hex(random_bytes(16));
 
-		//Create table
-		;
 	}
 
 
