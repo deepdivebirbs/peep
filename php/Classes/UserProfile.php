@@ -8,7 +8,15 @@ require_once(dirname(__DIR__,1) . "/vendor/autoload.php");
 use http\Exception\BadConversionException;
 use Ramsey\Uuid\Uuid;
 
-//TODO add dockblock for class
+
+/**
+ * Class UserProfile
+ *
+ * UserProfile is an object representing our users and the information we store about them. Some of this stored information is used by the Favorite class.
+ *
+ * @package Birbs\Peep
+ */
+
 class UserProfile implements \JsonSerializable {
 	use ValidateUuid;
 
