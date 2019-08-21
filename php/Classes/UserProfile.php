@@ -23,11 +23,11 @@ class UserProfile implements \JsonSerializable {
 	/**
 	 * @var $userProfileId , the primary key and index
 	 * @var $userProfileAuthenticationToken , needed for security purposes
-	 * @var $userProfileEmail , other information stored about the user
-	 * @var $userProfileFirstName , other information stored about the the user
-	 * @var $userProfileHash , needed for security purposes
-	 * @var $userProfileLastName , other information stored about the the user
-	 * @var $userProfileName , a unique identifier, but not the key
+	 * @var $userProfileEmail , the user's email
+	 * @var $userProfileFirstName , the user's first name
+	 * @var $userProfileHash , the hash, needed for security purposes
+	 * @var $userProfileLastName , the user's last name.
+	 * @var $userProfileName , The username. A unique identifier, but not the key
 	 */
 	private $userProfileId;
 	private $userProfileAuthenticationToken;
@@ -38,15 +38,15 @@ class UserProfile implements \JsonSerializable {
 	private $userProfileName;
 
 	/**
-	 * Constructor method for User object
+	 * Constructor method for UserProfile object
 	 *
-	 * @param string|Uuid newUserProfileId,
-	 * @param string newUserName,
-	 * @param string newFirstName,
-	 * @param string newLastName,
-	 * @param string newUserEmail,
-	 * @param string newUserAuthenticationToken,
-	 * @param string newUserHash
+	 * @param string|Uuid newUserProfileId, the primary key and identifier
+	 * @param string newUserProfileName, the username
+	 * @param string newUserProfileFirstName, The user's first name
+	 * @param string newUserProfileLastName, The user's Last name
+	 * @param string newUserProfileEmail, The user's email
+	 * @param string newUserProfileAuthenticationToken, The authentication token
+	 * @param string newUserProfileHash, the Hash
 	 *
 	 * @throws \InvalidArgumentException if one of the inputs is marked as invalid by the setter it was passed to
 	 * @throws \RangeException if a setter finds one
@@ -208,17 +208,28 @@ class UserProfile implements \JsonSerializable {
 	}
 
 	/**
-	 * Mutator method for userProfileHash. Needs additional sanitizing
-	 * TODO Improve hashing and unhashing
-	 * @param string newUserHash new value of userProfileHash
-	 * @throws \InvalidArgumentException if newUserHash is empty or insecure
+	 * Mutator method for userProfileHash. Uses argon2i
+	 *
+	 * @param string newUserProfileHash new value of userProfileHash
+	 * @throws \InvalidArgumentException if newUserHash is empty or insecure. Or if the salting did not happen properly
+	 * @throws \RangeException if the salted hash is not 97 characters
 	 */
 	public function setUserProfileHash(string $newUserProfileHash): void {
+		//enforce that the hash is properly formatted
 		$newUserProfileHash = trim($newUserProfileHash);
-		$newUserProfileHash = filter_var($newUserProfileHash, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newUserProfileHash) === true) {
-			throw(new \InvalidArgumentException("input is empty or insecure"));
+			throw(new \InvalidArgumentException("profile password hash empty or insecure"));
 		}
+		//enforce the hash is really an Argon hash
+		$profileHashInfo = password_get_info($newUserProfileHash);
+		if($profileHashInfo["algoName"] !== "argon2i") {
+			throw(new \InvalidArgumentException("profile hash is not a valid hash"));
+		}
+		//enforce that the hash is exactly 97 characters.
+		if(strlen($newUserProfileHash) !== 97) {
+			throw(new \RangeException("profile hash must be 97 characters"));
+		}
+		//store the hash
 		$this->userProfileHash = $newUserProfileHash;
 	}
 
@@ -294,7 +305,7 @@ class UserProfile implements \JsonSerializable {
 		$query = "UPDATE userProfile SET userProfileId = :userProfileId, userProfileName = :userProfileName, userProfileFirstName = :userProfileFirstName, userProfileLastName = :userProfileLastName, userProfileEmail = :userProfileEmail, userProfileAuthenticationToken = :userProfileAuthenticationToken, userProfileHash = :userProfileHash WHERE userProfileId = :userProfileId";
 		$statement = $pdo->prepare($query);
 
-		$parameters = ["userProfileId" => $this->userProfileId->getBytes(), "userProfileName" => $this->userProfileName->getBytes(), "userProfileFirstName" => $this->userProfileFirstName, "userProfileLastName" => $this->userProfileLastName, "userProfileEmail" => $this->userProfileEmail, "userProfileAuthenticationToken" => $this->userProfileAuthenticationToken, "userProfileHash" => $this->userProfileHash];
+		$parameters = ["userProfileId" => $this->userProfileId->getBytes(), "userProfileName" => $this->userProfileName, "userProfileFirstName" => $this->userProfileFirstName, "userProfileLastName" => $this->userProfileLastName, "userProfileEmail" => $this->userProfileEmail, "userProfileAuthenticationToken" => $this->userProfileAuthenticationToken, "userProfileHash" => $this->userProfileHash];
 		$statement->execute($parameters);
 	}
 
@@ -323,16 +334,16 @@ class UserProfile implements \JsonSerializable {
 	 * @param string $userId
 	 * @return UserProfile|null
 	 */
-	public function getUserProfileById(\PDO $pdo , string $userId ): ?userProfile{
+	public function getUserProfileById(\PDO $pdo , string $userProfileId ): ?userProfile{
 		// sanitize the userId before searching
 		try {
-			$userId = self::validateUuid($userId);
+			$userProfileId = self::validateUuid($userProfileId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 
 		// create query template
-		$query = "SELECT userProfileId, userProfileName, userProfileFirstName, userProfileLastName, userProfileEmail, userProfileAuthenticationToken, userProfileHash FROM userProfile WHERE userProfileId = :userId";
+		$query = "SELECT userProfileId, userProfileName, userProfileFirstName, userProfileLastName, userProfileEmail, userProfileAuthenticationToken, userProfileHash FROM userProfile WHERE userProfileId = :userProfileId";
 		$pdoStatement = $pdo->prepare($query);
 
 		// bind the user id to the place holder in the template
@@ -341,48 +352,42 @@ class UserProfile implements \JsonSerializable {
 
 		// grab the statement from mySQL
 		try {
-			$user = null;
+			$userProfile = null;
 			$pdoStatement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $pdoStatement->fetch();
 			if($row !== false) {
-				$user = new userProfile($row["userProfileId"], $row["userProfileName"], $row["userProfileFirstName"], $row["userProfileLastName"], $row["userProfileEmail"], $row["userProfileAuthenticationToken"], $row["userProfileHash"]);
+				$userProfile = new userProfile($row["userProfileId"], $row["userProfileName"], $row["userProfileFirstName"], $row["userProfileLastName"], $row["userProfileEmail"], $row["userProfileAuthenticationToken"], $row["userProfileHash"]);
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		return($user);
+		return($userProfile);
 	}
 
-	public function getUserProfileByName(\PDO $pdo , string $userProfileName ): ?userProfile{
-		// sanitize the userName before searching
-		try {
-			$userProfileName = self::validateUuid($userProfileName);
-		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-			throw(new \PDOException($exception->getMessage(), 0, $exception));
-		}
-
+	public function getUserProfileByName(\PDO $pdo , string $userProfileName ): ?userProfile {
+//TODO Trim and filterVar
 		// create query template
 		$query = "SELECT userProfileId, userProfileName, userProfileFirstName, userProfileLastName, userProfileEmail, userProfileAuthenticationToken, userProfileHash FROM userProfile WHERE userProfileName = :userProfileName";
 		$pdoStatement = $pdo->prepare($query);
 
 		// bind the user id to the place holder in the template
-		$parameters = ["userProfileName" => $userProfileName->getBytes()];
+		$parameters = ["userProfileName" => $userProfileName];
 		$pdoStatement->execute($parameters);
 
 		// grab the statement from mySQL
 		try {
-			$user = null;
+			$userProfile = null;
 			$pdoStatement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $pdoStatement->fetch();
 			if($row !== false) {
-				$user = new userProfile($row["userProfileId"], $row["userProfileName"], $row["userProfileFirstName"], $row["userProfileLastName"], $row["userProfileEmail"], $row["userProfileAuthenticationToken"], $row["userProfileHash"]);
+				$userProfile = new userProfile($row["userProfileId"], $row["userProfileName"], $row["userProfileFirstName"], $row["userProfileLastName"], $row["userProfileEmail"], $row["userProfileAuthenticationToken"], $row["userProfileHash"]);
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		return($user);
+		return($userProfile);
 	}
 
 
@@ -395,12 +400,7 @@ class UserProfile implements \JsonSerializable {
 		$fields = get_object_vars($this);
 
 		$fields["userProfileId"] = $this->userProfileId->toString();
-		//$fields["userProfileAuthenticationToken"] = $this->userProfileAuthenticationToken->toString();
-		$fields["userProfileEmail"] = $this->userProfileEmail->toString();
-		$fields["userProfileFirstName"] = $this->userProfileFirstName->toString();
-		//$fields["userProfileHash"] = $this->userProfileHash->toString();
-		$fields["userProfileLastName"] = $this->userProfileLastName->toString();
-		$fields["userProfileName"] = $this->userProfileName->toString();
+
 
 		return($fields);
 	}
