@@ -1,10 +1,11 @@
 ALTER DATABASE peep CHARACTER SET utf8 COLLATE utf8_unicode_cli;
 
 /* ONLY RUN ONCE THIS LINE DELETES THE CURRENT TABLE AND REMAKES IT!! */
-DROP TABLE IF EXISTS userProfile;
-DROP TABLE IF EXISTS species;
-DROP TABLE IF EXISTS sighting;
+
 DROP TABLE IF EXISTS favorite;
+DROP TABLE IF EXISTS sighting;
+DROP TABLE IF EXISTS species;
+DROP TABLE IF EXISTS userProfile;
 
 create table userProfile(
 	userProfileId binary(16) not null,
@@ -23,7 +24,7 @@ CREATE TABLE species(
 	speciesCode VARCHAR(6) NOT NULL,
 	speciesComName VARCHAR(64) NULL,
 	speciesSciName VARCHAR(64) NULL,
-	speciesPhoto VARCHAR(128) NULL,
+	speciesPhotoUrl VARCHAR(128) NULL,
 	PRIMARY KEY (speciesId)
 );
 
@@ -39,6 +40,7 @@ create table sighting (
 	primary key(sightingId),
 	foreign key(sightingUserProfileId) REFERENCES userProfile(userProfileId),
 	foreign key(sightingSpeciesId) REFERENCES species(speciesId)
+
 );
 
 -- Note that the table FavoriteBirdlist contains two foreign keys, each from a different

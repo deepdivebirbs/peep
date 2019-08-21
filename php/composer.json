@@ -6,7 +6,8 @@
     "lcobucci/jwt": "3.2",
     "ramsey/uuid": "@stable",
     "ext-json": "@stable",
-    "ext-pdo": "@stable"
+    "ext-pdo": "@stable",
+    "ext-curl": "@stable"
   },
   "scripts":{
     "phpunit": "./vendor/bin/phpunit -c ./Classes/Test --coverage-html coverage"
