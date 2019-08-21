@@ -30,14 +30,14 @@ CREATE TABLE species(
 create table sighting (
 	sightingId BINARY (16) NOT NULL,
 	sightingUserProfileId BINARY (16) NOT NULL,
-	sightingBirdSpeciesId BINARY (16) NOT NULL,
-	sightingBirdPhoto VARCHAR (128) NULL,
+	sightingSpeciesId BINARY (16) NOT NULL,
+	sightingPhoto VARCHAR (128) NULL,
 	sightingDateTime DATETIME (6) NOT NULL,
 	sightingLocX FLOAT (6, 3) NOT NULL,
 	sightingLocY FLOAT (6, 3) NOT NULL,    unique(sightingId),
 	primary key(sightingId),
 	foreign key(sightingUserProfileId) REFERENCES userProfile(userProfileId),
-	foreign key(sightingBirdSpeciesId) REFERENCES species(speciesId)
+	foreign key(sightingSpeciesId) REFERENCES species(speciesId)
 );
 
 -- Note that the table FavoriteBirdlist contains two foreign keys, each from a different
