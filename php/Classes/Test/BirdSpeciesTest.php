@@ -67,6 +67,9 @@ class BirdSpeciesTest extends PeepTest {
 		$this->VALID_SPECIES_ID = generateUuidV4();
 	}
 
+	/**
+	 * Deletes all data and resets data base after each unit test.
+	 */
 	public final function tearDown(): void {
 		parent::tearDown();
 
