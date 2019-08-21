@@ -29,11 +29,11 @@ class UserProfileTest extends PeepTest {
 	/**
 	 * @var $VALID_profileEmail - a test email which should be valid.
 	 */
-	protected $VALID_profileEmail;
+	protected $VALID_profileEmail = "Unit test should be passing.";
 	/**
 	 * @var $VALID_profileFirstName - a test name which should be valid.
 	 */
-	protected $VALID_profileFirstName;
+	protected $VALID_profileFirstName = "Mr. User";
 	/**
 	 * @var $VALID_HASH - a test hash which should be valid. Might not be necessary.
 	 */
@@ -41,11 +41,11 @@ class UserProfileTest extends PeepTest {
 	/**
 	 * @var $VALID_profileLastName - A test last name which should be valid.
 	 */
-	protected $VALID_profileLastName;
+	protected $VALID_profileLastName = "Passes";
 	/**
 	 * @var $VALID_profileName - a test profilename which should be valid.
 	 */
-	protected $VALID_profileName;
+	protected $VALID_profileName = "Mr. User Passes";
 
 	/**
 	 * run the default setup operation to create salt and hash.
