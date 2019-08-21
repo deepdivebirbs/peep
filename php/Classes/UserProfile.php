@@ -11,13 +11,13 @@ class UserProfile implements \JsonSerializable {
 	use ValidateUuid;
 
 	/**
-	 * @var $userProfileId, the primary key and index
-	 * @var $userProfileAuthenticationToken, needed for security purposes
-	 * @var $userProfileEmail, other information stored about the user
-	 * @var $userProfileFirstName, other information stored about the the user
-	 * @var $userProfileHash, needed for security purposes
-	 * @var $userProfileLastName, other information stored about the the user
-	 * @var $userProfileName, a unique identifier, but not the key
+	 * @var $userProfileId , the primary key and index
+	 * @var $userProfileAuthenticationToken , needed for security purposes
+	 * @var $userProfileEmail , other information stored about the user
+	 * @var $userProfileFirstName , other information stored about the the user
+	 * @var $userProfileHash , needed for security purposes
+	 * @var $userProfileLastName , other information stored about the the user
+	 * @var $userProfileName , a unique identifier, but not the key
 	 */
 	private $userProfileId;
 	private $userProfileAuthenticationToken;
@@ -39,7 +39,7 @@ class UserProfile implements \JsonSerializable {
 	 * @param string newUserHash
 	 * TODO Throws
 	 */
-	public function __construct( $newUserProfileId, string $newUserProfileName, string $newUserProfileFirstName, string $newUserProfileLastName, string $newUserProfileEmail, string $newUserProfileAuthenticationToken, string $newUserProfileHash) {
+	public function __construct($newUserProfileId, string $newUserProfileName, string $newUserProfileFirstName, string $newUserProfileLastName, string $newUserProfileEmail, string $newUserProfileAuthenticationToken, string $newUserProfileHash) {
 		try {
 			$this->setUserProfileId($newUserProfileId);
 			$this->setUserProfileName($newUserProfileName);
@@ -49,7 +49,7 @@ class UserProfile implements \JsonSerializable {
 			$this->setUserProfileAuthenticationToken($newUserProfileAuthenticationToken);
 			$this->setUserProfileHash($newUserProfileHash);
 		} //The following determines what exception type was thrown
-		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
@@ -59,7 +59,7 @@ class UserProfile implements \JsonSerializable {
 	 * accessor method for userProfileId
 	 * @return Uuid value of userProfileId - should fit in Binary.
 	 */
-	public function getUserProfileId() :Uuid {
+	public function getUserProfileId(): Uuid {
 		return ($this->userProfileId);
 	}
 
@@ -76,7 +76,7 @@ class UserProfile implements \JsonSerializable {
 	 * accessor method for userProfileEmail
 	 * @return string userProfileEmail - should fit in varChar(128)
 	 */
-	public function getUserProfileEmail() :string {
+	public function getUserProfileEmail(): string {
 		return ($this->userProfileEmail);
 	}
 
@@ -84,7 +84,7 @@ class UserProfile implements \JsonSerializable {
 	 * accessor method for userProfileFirstName
 	 * @return  string userProfileFirstName - should fit in varChar(32)
 	 */
-	public function getUserProfileFirstName() :string {
+	public function getUserProfileFirstName(): string {
 		return ($this->userProfileFirstName);
 	}
 
@@ -101,7 +101,7 @@ class UserProfile implements \JsonSerializable {
 	 * accessor method for userProfileLastName
 	 * @return string userProfileLastName - should fit in varChar(32).
 	 */
-	public function getUserProfileLastName() :string {
+	public function getUserProfileLastName(): string {
 		return ($this->userProfileLastName);
 	}
 
@@ -109,20 +109,20 @@ class UserProfile implements \JsonSerializable {
 	 * accessor method for userProfileName
 	 * @return string userProfileName - should fit in varchar(32).
 	 */
-	public function getUserProfileName() :string {
+	public function getUserProfileName(): string {
 		return ($this->userProfileName);
 	}
 
 
-		/**
-		 * Mutator method for userProfileId
-		 *
-		 * @param string|Uuid $newUserProfileId new value of userProfileId
-		 * @throws \InvalidArgumentException if $newUserProfileId is not an Int. (Should fit into a binary)
-		 * @throws \RangeException
-		 * @throws \Exception
-		 * @throws \TypeError
-		 */
+	/**
+	 * Mutator method for userProfileId
+	 *
+	 * @param string|Uuid $newUserProfileId new value of userProfileId
+	 * @throws \InvalidArgumentException if $newUserProfileId is not an Int. (Should fit into a binary)
+	 * @throws \RangeException
+	 * @throws \Exception
+	 * @throws \TypeError
+	 */
 	public function setUserProfileId(string $newUserProfileId): void {
 		try {
 			$uuid = self::validateUuid($newUserProfileId);
@@ -140,7 +140,7 @@ class UserProfile implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if $newUserAuthorizationToken is empty or insecure
 	 * @throws \RangeException if sanitized input is the wrong length or contains invalid characters
 	 */
-	public function setUserProfileAuthenticationToken(string $newUserProfileAuthenticationToken): void{
+	public function setUserProfileAuthenticationToken(string $newUserProfileAuthenticationToken): void {
 		$newUserProfileAuthenticationToken = strtolower(trim($newUserProfileAuthenticationToken));
 		$newUserProfileAuthenticationToken = filter_var($newUserProfileAuthenticationToken, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newUserProfileAuthenticationToken) === true) {
@@ -162,7 +162,7 @@ class UserProfile implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if input is empty or insecure
 	 * @throws \RangeException if input is too long
 	 */
-	public function setUserProfileEmail(string $newUserProfileEmail): void{
+	public function setUserProfileEmail(string $newUserProfileEmail): void {
 		$newUserProfileEmail = trim($newUserProfileEmail);
 		$newUserProfileEmail = filter_var($newUserProfileEmail, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newUserProfileEmail) === true) {
@@ -181,7 +181,7 @@ class UserProfile implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if input is empty or insecure
 	 * @throws \RangeException if input is too long
 	 */
-	public function setUserProfileFirstName(string $newUserProfileFirstName): void{
+	public function setUserProfileFirstName(string $newUserProfileFirstName): void {
 		$newUserProfileFirstName = trim($newUserProfileFirstName);
 		$newUserProfileFirstName = filter_var($newUserProfileFirstName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newUserProfileFirstName) === true) {
@@ -199,7 +199,7 @@ class UserProfile implements \JsonSerializable {
 	 * @param string newUserHash new value of userProfileHash
 	 * @throws \InvalidArgumentException if newUserHash is empty or insecure
 	 */
-	public function setUserProfileHash(string $newUserProfileHash): void{
+	public function setUserProfileHash(string $newUserProfileHash): void {
 		$newUserProfileHash = trim($newUserProfileHash);
 		$newUserProfileHash = filter_var($newUserProfileHash, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newUserProfileHash) === true) {
@@ -215,7 +215,7 @@ class UserProfile implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if input is empty or insecure
 	 * @throws \RangeException if input is too long
 	 */
-	public function setUserProfileLastName(string $newUserProfileLastName): void{
+	public function setUserProfileLastName(string $newUserProfileLastName): void {
 		$newUserProfileLastName = trim($newUserProfileLastName);
 		$newUserProfileLastName = filter_var($newUserProfileLastName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newUserProfileLastName) === true) {
@@ -234,7 +234,7 @@ class UserProfile implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if input is empty or insecure
 	 * @throws \RangeException if input is too long
 	 */
-	public function setUserProfileName(string $newUserProfileName): void{
+	public function setUserProfileName(string $newUserProfileName): void {
 		$newUserProfileName = trim($newUserProfileName);
 		$newUserProfileName = filter_var($newUserProfileName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newUserProfileName) === true) {
@@ -287,6 +287,12 @@ class UserProfile implements \JsonSerializable {
 		$statement->execute($parameters);
 	}
 
+	/**
+	 * TODO Refine docblock
+	 * @param \PDO $pdo
+	 * @param string $userId
+	 * @return UserProfile|null
+	 */
 	public function getUserProfileById(\PDO $pdo , string $userId ): ?userProfile{
 		// sanitize the userId before searching
 		try {
@@ -327,7 +333,7 @@ class UserProfile implements \JsonSerializable {
 		}
 
 		// create query template
-		$query = "SELECT userProfileId, userProfileName, userProfileFirstName, userProfileLastName, userProfileEmail, userProfileAuthenticationToken, userProfileHash FROM userProfile WHERE userProfileName = :userName";
+		$query = "SELECT userProfileId, userProfileName, userProfileFirstName, userProfileLastName, userProfileEmail, userProfileAuthenticationToken, userProfileHash FROM userProfile WHERE userProfileName = :userProfileName";
 		$pdoStatement = $pdo->prepare($query);
 
 		// bind the user id to the place holder in the template
@@ -351,7 +357,7 @@ class UserProfile implements \JsonSerializable {
 
 
 	/**
-	 * formats the state variables for JSON serialization
+	 * formats the state variables for JSON serialization. Might need changing.
 	 *
 	 * @return array resulting state variables to serialize
 	 **/
