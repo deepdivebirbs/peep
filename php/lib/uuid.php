@@ -1,10 +1,15 @@
 <?php
+
 require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 use Ramsey\Uuid\UuidInterface;
 use Ramsey\Uuid\UuidFactory;
 use Ramsey\Uuid\Codec\StringCodec;
-
-function generateUuidV4(): UuidInterface {
+/**
+ * generates an optimized uuid v4 for efficient mySQL storage and indexing
+ *
+ * @return UuidInterface resulting uuid
+ **/
+function generateUuidV4() : UuidInterface {
 	try {
 		$factory = new UuidFactory();
 		$codec = new StringCodec($factory->getUuidBuilder());

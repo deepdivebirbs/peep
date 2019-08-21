@@ -68,6 +68,8 @@ class BirdSpeciesTest extends PeepTest {
 	}
 
 	public final function tearDown(): void {
+		parent::tearDown();
+
 		$this->VALID_SPECIES_ID = null;
 		$this->VALID_SPECIES_CODE = null;
 		$this->VALID_SPECIES_COM_NAME = null;
@@ -116,8 +118,6 @@ class BirdSpeciesTest extends PeepTest {
 	 * @throws \Exception
 	 */
 	public function testSpeciesUpdate() {
-		$this->VALID_SPECIES_ID = generateUuidV4();
-
 		// Get row count for some reason
 		$rowCount = $this->getConnection()->getRowCount("species");
 
@@ -150,9 +150,6 @@ class BirdSpeciesTest extends PeepTest {
 	 * Unit test for my delete method in BirdSpecies class
 	 */
 	public function testSpeciesDelete(): void {
-		// Generate new UUID
-		$this->VALID_SPECIES_ID = generateUuidV4();
-
 		// Get the row count to compare later
 		$rowCount = $this->getConnection()->getRowCount("species");
 
@@ -179,9 +176,6 @@ class BirdSpeciesTest extends PeepTest {
 	 * @throws \Exception
 	 */
 	public function testGetBirdBySpeciesId(): void {
-		// Generate new UUID.
-		$this->VALID_SPECIES_ID = generateUuidV4();
-
 		// Get row count for later
 		$rowCount = $this->getConnection()->getRowCount("species");
 
@@ -205,9 +199,6 @@ class BirdSpeciesTest extends PeepTest {
 	 * @throws \Exception
 	 */
 	public function testGetAllBirds() {
-		// Generate new UUID
-		$this->VALID_SPECIES_ID = generateUuidV4();
-
 		// Get row count
 		$baseRowCount = $this->getConnection()->getRowCount("species");
 
