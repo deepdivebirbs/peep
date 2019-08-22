@@ -288,7 +288,7 @@ class UserProfile implements \JsonSerializable {
 
 		// bind the member variables to the place holders in the template
 		//$formattedDate = $this->tweetDate->format("Y-m-d H:i:s.u");
-		$parameters = ["userProfileId" => $this->userProfileId->getBytes(), "userProfileName" => $this->userProfileName->getBytes(), "userProfileFirstName" => $this->userProfileFirstName, "userProfileLastName" => $this->userProfileLastName, "userProfileEmail" => $this->userProfileEmail, "userProfileAuthenticationToken" => $this->userProfileAuthenticationToken, "userProfileHash" => $this->userProfileHash];
+		$parameters = ["userProfileId" => $this->userProfileId->getBytes(), "userProfileName" => $this->userProfileName, "userProfileFirstName" => $this->userProfileFirstName, "userProfileLastName" => $this->userProfileLastName, "userProfileEmail" => $this->userProfileEmail, "userProfileAuthenticationToken" => $this->userProfileAuthenticationToken, "userProfileHash" => $this->userProfileHash];
 		$statement->execute($parameters);
 	}
 
@@ -331,7 +331,7 @@ class UserProfile implements \JsonSerializable {
 	 * Takes an ID and pdo object, and returns the profile from the pdo that matches it.
 	 *
 	 * @param \PDO $pdo
-	 * @param string $userId
+	 * @param string $userProfileId
 	 * @return UserProfile|null
 	 */
 	public function getUserProfileById(\PDO $pdo , string $userProfileId ): ?userProfile{
