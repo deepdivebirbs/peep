@@ -129,6 +129,10 @@ class UserProfileTest extends PeepTest {
 		$this->assertEquals($numRows, $this->getConnection()->getRowCount("useProfile"));
 	}
 
+	/**
+	 * Test grabbing a profile by an ID that can't exist.
+	 * TODO make sure the generated ID is too big
+	 */
 	public function testGetInvalidProfileByProfileId() : void {
 		//grab profile id that exceeds the maximum allowable profile id
 		$profileId = generateUuidV4();
@@ -136,8 +140,33 @@ class UserProfileTest extends PeepTest {
 		$this->assertNull($profile);
 	}
 
-	public function testGetUserProfileByName() {
-		;
+	public function testGetUserProfileByName() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("userProfile");
+
+		// create a new Tweet and insert to into mySQL
+		$profileId = generateUuidV4();
+		$userProfile = new UserProfile($profileId, $this->VALID_profileName, $this->VALID_profileFirstName, $this->VALID_profileLastName, $this->VALID_profileEmail, $this->VALID_AUTHENTICATION, $this->VALID_HASH);
+		$userProfile->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$results = UserProfile::getUserProfileByName($this->getPDO(), $userProfile->getUserProfileName());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("userProfile"));
+		$this->assertCount(1, $results);
+
+		// enforce no other objects are bleeding into the test
+		$this->assertContainsOnlyInstancesOf("Birbs\\Peep\\Test", $results);
+
+		// grab the result from the array and validate it
+		$pdoProfile = $results[0];
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("userProfile"));
+		$this->assertEquals($pdoProfile->getUserProfileId(), $profileId);
+		$this->assertEquals($pdoProfile->getUserProfileAuthenticationToken(), $this->VALID_AUTHENTICATION);
+		$this->assertEquals($pdoProfile->getUserProfileEmail(), $this->VALID_profileEmail);
+		$this->assertEquals($pdoProfile->getUserProfileFirstName(), $this->VALID_profileFirstName);
+		$this->assertEquals($pdoProfile->getUserProfileHash(), $this->VALID_HASH);
+		$this->assertEquals($pdoProfile->getUserProfileLastName(), $this->VALID_profileLastName);
+		$this->assertEquals($pdoProfile->getUserProfileName(), $this->VALID_profileName);
 	}
 
 	public function testGetUserProfileAll() {
