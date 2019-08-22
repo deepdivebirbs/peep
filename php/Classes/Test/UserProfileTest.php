@@ -73,7 +73,7 @@ class UserProfileTest extends PeepTest {
 		$testProfile->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match
-		$pdoProfile= UserProfile::getUserProfileById($this->getPDO(), $UserProfile->getUserProfileId);
+		$pdoProfile= UserProfile::getUserProfileById($this->getPDO(), $testProfile->getUserProfileId);
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("userProfile"));
 		$this->assertEquals($pdoProfile->getUserProfileId(), $testProfileId);
 		$this->assertEquals($pdoProfile->getUserProfileName(), $this->VALID_profileName);
@@ -129,8 +129,11 @@ class UserProfileTest extends PeepTest {
 		$this->assertEquals($numRows, $this->getConnection()->getRowCount("useProfile"));
 	}
 
-	public function testGetUserProfileById() {
-		;
+	public function testGetInvalidProfileByProfileId() : void {
+		//grab profile id that exceeds the maximum allowable profile id
+		$profileId = generateUuidV4();
+		$profile = UserProfile::getUserProfileById($this->getPDO(), $profileId);
+		$this->assertNull($profile);
 	}
 
 	public function testGetUserProfileByName() {
