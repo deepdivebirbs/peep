@@ -122,6 +122,11 @@ class UserProfileTest extends PeepTest {
 		//delete the profile from mySQL
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("userProfile"));
 		$testProfile->delete($this->getPDO());
+
+		//test that this profile was deleted by grabbing profile id
+		$pdoProfile = UserProfile::getUserProfileById($this->getPDO(), $testProfile->getUserProfileId());
+		$this->assertNull($pdoProfile);
+		$this->assertEquals($numRows, $this->getConnection()->getRowCount("useProfile"));
 	}
 
 	public function testGetUserProfileById() {
