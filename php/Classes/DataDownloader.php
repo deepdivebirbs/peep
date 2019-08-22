@@ -4,16 +4,20 @@ namespace Birbs\Peep;
 require_once("BirdSpecies.php");
 require_once("autoload.php");
 require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
+require_once(dirname(__DIR__, 1) . "/lib/uuid.php");
 
 /**
  * Class DataDownloader
  * @package Birbs\Peep
  */
 class DataDownloader {
+
 	/**
-	 * @return Array
+	 * This function pulls a batch of birds from the Ebirds database through their API
+	 *
+	 * @return array
 	 */
-	public function pullBirds(): Array {
+	public static function pullBirds(): array {
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
@@ -31,18 +35,7 @@ class DataDownloader {
 		));
 
 		$response = curl_exec($curl);
-
 		$jsonArray = json_decode($response, true);
-
-
-		/*
-		 * Don't forget, you don't have to print anything in the foreach loop, just push elements to the array
-		 * and print the array outside of the loop.  DO NOT ENCODE THE ARRAY YET!!
-		 */
-		/*
-
-		*/
-
 		return $jsonArray;
 	}
 
@@ -64,25 +57,37 @@ class DataDownloader {
 	}
 
 	/**
-	 * This function creates a bunch of arrays that contain the specified fields.
+	 * Sets the values from the API JSON array
 	 */
-	public function createValueArrays() {
-		$speciesCodes = $this->parseBirds($this->pullBirds(), "speciesCode");
-		$speciesComNames = $this->parseBirds($this->pullBirds(), "comName");
-		$speciesSciNames = $this->parseBirds($this->pullBirds(), "sciName");
-		$speciesObsDate = $this->parseBirds($this->pullBirds(), "obsDt");
-		$speciesLat = $this->parseBirds($this->pullBirds(), "lat");
-		$speciesLng = $this->parseBirds($this->pullBirds(), "lng");
+	public function setValues() {
+		$birdList = self::pullBirds();
 
-		$valueArray = [$speciesCodes, $speciesComNames, $speciesSciNames, $speciesObsDate, $speciesLat, $speciesLng];
+		foreach($birdList as $key => $value) {
+			$speciesId = generateUuidV4();
+			$speciesCode = $birdList[$key]["speciesCode"];
+			$speciesComName = $birdList[$key]["comName"];
+			$speciesSciName = $birdList[$key]["sciName"];
+			$speciesPhotoUrl = "www.testurl.com";
+			$speciesObsDate = $birdList[$key]["obsDt"];
+			$speciesLat = $birdList[$key]["lat"];
+			$speciesLng = $birdList[$key]["lng"];
 
-		print_r($valueArray);
+			print_r($speciesPhotoUrl . "\n");
+			// Create new BirdSpecies
+			$birdSpecies = new BirdSpecies($speciesId, $speciesCode, $speciesComName, $speciesSciName, $speciesPhotoUrl);
+
+			$birdSpeciesArray = Array();
+
+			array_push($birdSpeciesArray, $birdSpecies);
+
+			var_dump($speciesId);
+		};
 	}
-
 }
 
 $test = new DataDownloader();
 //$birds = $test->pullBirds();
 //$comNames = $test->parseBirds($birds, "comName");
 
-$test->createValueArrays();
+var_dump($test->setValues());
+

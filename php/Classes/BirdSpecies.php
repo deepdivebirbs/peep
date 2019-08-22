@@ -148,9 +148,6 @@ class BirdSpecies implements \JsonSerializable{
 			throw(new \TypeError("speciesCode must be a string."));
 		}
 
-		if(strlen($speciesCode) !== 6) {
-			throw(new \RangeException("speciesCode must be 6 characters."));
-		}
 		$this->speciesCode = $speciesCode;
 	}
 
