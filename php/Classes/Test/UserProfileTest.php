@@ -84,8 +84,29 @@ class UserProfileTest extends PeepTest {
 		$this->assertEquals($pdoProfile->getUserProfileAuthenticationToken(), $this->VALID_AUTHENTICATION);
 	}
 
-	public function testUserProfileUpdate() {
-		;
+	public function testUserProfileUpdate(): void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("profile");
+
+		// create a new userProfile and insert to into mySQL
+		$profileId = generateUuidV4();
+		$userProfile = new UserProfile($profileId, $this->VALID_profileName, $this->VALID_profileFirstName, $this->VALID_profileLastName, $this->VALID_profileEmail, $this->VALID_AUTHENTICATION, $this->VALID_HASH);
+		$userProfile->insert($this->getPDO());
+
+		// edit the Profile and update it in mySQL
+		$userProfile->setUserProfileEmail($this->VALID_profileEmail);
+		$userProfile->update($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$pdoProfile = userProfile::getUserProfileById($this->getPDO(), $userProfile->getUserProfileId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("userProfile"));
+		$this->assertEquals($pdoProfile->getUserProfileId(), $profileId);
+		$this->assertEquals($pdoProfile->getUserProfileAuthenticationToken(), $this->VALID_AUTHENTICATION);
+		$this->assertEquals($pdoProfile->getUserProfileEmail(), $this->VALID_profileEmail);
+		$this->assertEquals($pdoProfile->getUserProfileFirstName(), $this->VALID_profileFirstName);
+		$this->assertEquals($pdoProfile->getUserProfileHash(), $this->VALID_HASH);
+		$this->assertEquals($pdoProfile->getUserProfileLastName(), $this->VALID_profileLastName);
+		$this->assertEquals($pdoProfile->getUserProfileName(), $this->VALID_profileName);
 	}
 
 	public function testUserProfileDelete() {
