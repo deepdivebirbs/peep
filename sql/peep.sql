@@ -40,7 +40,6 @@ create table sighting (
 	primary key(sightingId),
 	foreign key(sightingUserProfileId) REFERENCES userProfile(userProfileId),
 	foreign key(sightingSpeciesId) REFERENCES species(speciesId)
-
 );
 
 -- Note that the table FavoriteBirdlist contains two foreign keys, each from a different
