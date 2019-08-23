@@ -152,7 +152,7 @@ public function testGetSightingBySightingId(): void {
 	$sighting->insert($this->getPDO());
 
 		//grab the data from MySQL and enforce the fields match our expectations
-	$result = Sighting::getSightingBySightingId($this->getPDO(), $sighting->getSightingId());
+	$results = Sighting::getSightingBySightingId($this->getPDO(), $sighting->getSightingId());
 	$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("sighting"));
 	$this->assertCount(1, $results);
 	$this->assertContainsOnlyInstancesOf("Birbs\\Peep\\Sighting", $results);
