@@ -1,7 +1,13 @@
 <?php
+
 namespace Birbs\Peep;
 
+use Birbs\Peep\Test\PeepTest;
+
 require_once("BirdSpecies.php");
+require_once("Sighting.php");
+require_once("Test/PeepTest.php");
+
 require_once("autoload.php");
 require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 require_once(dirname(__DIR__, 1) . "/lib/uuid.php");
@@ -10,7 +16,7 @@ require_once(dirname(__DIR__, 1) . "/lib/uuid.php");
  * Class DataDownloader
  * @package Birbs\Peep
  */
-class DataDownloader {
+class DataDownloader extends PeepTest {
 
 	/**
 	 * This function pulls a batch of birds from the Ebirds database through their API
@@ -59,28 +65,38 @@ class DataDownloader {
 	/**
 	 * Sets the values from the API JSON array
 	 */
-	public function setValues() {
+	public function setAndInsert() {
 		$birdList = self::pullBirds();
 
 		foreach($birdList as $key => $value) {
+			// Generate IDs
 			$speciesId = generateUuidV4();
+			$sightingId = generateUuidV4();
+			$sightingUserProfileId = generateUuidV4();
+
 			$speciesCode = $birdList[$key]["speciesCode"];
 			$speciesComName = $birdList[$key]["comName"];
 			$speciesSciName = $birdList[$key]["sciName"];
-			$speciesPhotoUrl = "www.testurl.com";
+			$speciesPhotoUrl = "https://ebird.org/species/pinjay";
 			$speciesObsDate = $birdList[$key]["obsDt"];
 			$speciesLat = $birdList[$key]["lat"];
 			$speciesLng = $birdList[$key]["lng"];
 
-			print_r($speciesPhotoUrl . "\n");
+			// Create DateTime object
+			$sightingDateTime = new \DateTime;
+			$sightingDateTime::createFromFormat("Y-m-d H:i:s", $speciesObsDate);
+
 			// Create new BirdSpecies
 			$birdSpecies = new BirdSpecies($speciesId, $speciesCode, $speciesComName, $speciesSciName, $speciesPhotoUrl);
+			$sighting = new Sighting($sightingId, $sightingUserProfileId, $speciesId, $speciesComName, $speciesSciName, $speciesLat, $speciesLng, $sightingDateTime, $speciesPhotoUrl);
 
 			$birdSpeciesArray = Array();
 
 			array_push($birdSpeciesArray, $birdSpecies);
 
-			var_dump($speciesId);
+			// Insert objects into species
+			$birdSpecies->insert($this->getPDO());
+			$sighting->insert($this->getPDO());
 		};
 	}
 }
@@ -88,6 +104,5 @@ class DataDownloader {
 $test = new DataDownloader();
 //$birds = $test->pullBirds();
 //$comNames = $test->parseBirds($birds, "comName");
-
-var_dump($test->setValues());
+$test->setAndInsert();
 

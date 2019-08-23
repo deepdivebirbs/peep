@@ -213,7 +213,7 @@ class Sighting implements \jsonSerializable {
  **/
 	public function setSightingBirdPhoto(string $newSightingBirdPhoto): void {
 		$newSightingBirdPhoto = trim($newSightingBirdPhoto);
-		$newSightingBirdPhoto = filter_var($newSightingBirdPhoto, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES, FILTER_SANITIZE_URL, FILTER_VALIDATE_URL);
+		$newSightingBirdPhoto = filter_var($newSightingBirdPhoto, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(strlen($newSightingBirdPhoto) > 255) {
 			throw(new \RangeException("image content is too large"));
 		}
@@ -267,7 +267,7 @@ class Sighting implements \jsonSerializable {
 /**
  * mutator method for sighting LocY
  *
- * @param float $sightingLocY
+ * @param float $newSightingLocY
  * @throws \InvalidArgumentException if sightingLocY is not a float
  * @throws \RangeException if not to the thousandths decimal place
  * @throws \TypeError if sightingLocY is not a float
@@ -294,7 +294,7 @@ class Sighting implements \jsonSerializable {
 	public function insert(\PDO $pdo) : void {
 
 		// create query template
-		$query = "INSERT INTO sighting(sightingId,sightingSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY) VALUES(:sightingId, :sightingSpeciesId, :sightingUserProfileId, :sightingBirdPhoto, :sightingDateTime, :sightingLocX, :sightingLocY)";
+		$query = "INSERT INTO sighting(sightingId,sightingBirdSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY) VALUES(:sightingId, :sightingSpeciesId, :sightingUserProfileId, :sightingBirdPhoto, :sightingDateTime, :sightingLocX, :sightingLocY)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
