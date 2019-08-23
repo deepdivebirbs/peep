@@ -108,11 +108,11 @@ class Favorite implements \JsonSerializable {
 	public function insert(\PDO $pdo): void {
 		//template for query
 		$query = "INSERT INTO favorite(favoriteSpeciesId, favoriteUserProfileId) 
-		VALUES (:favoriteBirdSpeciesId, :favoriteUserProfileId )";
+		VALUES (:favoriteSpeciesId, :favoriteUserProfileId )";
 		$statement = $pdo->prepare($query);
 
 		//binds member variables to the placeholders in the template. getbytes converts string into bytes
-		$parameters = ["favoriteBirdSpeciesId" => $this->favoriteBirdSpeciesId->getBytes(),
+		$parameters = ["favoriteSpeciesId" => $this->favoriteBirdSpeciesId->getBytes(),
 			"favoriteUserProfileId" => $this->favoriteUserProfileId->getBytes()]
 
 		;
@@ -134,7 +134,7 @@ class Favorite implements \JsonSerializable {
 
 		//binds the member variables to the placeholder in the template
 		$parameters = ["favoriteUserProfileId" => $this->favoriteUserProfileId -> getBytes(), "favoriteSpeciesId" =>
-			$this->favoriteSpeciesId->getBytes()];
+			$this->favoriteBirdSpeciesId->getBytes()];
 		$statement->execute($parameters);
 	}
 
@@ -159,7 +159,7 @@ class Favorite implements \JsonSerializable {
 		}
 
 		//create query template
-		$query = "SELECT favoriteUserProfileId, favoriteSpeciesId FROM favorite WHERE favoriteUserProfileId = :favoriteUserProfileId AND favoriteSpeciesId= :favoriteSpeciesID";
+		$query = "SELECT favoriteUserProfileId, favoriteSpeciesId FROM favorite WHERE favoriteUserProfileId = :favoriteUserProfileId AND favoriteSpeciesId= :favoriteSpeciesId";
 		$statement = $pdo->prepare($query);
 
 		// bind the userProfileId and the speciesId to their placeholder in the template
@@ -172,7 +172,7 @@ class Favorite implements \JsonSerializable {
 			$statement ->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if ($row !==false) {
-				$favorite = new Favorite($row["favoriteUserProfileId"], $row["favoriteSpeciesId"]);
+				$favorite = new Favorite($row["favoriteSpeciesId"], $row["favoriteUserProfileId"]);
 			}
 		}catch (\Exception $exception){
 			//if the row couldn't be converted, rethrow it
