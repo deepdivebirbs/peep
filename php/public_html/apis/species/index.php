@@ -17,7 +17,7 @@ if(session_status() !== PHP_SESSION_ACTIVE) {
 	session_start();
 }
 
-// Create an empty reply for some reason
+// Create a template reply
 $reply = new \stdClass();
 $reply->status = 200;
 $reply->data = null;
@@ -28,12 +28,57 @@ try {
 	$pdo = $secrets->getPdoObject();
 
 	// What HTTP method was used?
-	$method = $_SERVER["HTTP_X_HTTP_METHOD"] ?? $_SERVER["REQUEST_METHOD"];
+	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
+
+	// Sanitize and store input
+	$speciesId = filter_input(INPUT_GET, "speciesId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$speciesCode = filter_input(INPUT_GET, "speciesCode", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$speciesComName = filter_input(INPUT_GET, "speciesComName", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$speciesSciName = filter_input(INPUT_GET, "speciesSciName", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$speciesPhotoUrl = filter_input(INPUT_GET, "speciesPhotoUrl", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+
+
+	// Define behaviour if $method is a GET request
+	if($method === "GET") {
+		// Set the XSRF cookie
+		setXsrfCookie();
+
+		// Get bird species based on stuff?
+		if(empty($speciesId) === false) {
+			$birdSpecies = BirdSpecies::getSpeciesBySpeciesId($pdo, $speciesId);
+			if($birdSpecies !== null) {
+				$reply->data = $birdSpecies;
+			}
+		} else {
+			$birdSpecies = BirdSpecies::getAllBirds($pdo)->toArray();
+			if($birdSpecies !== null) {
+				$reply->data = $birdSpecies;
+			}
+		}
+	} else {
+		throw(new \InvalidArgumentException("Invalid HTTP Request...", 418));
+	}
 
 } catch(\Exception $exception) {
-	$exceptionType = get_class($exception);
-	throw(new $exceptionType($exception->getMessage(), 0, $exception));
+	// Set error messages
+	$reply->status = $exception->getCode();
+	$reply->message = $exception->getMessage();
+	$reply->trace = $exception->getTraceAsString();
+
+} catch(\TypeError $exception) {
+	$reply->status = $exception->getCode();
+	$reply->message = $exception->getMessage();
 }
+
+header("Content-type: application/json");
+
+// If the reply data is empty, unset the variable
+if($reply->data === null) {
+	unset($reply->data);
+}
+
+echo json_encode($reply);
 
 
 
