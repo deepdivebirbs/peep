@@ -21,7 +21,7 @@ create table userProfile(
 
 CREATE TABLE species(
 	speciesId BINARY(16) NOT NULL,
-	speciesCode VARCHAR(6) NOT NULL,
+	speciesCode VARCHAR(8) NOT NULL,
 	speciesComName VARCHAR(64) NULL,
 	speciesSciName VARCHAR(64) NULL,
 	speciesPhotoUrl VARCHAR(128) NULL,

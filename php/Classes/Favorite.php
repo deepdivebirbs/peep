@@ -21,7 +21,7 @@ class Favorite implements \JsonSerializable {
 	private $favoriteSpeciesId;
 
 	/**
-	 * this is taken from the user id of the user that is adding the bird to their favorites; this is a foreign key
+	 * This is taken from the user id of the user that is adding the bird to their favorites; this is a foreign key
 	 */
 	private $favoriteUserProfileId;
 

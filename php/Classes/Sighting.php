@@ -267,7 +267,7 @@ class Sighting implements \jsonSerializable {
 /**
  * mutator method for sighting LocY
  *
- * @param float $sightingLocY
+ * @param float $newSightingLocY
  * @throws \InvalidArgumentException if sightingLocY is not a float
  * @throws \RangeException if not to the thousandths decimal place
  * @throws \TypeError if sightingLocY is not a float
@@ -293,6 +293,7 @@ class Sighting implements \jsonSerializable {
 	public function insert(\PDO $pdo) : void {
 
 		// create query template
+
 		$query = "INSERT INTO sighting(sightingId, sightingBirdSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY) VALUES(:sightingId, :sightingBirdSpeciesId, :sightingUserProfileId, :sightingBirdPhoto, :sightingDateTime, :sightingLocX, :sightingLocY)";
 		$statement = $pdo->prepare($query);
 
