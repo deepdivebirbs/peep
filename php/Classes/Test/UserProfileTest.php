@@ -171,7 +171,7 @@ class UserProfileTest extends PeepTest {
 	 */
 	public function testGetValidUserProfileByUserProfileAuthenticationToken() : void {
 		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("profile");
+		$numRows = $this->getConnection()->getRowCount("userProfile");
 
 		// create a new userProfile and insert to into mySQL
 		$profileId = generateUuidV4();
@@ -179,18 +179,18 @@ class UserProfileTest extends PeepTest {
 		$userProfile->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$results = Profile::getUserProfileByAuthenticationToken($this->getPDO(), $userProfile->getProfileAuthenticationToken());
+		$results = UserProfile::getUserProfileByAuthenticationToken($this->getPDO(), $userProfile->getUserProfileAuthenticationToken());
 
-		// grab the result from the array and validate it
-		$pdoProfile = $results[0];
+		// validate the results
+
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("userProfile"));
-		$this->assertEquals($pdoProfile->getUserProfileId(), $profileId);
-		$this->assertEquals($pdoProfile->getUserProfileAuthenticationToken(), $this->VALID_AUTHENTICATION);
-		$this->assertEquals($pdoProfile->getUserProfileEmail(), $this->VALID_profileEmail);
-		$this->assertEquals($pdoProfile->getUserProfileFirstName(), $this->VALID_profileFirstName);
-		$this->assertEquals($pdoProfile->getUserProfileHash(), $this->VALID_HASH);
-		$this->assertEquals($pdoProfile->getUserProfileLastName(), $this->VALID_profileLastName);
-		$this->assertEquals($pdoProfile->getUserProfileName(), $this->VALID_profileName);
+		$this->assertEquals($results->getUserProfileId(), $profileId);
+		$this->assertEquals($results->getUserProfileAuthenticationToken(), $this->VALID_AUTHENTICATION);
+		$this->assertEquals($results->getUserProfileEmail(), $this->VALID_profileEmail);
+		$this->assertEquals($results->getUserProfileFirstName(), $this->VALID_profileFirstName);
+		$this->assertEquals($results->getUserProfileHash(), $this->VALID_HASH);
+		$this->assertEquals($results->getUserProfileLastName(), $this->VALID_profileLastName);
+		$this->assertEquals($results->getUserProfileName(), $this->VALID_profileName);
 	}
 
 
