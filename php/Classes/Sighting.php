@@ -73,7 +73,7 @@ class Sighting implements \jsonSerializable {
  * @throws \Exception if some other exception occurs
  * @Documentation https://php.net/manual/en/language.oop5.decon.php
  **/
-	public function __construct($newSightingId, $newSightingUserProfileId, $newSightingSpeciesId, float $newSightingLocX, float $newSightingLocY, \DateTime $newSightingDateTime, string $newSightingBirdPhoto) {
+	public function __construct($newSightingId, $newSightingUserProfileId, $newSightingSpeciesId, float $newSightingLocX, float $newSightingLocY, $newSightingDateTime = null, string $newSightingBirdPhoto) {
 		try {
 			$this->setSightingId($newSightingId);
 			$this->setSightingSpeciesId($newSightingSpeciesId);
@@ -177,7 +177,7 @@ class Sighting implements \jsonSerializable {
 	 * @throws \RangeException if the $newSightingSpeciesId is not positive
 	 * @throws \TypeError if the profile ID is not
 	 **/
-	public function setSightingSpeciesId(Uuid $newSightingSpeciesId): void {
+	public function setSightingSpeciesId($newSightingSpeciesId): void {
 		try {
 			$uuid = self::validateUuid($newSightingSpeciesId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -194,7 +194,7 @@ class Sighting implements \jsonSerializable {
 	 * @throws \RangeException if the $newSightingUserId is not positive
 	 * @throws \TypeError if the profile ID is not Uuid
 	 **/
-	public function setSightingUserProfileId(Uuid $newSightingUserProfileId): void {
+	public function setSightingUserProfileId($newSightingUserProfileId): void {
 		try {
 			$uuid = self::validateUuid($newSightingUserProfileId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -230,7 +230,7 @@ class Sighting implements \jsonSerializable {
  * @throws \Exception if there is a different kind of error
  *
  */
-	public function setSightingDateTime(\DateTime $newSightingDateTime): void {
+	public function setSightingDateTime($newSightingDateTime = null): void {
 		if($newSightingDateTime === null) {
 			$this->sightingDateTime = new \DateTime();
 			return;
@@ -293,12 +293,12 @@ class Sighting implements \jsonSerializable {
 	public function insert(\PDO $pdo) : void {
 
 		// create query template
-		$query = "INSERT INTO sighting(sightingId, sightingSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY) VALUES(:sightingId, :sightingSpeciesId, :sightingUserProfileId, :sightingBirdPhoto, :sightingDateTime, :sightingLocX, :sightingLocY)";
+		$query = "INSERT INTO sighting(sightingId, sightingBirdSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY) VALUES(:sightingId, :sightingBirdSpeciesId, :sightingUserProfileId, :sightingBirdPhoto, :sightingDateTime, :sightingLocX, :sightingLocY)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
 		$formattedDate = $this->sightingDateTime->format("Y-m-d H:i:s.u");
-		$parameters = ["sightingId" => $this->sightingId->getBytes(), "sightingSpeciesId" => $this->sightingSpeciesId->getBytes(),"sightingUserProfileId" => $this->sightingUserProfileId->getBytes(), "sightingBirdPhoto" => $this->sightingBirdPhoto, "sightingDateTime" => $formattedDate, "sightingLocX" => $this->sightingLocX, "sightingLocY" => $this->sightingLocY];
+		$parameters = ["sightingId" => $this->sightingId->getBytes(), "sightingBirdSpeciesId" => $this->sightingSpeciesId->getBytes(),"sightingUserProfileId" => $this->sightingUserProfileId->getBytes(), "sightingBirdPhoto" => $this->sightingBirdPhoto, "sightingDateTime" => $formattedDate, "sightingLocX" => $this->sightingLocX, "sightingLocY" => $this->sightingLocY];
 		$statement->execute($parameters);
 	}
 
@@ -337,7 +337,7 @@ try {
 	}
 
 	//create the query template
-	$query = "SELECT sightingId, sightingSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY FROM sighting WHERE sightingId = :sightingId";
+	$query = "SELECT sightingId, sightingBirdSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY FROM sighting WHERE sightingId = :sightingId";
 	$statement =$pdo->prepare($query);
 	//bind the sightingId to the template placeholder
 	$parameters = ["sightingId" => $sightingId->getBytes()];
@@ -349,7 +349,7 @@ try {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		$row = $statement->fetch();
 		if($row !== false) {
-			$sighting = new Sighting($row["sightingId"], $row["sightingSpeciesId"], $row["sightingUserProfileId"], $row["sightingBirdPhoto"], $row["sightingDateTime"], $row["sightingLocX"], $row["sightingLocY"]);
+			$sighting = new Sighting($row["sightingId"], $row["sightingBirdSpeciesId"], $row["sightingUserProfileId"], $row["sightingLocX"], $row["sightingLocY"], $row["sightingDateTime"], $row["sightingBirdPhoto"] );
 		}
 	} catch(\Exception $exception) {
 
@@ -371,9 +371,9 @@ try {
 
 public static function getSightingsBySightingUserProfileId(\PDO $pdo, $sightingUserProfileId) :\SplFixedArray {
 //create the query template
-	$query = "SELECT sightingId, sightingSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY FROM sighting WHERE sightingUserProfileId = :sightingUserProfileId";
+	$query = "SELECT sightingId, sightingBirdSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY FROM sighting WHERE sightingUserProfileId = :sightingUserProfileId";
 	$statement = $pdo->prepare($query);
-	$parameters = ["sightingsBySightingUserProfileId" => $sightingUserProfileId->getBytes];
+	$parameters = ["sightingsBySightingUserProfileId" => $sightingUserProfileId->getBytes()];
 	$statement->execute($parameters);
 
 //build an array of sightings
@@ -404,7 +404,7 @@ public static function getSightingsBySightingUserProfileId(\PDO $pdo, $sightingU
 
 	public static function getSightingsBySightingSpeciesId(\PDO $pdo, $sightingSpeciesId) :\SplFixedArray {
 //create the query template
-		$query = "SELECT sightingId, sightingSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY FROM sighting WHERE sightingSpeciesId = :sightingSpeciesId";
+		$query = "SELECT sightingId, sightingBirdSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY FROM sighting WHERE sightingBirdSpeciesId = :sightingSpeciesId";
 		$statement = $pdo->prepare($query);
 		$parameters = ["sightingsBySightingSpeciesId" => $sightingSpeciesId->getBytes()];
 		$statement->execute($parameters);

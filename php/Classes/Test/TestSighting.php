@@ -1,9 +1,11 @@
 <?php
 
 namespace Birbs\Peep\Test;
-use Birbs\Peep\{Sighting};
+
+use Birbs\Peep\{Sighting, UserProfile, BirdSpecies};
+
 require_once("PeepTest.php");
-require_once (dirname(__DIR__, 1) . "/autoload.php");
+require_once(dirname(__DIR__, 1) . "/autoload.php");
 
 /**
  * Full PHPUnit test for the Sighting class
@@ -14,17 +16,16 @@ require_once (dirname(__DIR__, 1) . "/autoload.php");
  * @author Ruth Dove <senoritaruth@gmail.com>
  *
  **/
-
 class SightingTest extends PeepTest {
 	/**
 	 * User profile that created the sighting; this is for foreign key relations
 	 * @var $userProfile User Profile
 	 **/
-	protected $userProfile = null;
+	protected $userProfile = "BirdLady";
 
 	/**
 	 * This is the species that was used to fill in the sighting being tested
-	 * @var $species Species from the API
+	 * @var $sightingSpeciesId Species from the API
 	 */
 	protected $species = null;
 
@@ -38,7 +39,7 @@ class SightingTest extends PeepTest {
 	 * User Profile hash used to create the user profile for this test sighting
 	 * @var $userProfileHash user Profile Hash
 	 **/
-	protected $userProfileHash = null;
+	protected $userProfileHash;
 
 	/**
 	 * Sighting Date Time, which is when the sighting was entered into the table
@@ -46,138 +47,113 @@ class SightingTest extends PeepTest {
 	 **/
 	protected $sightingDateTime = null;
 
+	/**Sighting Latitude, where the bird was sighted
+	 * @var $sightingLocX float the bird was sighted
+	 **/
+	protected $sightingLocX = 43.098;
+
+	/**Sighting Latitude, where the bird was sighted
+	 * @var $sightingLocY float of the bird was sighted
+	 **/
+	protected $sightingLocY = 36.098;
+
+	/**
+	 * @var $sightingBirdPhoto
+	 */
+	protected $sightingBirdPhoto = "img";
+
+	/**
+	 * @var $sightingId   Uuid of the sighting
+	 */
+	protected $sightingId;
+
 	/**
 	 * create dependent objects before running each test
 	 **/
 
-	public final function setUp() : void {
-		//run the default setUp() method first
-
+	// create a salt and a hash for the mocked profile
+	public final function setUp(): void {
+		// run the default setUp() method first
 		parent::setUp();
 
-		// create a salt and a hash for the mocked profile
+
 		$password = "abc123";
-		$this->VALID_USERPROFILEHASH = userProfileHash($password, PASSWORD_ARGON21, ["time_cost" => 384]);
-		$this->VALID_USERPROFILEACTIVATIONTOKEN = bin2hex(random_bytes(16));
+		$this->userProfileHash = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
+		$userProfileAuthenticationToken = bin2hex(random_bytes(16));
 
 		//create and insert the mocked profile
-		$this->userProfile = new userProfile(generateUuidV4(), "Bird Lady", "Cardi", "Nal","cardib@gsnail.com", null, $this->VALID_USERPROFILEHASH);
+		$userProfileId = generateUuidV4();
+		$this->userProfile = new UserProfile($userProfileId, "Bird Lady", "Cardi", "Nal", "cardib@gsnail.com", $userProfileAuthenticationToken, $this->userProfileHash);
 		$this->userProfile->insert($this->getPDO());
 
 		//create and insert the mocked species
-		$this->species = new species(generateUuidV4(), "pingym", "Pinyon Jay", "Gymnorhinus cyanocephalus", "photo.url/bird");
+		$speciesId = generateUuidV4();
+		$this->species = new BirdSpecies($speciesId, "pingym", "Pinyon Jay", "Gymnorhinus cyanocephalus", "photo.url/bird");
 		$this->species->insert($this->getPDO());
-
-		//create the and insert the mocked sighting
-		$this->sighting = new sighting(generateUuidV4(), generateUuidV4(), generateUuidV4() , $this->sightingBirdPhoto, $this->sightingDateTime, $this->$sightingLocX, $this->$sightingLocY);
-
-		//calculate the date (just use the time the unit test was set up)
-		$this->VALID = \DateTime();
-
-	} //public final function end curly
-
-	/**
-	 * Tear down function deletes all data and resets database after each unit test
-	 */
-	public final function tearDown(): void {
-		parent::tearDown();
-
-		$this->$userProfile = null;
-		$this->$userProfileAuthenticationToken = null;
-		$this->$userProfileHash = null;
-		$this->$sightingDateTime = null;
-		
-
-	Factory::DELETE_ALL();
 	}
 
+	//calculate the date (just use the time the unit test was set up)
+	//$this->sightingDateTime = \DateTime();
+
+	/**
+	 * Test inserting a valid sighting and verify that the actual MySQL data matches
+	 **/
+	public function testInsertValidSighting(): void {
+		//count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("sighting");
+
+		//create a new sighting and insert it into MySQL
+		$sightingId = generateUuidV4();
+		$sighting = new Sighting ($sightingId, $this->userProfile->getUserProfileId(), $this->species->getSpeciesId(), $this->sightingLocX, $this->sightingLocY, $this->sightingDateTime, $this->sightingBirdPhoto);
+		$sighting->insert($this->getPDO());
+
+		//grab the data from MySQL and enforce the fields match
+		$pdoSighting = Sighting::getSightingBySightingId($this->getPDO(), $sighting->getSightingId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("sighting"));
+		$this->assertEquals($pdoSighting->getSightingId(), $sightingId);
+		$this->assertEquals($pdoSighting->getSightingSpeciesId(), $sighting->getSightingSpeciesId());
+		$this->assertEquals($pdoSighting->getSightingUserProfileId(), $sighting->getSightingUserProfileId());
+		$this->assertEquals($pdoSighting->getSightingBirdPhoto(), $sighting->getSightingBirdPhoto());
+		$this->assertEquals($pdoSighting->getSightingDateTime()->getTimestamp(), $sighting->getSightingDateTime()->getTimestamp());
+		$this->assertEquals($pdoSighting->getSightingLocX(), $sighting->getSightingLocX());
+		$this->assertEquals($pdoSighting->getSightingLocY(), $sighting->getSightingLocY());
+	} //test insert valid sighting end curly
+
+	/**
+	 * Test creating a sighting and then deleting it
+	 **/
+	public function testDeleteValidSighting(): void {
+		//count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("sighting");
+
+		//create a new sighting and insert into MySQL
+		$sightingId = generateUuidV4();
+
+		$sighting = new Sighting ($sightingId, $this->userProfile->getUserProfileId(), $this->species->getSpeciesId(), $this->sightingLocX, $this->sightingLocY, $this->sightingDateTime, $this->sightingBirdPhoto);
+		$sighting->insert($this->getPDO());
+
+		//delete the sighting from MySQL
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("sighting"));
+		$sighting->delete($this->getPDO());
+
+		//grab the data from MySQL and enforce the sighting does not exist
+		$pdoSighting = Sighting::getSightingBySightingId($this->getPDO(), $sighting->getSightingId());
+		$this->assertNull($pdoSighting);
+		$this->assertEquals($numRows, $this->getConnection()->getRowCount("sighting"));
+	} //test delete valid sighting end curly
 
 
 	/**
- * Test inserting a valid sighting and verify that the actual MySQL data matches
- **/
-public function testInsertValidSighting(): void {
-	//count the number of rows and save it for later
-	$numRows = $this->getConnection()->getRowCount("sighting");
+	 * Test get an array of sightings by user profile id
+	 */
+	public function testGetAllSightingsByUserProfileId(): void {
+		//count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("sighting");
 
-	//create a new sighting and insert it into MySQL
-	$sighting = new sighting ($sightingId, $this->VALID_SIGHTINGSPECIESID, $this->VALID_SIGHTINGUSERPROFILEID, $this->VALID_SIGHTINGBIRDPHOTO, $this->VALID_SIGHTINGDATETIME, $this->VALID_SIGHTINGLOCX, $this->VALID_SIGHTINGLOCY);
-	$sighting->insert($this->getPDO());
-
-	//grab the data from MySQL and enforce the fields match
-	$pdoSighting = Sighting::getSightingBySightingId($this->getPDO(), $sighting->getSightingId());
-	$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("sighting"));
-	$this->assertEquals($pdoSighting->getSightingId(), $sightingId);
-	$this->assertEquals($pdoSighting->getSightingSpeciesId(), $sightingSpeciesId);
-	$this->assertEquals($pdoSighting->getSightingUserProfileId(), $sightingUserProfileId);
-	$this->assertEquals($pdoSighting->getSightingBirdPhoto(), $sightingBirdPhoto);
-	$this->assertEquals($pdoSighting->getSightingDateTime(), $sightingDateTime);
-	$this->assertEquals($pdoSighting->getSightingLocX(), $sightingLocX);
-	$this->assertEquals($pdoSighting->getSightingLocY(), $sightingLocY);
-} //test insert valid sighting end curly
-
-/**
- * Test creating a sighting and then deleting it
- **/
-public function testDeleteValidSighting(): void {
-	//count the number of rows and save it for later
-	$numRows = $this->getConnection()->getRowCount("sighting");
-
-	//create a new sighting and insert into MySQL
-
-	$sighting = new sighting($sightingId, $this->VALID_SIGHTINGSPECIESID, $this->VALID_SIGHTINGPROFILEUSERID, $this->VALID_SIGHTINGBIRDPHOTO, $this->VALID_SIGHTINGDATETIME, $this->VALID_SIGHTINGLOCX, $this->VALID_SIGHTINGLOCY);
-	$sighting->insert($this->getPDO());
-
-	//delete the sighting from MySQL
-	$this->assertEquals($numrows + 1, $this->getConnection()->getRowCount("sighting"));
-	$sighting->delete($this->getPDO);
-
-	//grab the data from MySQL and enforce the sighting does not exist
-	$pdoSighting = Sighting::getSightingBySightingId($this->getPDO(), $sighting->getSightingId());
-	$this->assertNull($pdoSighting);
-	$this->assertEquals($numrows, $this->getConnection()->getRowCount("sighting"));
-} //test delete valid sighting end curly
-
-/**
- * Test get a single sighting by sighting ID
- */
-public function testGetSightingBySightingId(): void {
-
-	//count the number of rows and save it for later
-	$numRows = $this->getConnection()->getRowCount("sighting");
-
-	//create a new sighting and insert it into MySQL
-	$sightingId = generateUuidV4();
-	$sighting = new Sighting($sightingId, $this->sightingId->getSightingId(), $this->VALID_SIGHTING; $this->VALID_SIGHTINGDATE);
-	$sighting->insert($this->getPDO());
-
-		//grab the data from MySQL and enforce the fields match our expectations
-	$results = Sighting::getSightingBySightingId($this->getPDO(), $sighting->getSightingId());
-	$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("sighting"));
-	$this->assertCount(1, $results);
-	$this->assertContainsOnlyInstancesOf("Birbs\\Peep\\Sighting", $results);
-
-		//grab the result from the table and validate it
-	$pdoSighting = $results[0];
-
-	$this->assertEquals($pdoSighting->getSightingId(), $sightingId);
-	$this->assertEquals($pdoSighting->$this->VALID_SIGHTINGSPECIESID, $this->VALID_SIGHTINGPROFILEUSERID, $this->VALID_SIGHTINGBIRDPHOTO, $this->VALID_SIGHTINGDATETIME, $this->VALID_SIGHTINGLOCX, $this->VALID_SIGHTINGLOCY);
-	//format the date to seconds since the beginning of time to avoid round off error
-	$this->assertEquals($pdoSighting->getSightingDateTime()->getTimeStamp(), $this->VALID_SIGHTINGDATETIME->getTimeStamp());
-
-	} //end single sighting test curly
-
-/**
- * Test get an array of sightings by user profile id
- */
-public function testGetAllSightingsByUserProfileId(): void {
-	//count the number of rows and save it for later
-	$numRows = $this->getConnection()->getRowCount("sighting");
-
-	//create a new sighting and insert it into MySQL
-	$sightingId = generateUuidV4();
-	$sighting = new Sighting($sightingId, $this->userProfile->getUserpProfileId(), $this->VALID_SIGHTING; $this->VALID_SIGHTINGDATE);
-	$sighting->insert($this->getPDO());
+		//create a new sighting and insert it into MySQL
+		$sightingId = generateUuidV4();
+		$sighting = new Sighting ($sightingId, $this->userProfile->getUserProfileId(), $this->species->getSpeciesId(), $this->sightingLocX, $this->sightingLocY, $this->sightingDateTime, $this->sightingBirdPhoto);
+		$sighting->insert($this->getPDO());
 
 	//grab the data from MySQL and enforce the fields match our expectations
 	$results = Sighting::getSightingsBySightingUserProfileId($this->getPDO(), $sighting->getSightingUserProfileId());
@@ -188,16 +164,18 @@ public function testGetAllSightingsByUserProfileId(): void {
 	//grab the result from the array and validate it
 	$pdoSighting = $results[0];
 
-	$this->assertEquals($pdoSighting->getSightingId(), $sightingId)
-	$this->assertEquals($pdoSighting->getSightingUserProfileId(), $this->profile->getProfileId());
-	$this->assertEquals($pdoSighting->$this->VALID_SIGHTINGSPECIESID, $this->VALID_SIGHTINGPROFILEUSERID, $this->VALID_SIGHTINGBIRDPHOTO, $this->VALID_SIGHTINGDATETIME, $this->VALID_SIGHTINGLOCX, $this->VALID_SIGHTINGLOCY);
-	//format the date to seconds since the beginning of time to avoid round off error
-	$this->assertEquals($pdoSighting->getSightingDateTime()->getTimeStamp(), $this->VALID_SIGHTINGDATETIME->getTimeStamp());
+		$this->assertEquals($pdoSighting->getSightingId(), $sightingId);
+		$this->assertEquals($pdoSighting->getSightingSpeciesId(), $sighting->getSightingSpeciesId());
+		$this->assertEquals($pdoSighting->getSightingUserProfileId(), $sighting->getSightingUserProfileId());
+		$this->assertEquals($pdoSighting->getSightingBirdPhoto(), $sighting->getSightingBirdPhoto());
+		$this->assertEquals($pdoSighting->getSightingDateTime()->getTimestamp(), $sighting->getSightingDateTime()->getTimestamp());
+		$this->assertEquals($pdoSighting->getSightingLocX(), $sighting->getSightingLocX());
+		$this->assertEquals($pdoSighting->getSightingLocY(), $sighting->getSightingLocY());
 
 } //test get all sightings by user profile id end curly
 
 	/**
-	 * Test get an array of sightings by user profile id
+	 * Test get an array of sightings by sighting species id
 	 */
 	public function testGetAllSightingsSpeciesId(): void {
 		//count the number of rows and save it for later
@@ -205,8 +183,8 @@ public function testGetAllSightingsByUserProfileId(): void {
 
 		//create a new sighting and insert it into MySQL
 		$sightingId = generateUuidV4();
-		$sighting = new Sighting($sightingId, $this->speciesId->getSpeciesId(), $this->VALID_SIGHTING; $this->VALID_SIGHTINGDATE);
-	$sighting->insert($this->getPDO());
+		$sighting = new Sighting ($sightingId, $this->userProfile->getUserProfileId(), $this->species->getSpeciesId(), $this->sightingLocX, $this->sightingLocY, $this->sightingDateTime, $this->sightingBirdPhoto);
+		$sighting->insert($this->getPDO());
 
 	//grab the data from MySQL and enforce the fields match our expectations
 	$results = Sighting::getSightingsBySightingSpeciesId($this->getPDO(), $sighting->getSightingSpeciesId());
@@ -217,12 +195,13 @@ public function testGetAllSightingsByUserProfileId(): void {
 	//grab the result from the array and validate it
 	$pdoSighting = $results[0];
 
-	$this->assertEquals($pdoSighting->getSightingId(), $sightingId)
-	$this->assertEquals($pdoSighting->getSightingSpeciesId(), $this->species->getSpeciesId());
-	$this->assertEquals($pdoSighting->$this->VALID_SIGHTINGSPECIESID, $this->VALID_SIGHTINGPROFILEUSERID, $this->VALID_SIGHTINGBIRDPHOTO, $this->VALID_SIGHTINGDATETIME, $this->VALID_SIGHTINGLOCX, $this->VALID_SIGHTINGLOCY);
-	//format the date to seconds since the beginning of time to avoid round off error
-	$this->assertEquals($pdoSighting->getSightingDateTime()->getTimeStamp(), $this->VALID_SIGHTINGDATETIME->getTimeStamp());
-
+		$this->assertEquals($pdoSighting->getSightingId(), $sightingId);
+		$this->assertEquals($pdoSighting->getSightingSpeciesId(), $sighting->getSightingSpeciesId());
+		$this->assertEquals($pdoSighting->getSightingUserProfileId(), $sighting->getSightingUserProfileId());
+		$this->assertEquals($pdoSighting->getSightingBirdPhoto(), $sighting->getSightingBirdPhoto());
+		$this->assertEquals($pdoSighting->getSightingDateTime()->getTimestamp(), $sighting->getSightingDateTime()->getTimestamp());
+		$this->assertEquals($pdoSighting->getSightingLocX(), $sighting->getSightingLocX());
+		$this->assertEquals($pdoSighting->getSightingLocY(), $sighting->getSightingLocY());
 } //test get all sightings by species id end curly
 
 
