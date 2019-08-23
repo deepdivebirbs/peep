@@ -288,7 +288,7 @@ class UserProfile implements \JsonSerializable {
 
 		// bind the member variables to the place holders in the template
 		//$formattedDate = $this->tweetDate->format("Y-m-d H:i:s.u");
-		$parameters = ["userProfileId" => $this->userProfileId->getBytes(), "userProfileName" => $this->userProfileName->getBytes(), "userProfileFirstName" => $this->userProfileFirstName, "userProfileLastName" => $this->userProfileLastName, "userProfileEmail" => $this->userProfileEmail, "userProfileAuthenticationToken" => $this->userProfileAuthenticationToken, "userProfileHash" => $this->userProfileHash];
+		$parameters = ["userProfileId" => $this->userProfileId->getBytes(), "userProfileName" => $this->userProfileName, "userProfileFirstName" => $this->userProfileFirstName, "userProfileLastName" => $this->userProfileLastName, "userProfileEmail" => $this->userProfileEmail, "userProfileAuthenticationToken" => $this->userProfileAuthenticationToken, "userProfileHash" => $this->userProfileHash];
 		$statement->execute($parameters);
 	}
 
@@ -331,7 +331,7 @@ class UserProfile implements \JsonSerializable {
 	 * Takes an ID and pdo object, and returns the profile from the pdo that matches it.
 	 *
 	 * @param \PDO $pdo
-	 * @param string $userId
+	 * @param string $userProfileId
 	 * @return UserProfile|null
 	 */
 	public function getUserProfileById(\PDO $pdo , string $userProfileId ): ?userProfile{
@@ -373,6 +373,32 @@ class UserProfile implements \JsonSerializable {
 
 		// bind the user id to the place holder in the template
 		$parameters = ["userProfileName" => $userProfileName];
+		$pdoStatement->execute($parameters);
+
+		// grab the statement from mySQL
+		try {
+			$userProfile = null;
+			$pdoStatement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $pdoStatement->fetch();
+			if($row !== false) {
+				$userProfile = new userProfile($row["userProfileId"], $row["userProfileName"], $row["userProfileFirstName"], $row["userProfileLastName"], $row["userProfileEmail"], $row["userProfileAuthenticationToken"], $row["userProfileHash"]);
+			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($userProfile);
+	}
+
+
+	public function getUserProfileByAuthenticationToken(\PDO $pdo , string $userProfileAuthenticationToken ): ?userProfile {
+//TODO Trim and filterVar
+		// create query template
+		$query = "SELECT userProfileId, userProfileName, userProfileFirstName, userProfileLastName, userProfileEmail, userProfileAuthenticationToken, userProfileHash FROM userProfile WHERE userProfileAuthenticationToken = :userProfileAuthenticationToken";
+		$pdoStatement = $pdo->prepare($query);
+
+		// bind the user id to the place holder in the template
+		$parameters = ["userProfileAuthenticationToken" => $userProfileAuthenticationToken];
 		$pdoStatement->execute($parameters);
 
 		// grab the statement from mySQL
