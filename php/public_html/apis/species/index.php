@@ -10,7 +10,12 @@ require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/jwt.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 
-use Birbs\Peep\{Sighting, BirdSpecies, Favorite, UserProfile};
+/**
+ * This is the API for BirdSpecies, this API handles incoming HTTP requests by getting the request, reading the request
+ * and pulling the data from the table to the user.
+ */
+
+use Birbs\Peep\{BirdSpecies};
 
 // Check if session is active, and if not activate it
 if(session_status() !== PHP_SESSION_ACTIVE) {
@@ -45,8 +50,8 @@ try {
 		setXsrfCookie();
 
 		// Get bird species based on stuff?
-		if(empty($speciesId) === false) {
-			$birdSpecies = BirdSpecies::getSpeciesBySpeciesId($pdo, $speciesId);
+		if(empty($speciesCode) === false) {
+			$birdSpecies = BirdSpecies::getBirdSpeciesBySpeciesCode($pdo, $speciesCode);
 			if($birdSpecies !== null) {
 				$reply->data = $birdSpecies;
 			}
@@ -79,6 +84,3 @@ if($reply->data === null) {
 }
 
 echo json_encode($reply);
-
-
-

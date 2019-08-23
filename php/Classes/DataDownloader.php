@@ -6,8 +6,7 @@ use Birbs\Peep\Test\PeepTest;
 
 require_once("BirdSpecies.php");
 require_once("Sighting.php");
-require_once("Test/PeepTest.php");
-include(".something.php");
+require_once(".something.php");
 
 require_once("autoload.php");
 require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
@@ -114,7 +113,18 @@ class DataDownloader {
 			//$sighting->insert($this->getPDO());
 		};
 	}
+
+	public function showAllBirds() {
+		// Create PDO object
+		$secrets = new \Secrets("/etc/apache2/capstone-mysql/peep.ini");
+		$pdo = $secrets->getPdoObject();
+
+		$birds = BirdSpecies::getAllBirds($pdo);
+
+		print_r($birds);
+	}
 }
 
 $test = new DataDownloader();
 $test->setAndInsert();
+//$test->showAllBirds();

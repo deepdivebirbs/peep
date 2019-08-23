@@ -205,7 +205,7 @@ class BirdSpeciesTest extends PeepTest {
 		// Get row count
 		$baseRowCount = $this->getConnection()->getRowCount("species");
 
-		// Create more than one new bird to insert.  Because how can we get ALL birds if there is only one bird?
+		// Create new bird to insert.  Because how can we get ALL birds if there is only one bird?
 		$testBird = new BirdSpecies($this->VALID_SPECIES_ID, $this->VALID_SPECIES_CODE, $this->VALID_SPECIES_COM_NAME, $this->VALID_SPECIES_SCI_NAME, $this->VALID_SPECIES_PHOTO_URL);
 
 		// Insert the test bird
@@ -224,5 +224,29 @@ class BirdSpeciesTest extends PeepTest {
 		$this->assertEquals($this->VALID_SPECIES_COM_NAME, $testBirds[0]->getSpeciesComName());
 		$this->assertEquals($this->VALID_SPECIES_SCI_NAME, $testBirds[0]->getSpeciesSciName());
 		$this->assertEquals($this->VALID_SPECIES_PHOTO_URL, $testBirds[0]->getSpeciesPhotoUrl());
+	}
+
+	public function testGetBirdSpeciesBySpeciesCode() {
+		// Get row count
+		$baseRowCount = $this->getConnection()->getRowCount("species");
+
+		// Create test bird
+		$testBird = new BirdSpecies($this->VALID_SPECIES_ID, $this->VALID_SPECIES_CODE, $this->VALID_SPECIES_COM_NAME, $this->VALID_SPECIES_SCI_NAME, $this->VALID_SPECIES_PHOTO_URL);
+
+		// Insert test bird
+		$testBird->insert($this->getPDO());
+
+		// Test if bird was inserted
+		$this->assertEquals($baseRowCount + 1, $this->getConnection()->getRowCount("species"));
+
+		// Get species by it's species code
+		$testBird = BirdSpecies::getBirdSpeciesBySpeciesCode($this->getPDO(), $this->VALID_SPECIES_CODE);
+
+		// Assert all of the values
+		$this->assertEquals($this->VALID_SPECIES_ID, $testBird->getSpeciesId());
+		$this->assertEquals($this->VALID_SPECIES_CODE, $testBird->getSpeciesCode());
+		$this->assertEquals($this->VALID_SPECIES_COM_NAME, $testBird->getSpeciesComName());
+		$this->assertEquals($this->VALID_SPECIES_SCI_NAME, $testBird->getSpeciesSciName());
+		$this->assertEquals($this->VALID_SPECIES_PHOTO_URL, $testBird->getSpeciesPhotoUrl());
 	}
 }

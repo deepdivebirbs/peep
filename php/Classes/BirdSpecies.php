@@ -7,6 +7,7 @@ require_once("autoload.php");
 require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Yaml\Tests\B;
 
 /**
  * This class takes API data from the Ebirds API at https://confluence.cornell.edu/display/CLOISAPI/eBirdAPIs and parses
@@ -307,6 +308,34 @@ class BirdSpecies implements \JsonSerializable{
 			}
 		}
 		return $birds;
+	}
+
+	public static function getBirdSpeciesBySpeciesCode(\PDO $pdo, $speciesCode): BirdSpecies {
+		// Create mySQL query
+		$query = "SELECT speciesId, speciesCode, speciesComName, speciesSciName, speciesPhotoUrl FROM species WHERE speciesCode = :speciesCode";
+
+		// Prepare query
+		$statement = $pdo->prepare($query);
+
+		// Set values
+		$values = ["speciesCode" => $speciesCode];
+
+		// Execute query
+		$statement->execute($values);
+
+		try {
+			$birdSpecies = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				// Create new bird species with the values set
+				$birdSpecies = new BirdSpecies($row["speciesId"], $row["speciesCode"], $row["speciesComName"], $row["speciesSciName"], $row["speciesPhotoUrl"]);
+			}
+		} catch(\Exception $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+		return $birdSpecies;
 	}
 
 	//Insert, delete, and update functions.
