@@ -128,10 +128,10 @@ class FavoriteTest extends PeepTest {
 		//enforce no other objects are bleeding into the test
 		$this->assertContainsOnlyInstancesOf("Birbs\\Peep\\Favorite", $results);
 
-		//grab the reslt from the array and validate it
+		//grab the result from the array and validate it
 		$pdoFavorite = $results[0];
+		$this->assertEquals($pdoFavorite->getFavoriteBirdSpeciesId(), $this->birdSpecies->getSpeciesId());
 		$this->assertEquals($pdoFavorite->getFavoriteUserProfileId(), $this->userProfile->getUserProfileId());
-		$this->assertEquals($pdoFavorite->getFavoriteSpeciesId(), $this->birdSpecies->getSpeciesId());
 	}
 
 
