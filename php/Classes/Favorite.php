@@ -18,7 +18,7 @@ class Favorite implements \JsonSerializable {
 	/**
 	 *this is the species code of the bird that the user is adding to their favorites; this is a foreign key
 	 */
-	private $favoriteSpeciesId;
+	private $favoriteBirdSpeciesId;
 
 	/**
 	 * this is taken from the user id of the user that is adding the bird to their favorites; this is a foreign key
@@ -28,16 +28,16 @@ class Favorite implements \JsonSerializable {
 	/**
 	 * constructor for this favorite class
 	 *
-	 * @param string|Uuid $newFavoriteSpeciesId id of the bird species that the user is saving (foreign key)
+	 * @param string|Uuid $newFavoriteBirdSpeciesId id of the bird species that the user is saving (foreign key)
 	 * @param string|Uuid $newFavoriteUserProfileId id of the user who is saving this bird (foreign key)
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data is out of range
 	 * @throws \TypeError if data types violate type hints
 	 * @throws \Exception if some other exception occurs
 	 */
-	public function __construct($newFavoriteSpeciesId, $newFavoriteUserProfileId) {
+	public function __construct($newFavoriteBirdSpeciesId, $newFavoriteUserProfileId) {
 		try {
-			$this->setNewFavoriteSpeciesId($newFavoriteSpeciesId);
+			$this->setNewFavoriteBirdSpeciesId($newFavoriteBirdSpeciesId);
 			$this->setNewFavoriteUserProfileId($newFavoriteUserProfileId);
 		} //this is the part where we determine what exception type is thrown, if any
 		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -50,8 +50,8 @@ class Favorite implements \JsonSerializable {
 	 * accessor method for FavoriteSpeciesId
 	 * @return Uuid value for FavoriteSpeciesId
 	 */
-	public function getFavoriteSpeciesId(): Uuid {
-		return ($this->favoriteSpeciesId);
+	public function getFavoriteBirdSpeciesId(): Uuid {
+		return ($this->favoriteBirdSpeciesId);
 	}
 
 	/**
@@ -64,20 +64,20 @@ class Favorite implements \JsonSerializable {
 
 	/**
 	 * mutator method for FavoriteSpeciesId
-	 * @param string|Uuid $newFavoriteSpeciesId
+	 * @param string|Uuid $newFavoriteBirdSpeciesId
 	 * @throws \InvalidArgumentException if $newFavoriteBirdSpeciesId is empty or insecure
 	 * @throws \RangeException if $newFavoriteSpeciesId is out of range
 	 * @throws \TypeError if $newFavoriteSpeciesId is not a Uuid
 	 * @throws \Exception if there is another exception
 	 */
-	public function setNewFavoriteSpeciesId($newFavoriteSpeciesId): void {
+	public function setNewFavoriteBirdSpeciesId($newFavoriteBirdSpeciesId): void {
 		try {
-			$uuid = self::validateUuid($newFavoriteSpeciesId);
+			$uuid = self::validateUuid($newFavoriteBirdSpeciesId);
 		} catch(\invalidArgumentException |\RangeException|\Exception|\TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new$exceptionType($exception->getMessage(), 0, $exception));
 		}
-		$this->favoriteSpeciesId = $uuid;
+		$this->favoriteBirdSpeciesId = $uuid;
 	}
 
 	/**
@@ -108,11 +108,11 @@ class Favorite implements \JsonSerializable {
 	public function insert(\PDO $pdo): void {
 		//template for query
 		$query = "INSERT INTO favorite(favoriteSpeciesId, favoriteUserProfileId) 
-		VALUES (:favoriteSpeciesId, :favoriteUserProfileId )";
+		VALUES (:favoriteBirdSpeciesId, :favoriteUserProfileId )";
 		$statement = $pdo->prepare($query);
 
 		//binds member variables to the placeholders in the template. getbytes converts string into bytes
-		$parameters = ["favoriteSpeciesId" => $this->favoriteSpeciesId->getBytes(),
+		$parameters = ["favoriteBirdSpeciesId" => $this->favoriteBirdSpeciesId->getBytes(),
 			"favoriteUserProfileId" => $this->favoriteUserProfileId->getBytes()]
 
 		;

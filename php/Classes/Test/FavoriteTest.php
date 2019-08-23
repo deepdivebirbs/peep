@@ -2,11 +2,7 @@
 
 
 namespace Birbs\Peep\Test;
-use Birbs\Peep\Favorite;
-use PHPUnit\Framework\TestCase;
-use PHPUnit\DbUnit\TestCaseTrait;
-use PHPUnit\DbUnit\DataSet\QueryDataSet;
-use PHPUnit\DbUnit\Database\Connection;
+use Birbs\Peep\{Favorite, UserProfile, BirdSpecies};
 use PHPUnit\DbUnit\Operation\{Composite, Factory, Operation};
 
 require_once("PeepTest.php");
@@ -38,7 +34,7 @@ class FavoriteTest extends PeepTest {
 	 * bird that was saved; used for foreign key relations
 	 * @var Species $species
 	 */
-	protected $species;
+	protected $birdSpecies;
 
 	/**
 	 * Valid hash to use to create mock userProfile to us in the test
@@ -64,12 +60,12 @@ class FavoriteTest extends PeepTest {
 		$this->VALID_UserProfileAuthenticationToken = bin2hex(random_bytes(16));
 
 		//create and insert mocked profile
-		$this->userProfile = new UserProfile(generateUuidV4(), "kewlbirdz", "Pam", "Beesley", "beesley@dundermifflin.com", null, $this->VALID_UserProfileHash);
+		$this->userProfile = new UserProfile(generateUuidV4(), "kewlbirdz", "Pam", "Beesley", "beesley@dundermifflin.com", $this->VALID_UserProfileAuthenticationToken, $this->VALID_UserProfileHash);
 		$this->userProfile->insert($this->getPDO());
 
 		//create and insert mocked species
-		$this->species = new Species(generateUuidV4(), "123456", "Roadrunner", "Geococcyx californianus", "birdphotos.com/roadrunner");
-		$this->species->insert($this->getPDO());
+		$this->birdSpecies = new BirdSpecies(generateUuidV4(), "123456", "Roadrunner", "Geococcyx californianus", "birdphotos.com/roadrunner");
+		$this->birdSpecies->insert($this->getPDO());
 	}
 
 	/**
@@ -81,15 +77,15 @@ class FavoriteTest extends PeepTest {
 		$numRows = $this->getConnection()->getRowCount("favorite");
 
 		//create a new favorite and insert it into the table
-		$favorite = new Favorite($this->userProfile->getUserProfileId(), $this->species->getSpeciesId());
+		$favorite = new Favorite($this->birdSpecies->getFavoriteSpeciesId(), $this->userProfile->getUserProfileId());
 		$favorite->insert($this->getPDO());
 
 		//grab data from mySQL and enforce fields matching our expectations
-		$pdoFavorite = Favorite::getFavoritebyFavoriteUserProfileIdAndFavoriteSpeciesId($this->getPDO(), $this->userProfile > getUserProfileID(), $this->species->getSpeciesId());
-		$this->assertEquals($numRows + 1, $this->getPDO(), $this->userProfile->getUserProfileId(), $this->species->getSpeciesId());
+		$pdoFavorite = Favorite::getFavoritebyFavoriteUserProfileIdAndFavoriteSpeciesId($this->getPDO(), $this->userProfile > getUserProfileID(), $this->birdSpecies->getBirdSpeciesId());
+		$this->assertEquals($numRows + 1, $this->getPDO(), $this->userProfile->getUserProfileId(), $this->birdSpecies->getBirdSpeciesId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("favorite"));
 		$this->assertEquals($pdoFavorite->getFavoriteUserProfileId(), $this->userProfile->getUserProfileId());
-		$this->assertEquals($pdoFavorite->getFavoriteSpeciesId(), $this->species->getSpeciesId());
+		$this->assertEquals($pdoFavorite->getFavoriteSpeciesId(), $this->birdSpecies->getBirdSpeciesId());
 	}
 
 	/**
@@ -100,7 +96,7 @@ class FavoriteTest extends PeepTest {
 		$numRows = $this->getConnection()->getRowCount("favorite");
 
 		//creates a new favorite for insertion into mySQL
-		$favorite= new Favorite($this->userProfile->getUserProfileId(), $this->speciesId->getSpeciesId());
+		$favorite= new Favorite($this->userProfile->getUserProfileId(), $this->birdSpeciesId->getSpeciesId());
 		$favorite->insert($this->getPDO());
 
 		//delete the favorite from mySQL
@@ -108,7 +104,7 @@ class FavoriteTest extends PeepTest {
 		$favorite->delete($this->getPDO());
 
 		//grab the data from mySQL and enforce the Favorite doesn't exit
-		$pdoFavorite = Favorite::getFavoritebyFavoriteUserProfileIdAndFavoriteSpeciesId($this->getPDO(), $this->userProfile->getUserProfileId(), $this->species->getSpeciesId());
+		$pdoFavorite = Favorite::getFavoritebyFavoriteUserProfileIdAndFavoriteSpeciesId($this->getPDO(), $this->userProfile->getUserProfileId(), $this->birdspecies->getBirdSpeciesId());
 		$this->assertNull($pdoFavorite);
 		$this->assertEquals($numRows, $this->getConnection()->getRowCount("favorite"));
 	}
@@ -121,14 +117,14 @@ class FavoriteTest extends PeepTest {
 		$numRows = $this->getConnection()->getRowCount("favorite");
 
 		//create a new favorite and insert it into mySQL
-		$favorite=new Favorite ($this->userProfile->getUserProfileId(), $this->species->getSpeciesId());
+		$favorite=new Favorite ($this->userProfile->getUserProfileId(), $this->birdSpecies->getBirdSpeciesId());
 		$favorite->insert($this->getPDO());
 
 		//grab data from mySQL and enforce that the fields match expectations
 		$pdoFavorite = Favorite::getFavoriteByFavoriteUserProfileIdAndFavoriteSpeciesId($this->getPDO(), $this->userProfile > getUserProfileID(), $this->species->getSpeciesId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("favorite"));
 		$this->assertEquals($pdoFavorite->getFavoriteUserProfileId(),$this->userProfile->getUserProfileId());
-		$this->assertEquals($pdoFavorite->getFavoriteSpeciesId(), $this->species->getSpeciesId());
+		$this->assertEquals($pdoFavorite->getFavoriteSpeciesId(), $this->birdSpecies->getBirdSpeciesId());
 	}
 
 	/**
@@ -148,7 +144,7 @@ class FavoriteTest extends PeepTest {
 		$numRows = $this->getConnection()->getRowCount("favorite");
 
 		//create a new Favorite and insert into mySQL
-		$favorite = new Favorite ($this->userProfile->getUserProfileId(), $this->speciesId->getSpeciesId());
+		$favorite = new Favorite ($this->userProfile->getUserProfileId(), $this->birdSpeciesId->getBirdSpeciesId());
 		$favorite->insert($this->getPDO());
 
 		//grab the data from mySQL and enforce that the fields match our expectations
@@ -162,7 +158,7 @@ class FavoriteTest extends PeepTest {
 		//grab the reslt from the array and validate it
 		$pdoFavorite = $results[0];
 		$this->assertEquals($pdoFavorite->getFavoriteUserProfileId(), $this->userProfile->getUserProfileId());
-		$this->assertEquals($pdoFavorite->getFavoriteSpeciesId(), $this->species->getSpeciesId());
+		$this->assertEquals($pdoFavorite->getFavoriteSpeciesId(), $this->birdSpecies->getBirdSpeciesId());
 	}
 
 
