@@ -7,10 +7,13 @@ use Birbs\Peep\Test\PeepTest;
 require_once("BirdSpecies.php");
 require_once("Sighting.php");
 require_once("Test/PeepTest.php");
+include(".something.php");
 
 require_once("autoload.php");
 require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 require_once(dirname(__DIR__, 1) . "/lib/uuid.php");
+require_once("/etc/apache2/capstone-mysql/Secrets.php");
+
 
 /**
  * Class DataDownloader
@@ -20,14 +23,16 @@ require_once(dirname(__DIR__, 1) . "/lib/uuid.php");
  *
  * @package Birbs\Peep
  */
-class DataDownloader extends PeepTest {
-
+class DataDownloader {
 	/**
 	 * This function pulls a batch of birds from the Ebirds database through their API
 	 *
 	 * @return array
 	 */
 	public static function pullBirds(): array {
+		// Get API key
+		$key = getApiKey();
+
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
@@ -40,7 +45,7 @@ class DataDownloader extends PeepTest {
 			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 			CURLOPT_CUSTOMREQUEST => "GET",
 			CURLOPT_HTTPHEADER => array(
-				"X-eBirdApiToken: vr62jb4302c7"
+				"X-eBirdApiToken: $key"
 			),
 		));
 
@@ -56,7 +61,7 @@ class DataDownloader extends PeepTest {
 	 * @param $field
 	 * @return array
 	 */
-	public function parseBirds($birdArray, $field) {
+	public static function parseBirds($birdArray, $field): array {
 		$returnArray = Array();
 
 		foreach($birdArray as $key => $value) {
@@ -70,6 +75,12 @@ class DataDownloader extends PeepTest {
 	 * Sets the values from the API JSON array
 	 */
 	public function setAndInsert() {
+		// Create PDO Secrets
+		$secrets = new \Secrets("/etc/apache2/capstone-mysql/peep.ini");
+		// Create PDO Object
+		$pdo = $secrets->getPdoObject();
+
+		// Pull birds from API
 		$birdList = self::pullBirds();
 
 		foreach($birdList as $key => $value) {
@@ -78,6 +89,7 @@ class DataDownloader extends PeepTest {
 			$sightingId = generateUuidV4();
 			$sightingUserProfileId = generateUuidV4();
 
+			// Parse API data
 			$speciesCode = $birdList[$key]["speciesCode"];
 			$speciesComName = $birdList[$key]["comName"];
 			$speciesSciName = $birdList[$key]["sciName"];
@@ -86,20 +98,19 @@ class DataDownloader extends PeepTest {
 			$speciesLat = $birdList[$key]["lat"];
 			$speciesLng = $birdList[$key]["lng"];
 
-			// Create DateTime object
-			$sightingDateTime = new \DateTime;
-			$sightingDateTime::createFromFormat("Y-m-d H:i:s", $speciesObsDate);
+			// Create DateTime object from the API dates
+			$sightingDateTime = \DateTime::createFromFormat("Y-m-d H:i", $speciesObsDate);
 
 			// Create new BirdSpecies
 			$birdSpecies = new BirdSpecies($speciesId, $speciesCode, $speciesComName, $speciesSciName, $speciesPhotoUrl);
-			$sighting = new Sighting($sightingId, $sightingUserProfileId, $speciesId, $speciesComName, $speciesSciName, $speciesLat, $speciesLng, $sightingDateTime, $speciesPhotoUrl);
+			//$sighting = new Sighting($sightingId, $sightingUserProfileId, $speciesId, $speciesComName, $speciesSciName, $speciesLat, $speciesLng, $sightingDateTime, $speciesPhotoUrl);
 
 			$birdSpeciesArray = Array();
 
 			array_push($birdSpeciesArray, $birdSpecies);
 
 			// Insert objects into species
-			$birdSpecies->insert($this->getPDO());
+			$birdSpecies->insert($pdo);
 			//$sighting->insert($this->getPDO());
 		};
 	}
@@ -107,4 +118,3 @@ class DataDownloader extends PeepTest {
 
 $test = new DataDownloader();
 $test->setAndInsert();
-

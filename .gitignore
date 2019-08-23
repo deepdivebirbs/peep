@@ -8,3 +8,4 @@
 /app/src/setupProxy.js
 /vendor
 /npm-debug.log
+/php/Classes/.something.php
