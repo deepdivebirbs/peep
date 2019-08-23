@@ -14,6 +14,10 @@ require_once(dirname(__DIR__, 1) . "/lib/uuid.php");
 
 /**
  * Class DataDownloader
+ *
+ * This class pulls bird data from the Ebird API, creates objects from that data, then inserts those objects into
+ * the database.
+ *
  * @package Birbs\Peep
  */
 class DataDownloader extends PeepTest {
@@ -96,13 +100,11 @@ class DataDownloader extends PeepTest {
 
 			// Insert objects into species
 			$birdSpecies->insert($this->getPDO());
-			$sighting->insert($this->getPDO());
+			//$sighting->insert($this->getPDO());
 		};
 	}
 }
 
 $test = new DataDownloader();
-//$birds = $test->pullBirds();
-//$comNames = $test->parseBirds($birds, "comName");
 $test->setAndInsert();
 
