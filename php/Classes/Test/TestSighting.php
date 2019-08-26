@@ -16,6 +16,23 @@ require_once (dirname(__DIR__, 1) . "/autoload.php");
  **/
 
 class SightingTest extends PeepTest {
+	//reorganize all the state variables below:
+	//pk, fk, fk, alphabetically
+	//alphabetize the rest:
+	//sightingId = pk
+	//sightingSpeciesId = fk
+	//sightingUserProfileId = fk
+	//sightingBirdPhoto
+	//sightingDateTime
+	//sightingLocX
+	//sightingLocY
+	//species
+	//userProfile
+	//userProfileAuthenticationToken
+	//userProfileHash
+	//
+	
+	
 	/**
 	 * User profile that created the sighting; this is for foreign key relations
 	 * @var $userProfile User Profile
@@ -46,6 +63,7 @@ class SightingTest extends PeepTest {
 	 **/
 	protected $sightingDateTime = null;
 
+	//TODO add the rest of my class variables as state variables here (organize)
 	/**
 	 * create dependent objects before running each test
 	 **/
@@ -57,6 +75,7 @@ class SightingTest extends PeepTest {
 
 		// create a salt and a hash for the mocked profile
 		$password = "abc123";
+		//TODO row below, change argon 21 to 2i 
 		$this->VALID_USERPROFILEHASH = userProfileHash($password, PASSWORD_ARGON21, ["time_cost" => 384]);
 		$this->VALID_USERPROFILEACTIVATIONTOKEN = bin2hex(random_bytes(16));
 
@@ -189,6 +208,7 @@ public function testGetAllSightingsByUserProfileId(): void {
 	$pdoSighting = $results[0];
 
 	$this->assertEquals($pdoSighting->getSightingId(), $sightingId)
+		//TODO row below, add user to getProfileId
 	$this->assertEquals($pdoSighting->getSightingUserProfileId(), $this->profile->getProfileId());
 	$this->assertEquals($pdoSighting->$this->VALID_SIGHTINGSPECIESID, $this->VALID_SIGHTINGPROFILEUSERID, $this->VALID_SIGHTINGBIRDPHOTO, $this->VALID_SIGHTINGDATETIME, $this->VALID_SIGHTINGLOCX, $this->VALID_SIGHTINGLOCY);
 	//format the date to seconds since the beginning of time to avoid round off error
