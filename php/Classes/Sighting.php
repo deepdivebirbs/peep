@@ -73,7 +73,7 @@ class Sighting implements \jsonSerializable {
  * @throws \Exception if some other exception occurs
  * @Documentation https://php.net/manual/en/language.oop5.decon.php
  **/
-	public function __construct($newSightingId, $newSightingUserProfileId, $newSightingSpeciesId, float $newSightingLocX, float $newSightingLocY, $newSightingDateTime = null, string $newSightingBirdPhoto) {
+	public function __construct($newSightingId, $newSightingUserProfileId, $newSightingSpeciesId, string $newSightingBirdPhoto, $newSightingDateTime = null, float $newSightingLocX, float $newSightingLocY) {
 		try {
 			$this->setSightingId($newSightingId);
 			$this->setSightingSpeciesId($newSightingSpeciesId);
@@ -254,7 +254,7 @@ class Sighting implements \jsonSerializable {
  * @throws \TypeError if sightingLocX is not a float
  **/
 	public function setSightingLocX(float $newSightingLocX) {
-		//check if it's a float
+		//check if it's empty
 		if(empty($newSightingLocX) === true) {
 			throw(new \InvalidArgumentException("Location data is empty"));
 		}
@@ -324,7 +324,7 @@ class Sighting implements \jsonSerializable {
 	//gets a single sighting by sightingId
 	/**
 	 * @param \PDO $pdo PDO connection object
-	 * @param Uuid|string $sightingId to search for the sighting
+	 * @param Uuid $sightingId to search for the sighting
 	 * @return sighting|null sighting or null if sighting is not found
 	 * @throws \PDOException where there are MySQL-related errors found
 	 * @throws \TypeError when a variable is not found to be the right data type
@@ -350,7 +350,7 @@ try {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		$row = $statement->fetch();
 		if($row !== false) {
-			$sighting = new Sighting($row["sightingId"], $row["sightingBirdSpeciesId"], $row["sightingUserProfileId"], $row["sightingLocX"], $row["sightingLocY"], $row["sightingDateTime"], $row["sightingBirdPhoto"] );
+			$sighting = new Sighting($row["sightingId"], $row["sightingUserProfileId"], $row["sightingBirdSpeciesId"], $row["sightingBirdPhoto"],  $row["sightingDateTime"], $row["sightingLocX"], $row["sightingLocY"]);
 		}
 	} catch(\Exception $exception) {
 
@@ -372,9 +372,9 @@ try {
 
 public static function getSightingsBySightingUserProfileId(\PDO $pdo, $sightingUserProfileId) :\SplFixedArray {
 //create the query template
-	$query = "SELECT sightingId, sightingBirdSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY FROM sighting WHERE sightingUserProfileId = :sightingUserProfileId";
+	$query = "SELECT sightingId,  sightingUserProfileId, sightingBirdSpeciesId, sightingLocX, sightingLocY, sightingDateTime, sightingBirdPhoto FROM sighting WHERE sightingUserProfileId = :sightingUserProfileId";
 	$statement = $pdo->prepare($query);
-	$parameters = ["sightingsBySightingUserProfileId" => $sightingUserProfileId->getBytes()];
+	$parameters = ["sightingUserProfileId" => $sightingUserProfileId->getBytes()];
 	$statement->execute($parameters);
 
 //build an array of sightings
@@ -382,7 +382,7 @@ public static function getSightingsBySightingUserProfileId(\PDO $pdo, $sightingU
 	$statement->setFetchMode(\PDO::FETCH_ASSOC);
 	while(($row = $statement->fetch()) !== false) {
 		try {
-			$sighting = new Sighting($row["sightingId"], $row["sightingSpeciesId"], $row["sightingUserProfileId"], $row["sightingBirdPhoto"], $row["sightingDateTime"], $row["sightingLocX"], $row["sightingLocY"]);
+			$sighting = new Sighting($row["sightingId"], $row["sightingUserProfileId"], $row["sightingBirdSpeciesId"], $row["sightingBirdPhoto"], $row["sightingDateTime"], $row["sightingLocX"], $row["sightingLocY"]);
 			$sightings[$sightings->key()] = $sighting;
 			$sightings->next();
 		} catch(\Exception $exception) {
@@ -405,9 +405,9 @@ public static function getSightingsBySightingUserProfileId(\PDO $pdo, $sightingU
 
 	public static function getSightingsBySightingSpeciesId(\PDO $pdo, $sightingSpeciesId) :\SplFixedArray {
 //create the query template
-		$query = "SELECT sightingId, sightingBirdSpeciesId, sightingUserProfileId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY FROM sighting WHERE sightingBirdSpeciesId = :sightingSpeciesId";
+		$query = "SELECT sightingId, sightingUserProfileId, sightingBirdSpeciesId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY FROM sighting WHERE sightingBirdSpeciesId = :sightingSpeciesId";
 		$statement = $pdo->prepare($query);
-		$parameters = ["sightingsBySightingSpeciesId" => $sightingSpeciesId->getBytes()];
+		$parameters = ["sightingSpeciesId" => $sightingSpeciesId->getBytes()];
 		$statement->execute($parameters);
 
 //build an array of sightings
@@ -415,7 +415,7 @@ public static function getSightingsBySightingUserProfileId(\PDO $pdo, $sightingU
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$sighting = new Sighting($row["sightingId"], $row["sightingSpeciesId"], $row["sightingUserProfileId"], $row["sightingBirdPhoto"], $row["sightingDateTime"], $row["sightingLocX"], $row["sightingLocY"]);
+				$sighting = new Sighting($row["sightingId"], $row["sightingUserProfileId"], $row["sightingBirdSpeciesId"], $row["sightingBirdPhoto"], $row["sightingDateTime"], $row["sightingLocX"], $row["sightingLocY"]);
 				$sightings[$sightings->key()] = $sighting;
 				$sightings->next();
 			} catch(\Exception $exception) {

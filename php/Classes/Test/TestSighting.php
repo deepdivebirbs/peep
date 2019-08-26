@@ -104,7 +104,7 @@ class SightingTest extends PeepTest {
 
 		//create a new sighting and insert it into MySQL
 		$sightingId = generateUuidV4();
-		$sighting = new Sighting ($sightingId, $this->userProfile->getUserProfileId(), $this->species->getSpeciesId(), $this->sightingLocX, $this->sightingLocY, $this->sightingDateTime, $this->sightingBirdPhoto);
+		$sighting = new Sighting ($sightingId, $this->userProfile->getUserProfileId(), $this->species->getSpeciesId(), $this->sightingBirdPhoto, $this->sightingDateTime, $this->sightingLocX, $this->sightingLocY);
 		$sighting->insert($this->getPDO());
 
 		//grab the data from MySQL and enforce the fields match
@@ -129,7 +129,7 @@ class SightingTest extends PeepTest {
 		//create a new sighting and insert into MySQL
 		$sightingId = generateUuidV4();
 
-		$sighting = new Sighting ($sightingId, $this->userProfile->getUserProfileId(), $this->species->getSpeciesId(), $this->sightingLocX, $this->sightingLocY, $this->sightingDateTime, $this->sightingBirdPhoto);
+		$sighting = new Sighting ($sightingId, $this->userProfile->getUserProfileId(), $this->species->getSpeciesId(), $this->sightingBirdPhoto, $this->sightingDateTime, $this->sightingLocX, $this->sightingLocY);
 		$sighting->insert($this->getPDO());
 
 		//delete the sighting from MySQL
@@ -152,7 +152,7 @@ class SightingTest extends PeepTest {
 
 		//create a new sighting and insert it into MySQL
 		$sightingId = generateUuidV4();
-		$sighting = new Sighting ($sightingId, $this->userProfile->getUserProfileId(), $this->species->getSpeciesId(), $this->sightingLocX, $this->sightingLocY, $this->sightingDateTime, $this->sightingBirdPhoto);
+		$sighting = new Sighting ($sightingId, $this->userProfile->getUserProfileId(), $this->species->getSpeciesId(), $this->sightingBirdPhoto, $this->sightingDateTime,  $this->sightingLocX, $this->sightingLocY);
 		$sighting->insert($this->getPDO());
 
 	//grab the data from MySQL and enforce the fields match our expectations
@@ -183,7 +183,7 @@ class SightingTest extends PeepTest {
 
 		//create a new sighting and insert it into MySQL
 		$sightingId = generateUuidV4();
-		$sighting = new Sighting ($sightingId, $this->userProfile->getUserProfileId(), $this->species->getSpeciesId(), $this->sightingLocX, $this->sightingLocY, $this->sightingDateTime, $this->sightingBirdPhoto);
+		$sighting = new Sighting ($sightingId, $this->userProfile->getUserProfileId(), $this->species->getSpeciesId(), $this->sightingBirdPhoto, $this->sightingDateTime, $this->sightingLocX, $this->sightingLocY);
 		$sighting->insert($this->getPDO());
 
 	//grab the data from MySQL and enforce the fields match our expectations
