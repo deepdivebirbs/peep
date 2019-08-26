@@ -249,4 +249,25 @@ class BirdSpeciesTest extends PeepTest {
 		$this->assertEquals($this->VALID_SPECIES_SCI_NAME, $testBird->getSpeciesSciName());
 		$this->assertEquals($this->VALID_SPECIES_PHOTO_URL, $testBird->getSpeciesPhotoUrl());
 	}
+
+	public function testGetSpeciesByComName() {
+		// Get row count
+		$baseRowCount = $this->getConnection()->getRowCount("species");
+
+		// Create new test bird
+		$testBird = new BirdSpecies($this->VALID_SPECIES_ID, $this->VALID_SPECIES_CODE, $this->VALID_SPECIES_COM_NAME, $this->VALID_SPECIES_SCI_NAME, $this->VALID_SPECIES_PHOTO_URL);
+
+		// Insert test bird
+		$testBird->insert($this->getPDO());
+
+		// Confirm test bird was inserted
+		$this->assertEquals($baseRowCount + 1, $this->getConnection()->getRowCount("species"));
+
+		// Test the values coming from the database
+		$this->assertEquals($this->VALID_SPECIES_ID, $testBird->getSpeciesId());
+		$this->assertEquals($this->VALID_SPECIES_CODE, $testBird->getSpeciesCode());
+		$this->assertEquals($this->VALID_SPECIES_COM_NAME, $testBird->getSpeciesComName());
+		$this->assertEquals($this->VALID_SPECIES_SCI_NAME, $testBird->getSpeciesSciName());
+		$this->assertEquals($this->VALID_SPECIES_PHOTO_URL, $testBird->getSpeciesPhotoUrl());
+	}
 }
