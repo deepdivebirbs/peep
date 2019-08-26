@@ -397,9 +397,15 @@ class UserProfile implements \JsonSerializable {
 		return($userProfile);
 	}
 
-
+	/**
+	 *getUserProfileByAuthenticationToken - Gets a user Profile by Authentication Token. Needs to be used once, during profile creation.
+	 *
+	 * @param \PDO $pdo
+	 * @param string $userProfileAuthenticationToken
+	 * @return UserProfile|null
+	 */
 	public static function getUserProfileByAuthenticationToken(\PDO $pdo , string $userProfileAuthenticationToken ): ?userProfile {
-//TODO Trim and filterVar
+
 		// create query template
 		$query = "SELECT userProfileId, userProfileName, userProfileFirstName, userProfileLastName, userProfileEmail, userProfileAuthenticationToken, userProfileHash FROM userProfile WHERE userProfileAuthenticationToken = :userProfileAuthenticationToken";
 		$pdoStatement = $pdo->prepare($query);

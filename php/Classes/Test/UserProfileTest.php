@@ -56,7 +56,7 @@ class UserProfileTest extends PeepTest {
 	}
 
 	/**
-	 * Tests the Insert function, and checks whether the SQL data matches.
+	 * Tests the Insert function, and checks whether the SQL data matches. Also tests GetUserProfileById.
 	 */
 	public function testUserProfileInsert() {
 		// count the number of rows and save it for later
@@ -80,6 +80,9 @@ class UserProfileTest extends PeepTest {
 		$this->assertEquals($pdoProfile->getUserProfileAuthenticationToken(), $this->VALID_AUTHENTICATION);
 	}
 
+	/**
+	 * Tests userProfileUpdate.
+	 */
 	public function testUserProfileUpdate(): void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("userProfile");
@@ -105,6 +108,9 @@ class UserProfileTest extends PeepTest {
 		$this->assertEquals($pdoProfile->getUserProfileName(), $this->VALID_PROFILENAME);
 	}
 
+	/**
+	 * Tests UserProfileDelete.
+	 */
 	public function testUserProfileDelete(): void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("userProfile");
@@ -137,7 +143,7 @@ class UserProfileTest extends PeepTest {
 	}
 
 	/**
-	 * Test get User Profile by name - very similar to Get By Id.
+	 * Test get User Profile by name.
 	 *
 	 */
 
