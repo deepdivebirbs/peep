@@ -39,12 +39,12 @@ class FavoriteTest extends PeepTest {
 	/**
 	 * Valid hash to use to create mock userProfile to us in the test
 	 */
-	protected $VALID_UserProfileHash;
+	protected $VALID_USER_PROFILE_HASH;
 
 	/**
 	 * Valid userProfileAuthentication token to create a mock userProfile
 	 */
-	protected $VALID_UserProfileAuthenticationToken;
+	protected $VALID_USER_PROFILE_AUTHENTICATION_TOKEN;
 
 	/**
 	 * create dependent objects before running text
@@ -56,11 +56,11 @@ class FavoriteTest extends PeepTest {
 
 		//create a salt and hash for mocked profile
 		$password = "abc123";
-		$this->VALID_UserProfileHash = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
-		$this->VALID_UserProfileAuthenticationToken = bin2hex(random_bytes(16));
+		$this->VALID_USER_PROFILE_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
+		$this->VALID_USER_PROFILE_AUTHENTICATION_TOKEN = bin2hex(random_bytes(16));
 
 		//create and insert mocked profile
-		$this->userProfile = new UserProfile(generateUuidV4(), "kewlbirdz", "Pam", "Beesley", "beesley@dundermifflin.com", $this->VALID_UserProfileAuthenticationToken, $this->VALID_UserProfileHash);
+		$this->userProfile = new UserProfile(generateUuidV4(), "kewlbirdz", "Pam", "Beesley", "beesley@dundermifflin.com", $this->VALID_USER_PROFILE_AUTHENTICATION_TOKEN, $this->VALID_USER_PROFILE_HASH);
 		$this->userProfile->insert($this->getPDO());
 
 		//create and insert mocked species
