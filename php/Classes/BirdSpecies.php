@@ -244,6 +244,8 @@ class BirdSpecies implements \JsonSerializable{
 			throw(new \InvalidArgumentException("speciesId must not be empty."));
 		}
 
+		$speciesId = trim($speciesId);
+
 		try {
 			$validSpeciesId = self::validateUuid($speciesId);
 		} catch(\PDOException | \RangeException | \InvalidArgumentException | \Exception | \TypeError $exception) {
