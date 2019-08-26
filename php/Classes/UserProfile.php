@@ -334,7 +334,7 @@ class UserProfile implements \JsonSerializable {
 	 * @param string $userProfileId
 	 * @return UserProfile|null
 	 */
-	public function getUserProfileById(\PDO $pdo , string $userProfileId ): ?userProfile{
+	public static function getUserProfileById(\PDO $pdo , string $userProfileId ): ?userProfile{
 		// sanitize the userId before searching
 		try {
 			$userProfileId = self::validateUuid($userProfileId);
@@ -365,8 +365,15 @@ class UserProfile implements \JsonSerializable {
 		return($userProfile);
 	}
 
-	public function getUserProfileByName(\PDO $pdo , string $userProfileName ): ?userProfile {
-//TODO Trim and filterVar
+	/**
+	 * Takes a name and pdo object, and returns the profile from the pdo that matches it.
+	 *
+	 * @param \PDO $pdo
+	 * @param string $userProfileName
+	 * @return UserProfile|null
+	 */
+	public static function getUserProfileByName(\PDO $pdo , string $userProfileName ): ?userProfile {
+
 		// create query template
 		$query = "SELECT userProfileId, userProfileName, userProfileFirstName, userProfileLastName, userProfileEmail, userProfileAuthenticationToken, userProfileHash FROM userProfile WHERE userProfileName = :userProfileName";
 		$pdoStatement = $pdo->prepare($query);
@@ -391,7 +398,7 @@ class UserProfile implements \JsonSerializable {
 	}
 
 
-	public function getUserProfileByAuthenticationToken(\PDO $pdo , string $userProfileAuthenticationToken ): ?userProfile {
+	public static function getUserProfileByAuthenticationToken(\PDO $pdo , string $userProfileAuthenticationToken ): ?userProfile {
 //TODO Trim and filterVar
 		// create query template
 		$query = "SELECT userProfileId, userProfileName, userProfileFirstName, userProfileLastName, userProfileEmail, userProfileAuthenticationToken, userProfileHash FROM userProfile WHERE userProfileAuthenticationToken = :userProfileAuthenticationToken";
