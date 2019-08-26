@@ -2,9 +2,9 @@
 	<testsuites>
 		<testsuite name="Peep Tester">
 			<file>UserProfileTest.php</file>
-			<!--<file>BirdSpeciesTest.php</file>
+			<file>BirdSpeciesTest.php</file>
 			<file>SightingTest.php</file>
-			<file>FavoriteTest.php</file> -->
+			<file>FavoriteTest.php</file>
 		</testsuite>
 	</testsuites>
 	<filter>
