@@ -156,7 +156,7 @@ class UserProfileTest extends PeepTest {
 
 
 		// grab the result from the array and validate it
-		$pdoUserProfile= UserProfile::getUserProfileByName($this->getPDO(), $userProfile->getUserProfileId());
+		$pdoUserProfile= UserProfile::getUserProfileByName($this->getPDO(), $userProfile->getUserProfileName());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("userProfile"));
 		$this->assertEquals($pdoUserProfile->getUserProfileId(), $profileId);
 		$this->assertEquals($pdoUserProfile->getUserProfileAuthenticationToken(), $this->VALID_AUTHENTICATION);
