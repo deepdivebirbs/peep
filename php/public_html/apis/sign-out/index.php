@@ -15,11 +15,11 @@
 	$reply->status = 200;
 	$reply->data = null;
 	try {
-			//determine what method is used
+			//determine what method is used. But only GET should be valid for this API.
 		$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["REQUEST_METHOD"] : $_SERVER["REQUEST_METHOD"];
 		if($method === "GET") {
 			$_SESSION =[];
-			$reply->message = "Byeeeee.";
+			$reply->message = "Goodbye.";
 		}
 		else {
 			throw (new \InvalidArgumentException("Invalid HTTP method request."));
