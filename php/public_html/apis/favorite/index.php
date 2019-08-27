@@ -1,5 +1,6 @@
 <?php
 
+require_once("/etc/apache2/capstone-mysql/Secrets.php");
 require_once dirname(__DIR__,3)."/vendor/autoload.php";
 require_once dirname(__DIR__,3). "/Classes/autoload.php";require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/jwt.php";
@@ -29,11 +30,11 @@ try {
 	$pdo = $secrets ->getPdoObject();
 
 	//determine which HTTP method was used
-	$method = $_SERVER["HTTP_X_HTTP_METHOD"] ?? $_SERVER["REQUEST_METHOD"];
+	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
 
 	//sanitize the search parameters
-	$favoriteUserProfileId = $id = filter_input(INPUT_GET, "favoriteUserProfileId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	$favoriteBirdSpeciesId = $id = filter_input(INPUT_GET, "favoriteSpeciesId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$favoriteUserProfileId = filter_input(INPUT_GET, "favoriteUserProfileId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$favoriteBirdSpeciesId = filter_input(INPUT_GET, "favoriteSpeciesId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	if ($method === "GET") {
 		//set XSRF cookie
 		setXsrfCookie();
@@ -57,7 +58,7 @@ try {
 		throw (new \InvalidArgumentException("No Profile linked to this Favorite", 405));
 	}
 	if ( $method === "POST") {
-		//enfocer that the user has an XSRF token
+		//enforce that the user has an XSRF token
 		verifyXsrf();
 		//enforce the user has a JWT token
 		//validateJwtHeader();
@@ -75,11 +76,11 @@ try {
 		//enforce the end user has a JWT token
 		validateJwtHeader();
 		//grab the favorite by its composite key
-		$favorite = Favorite::getFavoriteByFavoriteUserProfileIdAndFavoriteSpeciesId($pdo, $requestObject->favoriteUserProfileId, $requestObject->favoriteBirdSpeciesId);
+		$favorite = Favorite::getAllFavoriteByUserProfileId($pdo, $requestObject->favoriteUserProfileId);
 		if ($favorite === null) {
 			throw (new RuntimeException("favorite does not exist"));
 		}
-		//enforce the user is signed in and only trying to edit their onwn favorite
+		//enforce the user is signed in and only trying to edit their own favorite
 		if(empty($_SESSION["userProfile"]) === true || $_SESSION["userProfile"]->getUserProfileId() !== $favorite->getFavoriteUserProfileId()) {
 			throw (new \InvalidArgumentException("you are not allowed to delete this favorite", 403));
 		}
@@ -102,3 +103,5 @@ if($reply->data === null) {
 }
 // encode and return reply to front end caller
 echo json_encode($reply);
+
+var_dump($reply);
