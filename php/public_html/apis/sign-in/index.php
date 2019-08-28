@@ -42,7 +42,7 @@ try {
 		if (empty($requestObject->userProfileEmail) === true) {
 			throw (new \InvalidArgumentException("email address not provided", 401))
 		} else {
-			$userProfileEmail
+			$userProfileEmail = filter_var($req)
 		}
 	}
 
