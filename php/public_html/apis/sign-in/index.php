@@ -26,7 +26,7 @@ $reply->data = null;
 try {
 	//grab the mySQL connection
 	$secrets = new \secrets ("etc/apache2/capstone-mysql/peep.ini");
-	$pdo = $secrets->getPdoObject ();
+	$pdo = $secrets->getPdoObject();
 	//determine what HTTP method was used
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER ["REQUEST_METHOD"];
 
@@ -41,32 +41,52 @@ try {
 		$requestObject = json_decode($requestContent);
 
 		//check to make sure the password and email fields are not empty
-		if (empty($requestObject->userProfileEmail) === true) {
+		if(empty($requestObject->userProfileEmail) === true) {
 			throw (new \InvalidArgumentException("email address not provided", 401));
 		} else {
 			$userProfileEmail = filter_var($requestObject->profileEmail, FILTER_SANITIZE_EMAIL);
 		}
 
 		//grab the profile from the database by the email provided
-		$userProfile = UserProfile::getUserProfilebyEmail ($pdo, $userProfileEmail);
-		if (empty($userProfile) === true) {
+		$userProfile = UserProfile::getUserProfilebyEmail($pdo, $userProfileEmail);
+		if(empty($userProfile) === true) {
 			throw (new InvalidArgumentException("Invalid Email", 401));
 		}
-		$userProfile ->setUserProfileAuthenticationToken(null);
+		$userProfile->setUserProfileAuthenticationToken(null);
+		$userProfile->update($pdo);
+
+		//verify hash is correct
+		if(password_verify($requestObject->userProfilePassword, $userProfile->getUserProfileHash()) === false) {
+			throw(new \InvalidArgumentException("Password or email is incorrect", 401));
+		}
+
+		//grab profile from database and put into a session
+		$userProfile = UserProfile::getUserProfileById($pdo, $userProfile->getUserProfileId());
+
+		$_SESSION["userProfile"] = $userProfile;
+
+		//create the Auth payload
+		$authObject = (object)[
+			"userProfileId" => $userProfile->getUserProfileId(),
+		];
+
+		//create and set the JWT token
+		setJwtAndAuthHeader("auth", $authObject);
+
+
+		$reply->message = "Sign in successful";
+	} else {
+		throw (new \InvalidArgumentException("Invalid HTTP method request", 418));
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+} catch (\Exception | \TypeError $exception) {
+	$reply->status = $exception->getCode();
+	$reply->mesage = $exception->getMessage();
 }
+
+//sets up the response header
+header("Content-type: application/json");
+
+
+//JSON encode the $reply object and echo it back to the front end
+echo json_encode($reply);
