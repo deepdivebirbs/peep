@@ -440,19 +440,24 @@ class UserProfile implements \JsonSerializable {
 		$parameters = ["userProfileEmail" => $userProfileEmail];
 		$pdoStatement->execute($parameters);
 
-		// grab the statement from mySQL
-		try {
-			$userProfile = null;
-			$pdoStatement->setFetchMode(\PDO::FETCH_ASSOC);
-			$row = $pdoStatement->fetch();
-			if($row !== false) {
-				$userProfile = new userProfile($row["userProfileId"], $row["userProfileName"], $row["userProfileFirstName"], $row["userProfileLastName"], $row["userProfileEmail"], $row["userProfileAuthenticationToken"], $row["userProfileHash"]);
+		// grab the statements from mySQL
+		// build an array of Profiles
+		$userProfiles = new \SplFixedArray($pdoStatement->rowCount());
+		$pdoStatement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $pdoStatement->fetch()) !== false) {
+			try {
+				$userProfile = null;
+				$pdoStatement->setFetchMode(\PDO::FETCH_ASSOC);
+				$row = $pdoStatement->fetch();
+				if($row !== false) {
+					$userProfile = new userProfile($row["userProfileId"], $row["userProfileName"], $row["userProfileFirstName"], $row["userProfileLastName"], $row["userProfileEmail"], $row["userProfileAuthenticationToken"], $row["userProfileHash"]);
+				}
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
-		} catch(\Exception $exception) {
-			// if the row couldn't be converted, rethrow it
-			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		return($userProfile);
+		return($userProfiles);
 	}
 
 	/**
