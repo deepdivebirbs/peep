@@ -1,11 +1,13 @@
 <?php
-require_once dirname(__DIR__, 3) . "/Classes/autoload.php";
+require_once dirname(__DIR__, 3) . "Classes/autoload.php";
+require_once dirname(__DIR__, 3) . "Vendor/autoload.php";
+
 require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 require_once dirname(__DIR__, 3) . "/lib/jwt.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 
-use Birbs\Peep\UserProfile;
+use Birbs\Peep\{UserProfile};
 
 /**
  * API for the app sign in, UserProfile class
@@ -40,10 +42,17 @@ try {
 
 		//check to make sure the password and email fields are not empty
 		if (empty($requestObject->userProfileEmail) === true) {
-			throw (new \InvalidArgumentException("email address not provided", 401))
+			throw (new \InvalidArgumentException("email address not provided", 401));
 		} else {
-			$userProfileEmail = filter_var($req)
+			$userProfileEmail = filter_var($requestObject->profileEmail, FILTER_SANITIZE_EMAIL);
 		}
+
+		//grab the profile from the database by the email provided
+		$userProfile = UserProfile::getUserProfilebyEmail ($pdo, $userProfileEmail);
+		if (empty($userProfile) === true) {
+			throw (new InvalidArgumentException("Invalid Email", 401));
+		}
+		$userProfile ->setUserProfileAuthenticationToken(null);
 	}
 
 
