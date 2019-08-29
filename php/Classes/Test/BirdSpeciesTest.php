@@ -17,6 +17,11 @@ require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 
 // Guess unit test classes don't have a __construct()?
 
+/**
+ * Class BirdSpeciesTest
+ * @package Birbs\Peep\Test
+ * @author Mark Waid Jr
+ */
 class BirdSpeciesTest extends PeepTest {
 	// Create the test values.
 

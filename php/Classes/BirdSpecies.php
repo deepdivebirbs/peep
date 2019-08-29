@@ -12,6 +12,8 @@ use Symfony\Component\Yaml\Tests\B;
 /**
  * This class takes API data from the Ebirds API at https://confluence.cornell.edu/display/CLOISAPI/eBirdAPIs and parses
  * the data into usable chunks and inserts that data into the table as specified.
+ *
+ * @author Mark Waid Jr
  **/
 class BirdSpecies implements \JsonSerializable{
 
