@@ -1,7 +1,4 @@
 <?php
-
-namespace Birb\Peep;
-
 use Birbs\Peep\UserProfile;
 use http\Client\Curl\User;
 use http\Exception\InvalidArgumentException;

@@ -1,6 +1,5 @@
 <?php
-
-namespace Birbs\Peep;
+use Birbs\Peep;
 
 require_once(dirname(__DIR__, 3) . "/Classes/autoload.php");
 require_once(dirname(__DIR__, 3) . "/vendor/autoload.php");
@@ -14,6 +13,8 @@ require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 /**
  * This is the API for BirdSpecies, this API handles incoming HTTP requests by getting the request, reading the request
  * and pulling the data from the table to the user.
+ *
+ * @author Mark Waid Jr
  */
 
 use Birbs\Peep\{BirdSpecies};
