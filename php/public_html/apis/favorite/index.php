@@ -64,7 +64,7 @@ try {
 		//enforce the user has a JWT token
 		//validateJwtHeader();
 		//enforce the user is signed in
-		if(empty(S_SESSION["userProfile"]) ===true) {
+		if(empty($_SESSION["userProfile"]) ===true) {
 			throw (new InvalidArgumentException("You must be logged in to access your favorites", 403));
 		}
 		validateJwtHeader();
