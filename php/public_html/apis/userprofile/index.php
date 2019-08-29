@@ -40,9 +40,8 @@ try {
 	$userProfileName = filter_input(INPUT_GET, "userProfileName", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$userProfileFirstName = filter_input(INPUT_GET, "userProfileFirstName", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$userProfileLastName = filter_input(INPUT_GET, "userProfileLastName", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-
-	$userProfileAuthenticationToken = filter_input(INPUT_GET, "userProfileAuthenticationToken", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$userProfileEmail = filter_input(INPUT_GET, "userProfileEmail", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$userProfileAuthenticationToken = filter_input(INPUT_GET, "userProfileAuthenticationToken", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$userProfileHash = filter_input(INPUT_GET, "userProfileHash", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
 
@@ -53,11 +52,15 @@ try {
 		// Set the XSRF cookie
 		setXsrfCookie();
 
-		// Get userProfile based on ID. Is this the best way?
+		// Get userProfile based on supplied data.
 		if(empty($userProfileId) === false) {
 			$reply->data = UserProfile::getUserProfileById($pdo, $userProfileId);
 		} else if (empty($userProfileName) === false){
 			$reply->data = UserProfile::getUserProfileByName($pdo, $userProfileName);
+		} else if (empty($userProfileAuthenticationToken) === false){
+			$reply->data = UserProfile::getUserProfileByAuthenticationToken($pdo, $userProfileAuthenticationToken);
+		} else if (empty($userProfileEmail) === false){
+			$reply->data = UserProfile::getUserProfileByEmail($pdo, $userProfileEmail);
 		}
 
 		//else {
