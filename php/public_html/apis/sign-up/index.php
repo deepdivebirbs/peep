@@ -149,33 +149,33 @@ try {
 <a href="$confirmLink">$confirmLink</a>
 EOF;
 		// Create new swift mail object
-		$switfMessage = new \Swift_Message();
+		$swiftMessage = new \Swift_Message();
 
 		// Set return address
-		$switfMessage->setFrom(["fleabass4@gmail.com" => "Ebirbs Team"]);
+		$swiftMessage->setFrom(["fleabass4@gmail.com" => "Ebirbs Team"]);
 
 		// Set recipient
 		$to = [$userProfileEmail];
-		$switfMessage->setTo($to);
+		$swiftMessage->setTo($to);
 
 		// Set subject
-		$switfMessage->setSubject($emailSubject);
+		$swiftMessage->setSubject($emailSubject);
 
 		// Set body
-		$switfMessage->setBody($message, "text/html");
-		$switfMessage->addPart(html_entity_decode($message), "text/plain");
+		$swiftMessage->setBody($message, "text/html");
+		$swiftMessage->addPart(html_entity_decode($message), "text/plain");
 
 		// Set up smtp and mailer objects
 		$smtp = new \Swift_SmtpTransport("localhost", 25);
 		$mailer = new \Swift_Mailer($smtp);
 
-		$numSent = $mailer->send($switfMessage, $failed);
+		$numSent = $mailer->send($swiftMessage, $failed);
 
 		if($numSent !== count($to)) {
 			throw(new \RuntimeException("Unable to send Email.", 400));
 		}
 
-		$reply->message = "Thank you for creating an account on the Ebirbs website!";
+		$reply->message = "Thank you for creating an account on the Ebirbs website! What is wrong with you? Why would you do this?";
 
 	} else {
 		throw(new \InvalidArgumentException("Invalid HTTP Request..."));
