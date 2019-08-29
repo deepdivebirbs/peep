@@ -13,20 +13,22 @@ use Birbs\Peep\{UserProfile};
  * API for the app sign in, UserProfile class
  */
 
-//Verify the session. If it's not active, start it.
-if (session_status() !== PHP_SESSION_ACTIVE) {
-	session_start();
-}
-
 //prepare an empty reply
 $reply = new stdClass();
 $reply->status = 200;
 $reply->data = null;
 
 try {
+
+	//Verify the session status. If it's not active, start it.
+	if (session_status() !== PHP_SESSION_ACTIVE) {
+		session_start();
+	}
+
 	//grab the mySQL connection
 	$secrets = new \secrets ("etc/apache2/capstone-mysql/peep.ini");
 	$pdo = $secrets->getPdoObject();
+
 	//determine what HTTP method was used
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER ["REQUEST_METHOD"];
 
@@ -48,7 +50,7 @@ try {
 		}
 
 		//grab the profile from the database by the email provided
-		$userProfile = UserProfile::getUserProfilebyEmail($pdo, $userProfileEmail);
+		$userProfile = UserProfile::getUserProfileByEmail($pdo, $userProfileEmail);
 		if(empty($userProfile) === true) {
 			throw (new InvalidArgumentException("Invalid Email", 401));
 		}
@@ -62,7 +64,6 @@ try {
 
 		//grab profile from database and put into a session
 		$userProfile = UserProfile::getUserProfileById($pdo, $userProfile->getUserProfileId());
-
 		$_SESSION["userProfile"] = $userProfile;
 
 		//create the Auth payload
