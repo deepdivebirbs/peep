@@ -21,6 +21,7 @@ require_once("/etc/apache2/capstone-mysql/Secrets.php");
  * the database.
  *
  * @package Birbs\Peep
+ * @author Mark Waid Jr
  */
 class DataDownloader {
 	/**
