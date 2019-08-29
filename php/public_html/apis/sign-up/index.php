@@ -123,7 +123,7 @@ try {
 		$userProfile = new UserProfile(generateUuidV4(), $profileUsername, $userFirstName, $userLastName, $userProfileEmail, $profileAuthToken, $hash);
 
 		// Insert the created user profile into the database
-		//$userProfile->insert($pdo);
+		$userProfile->insert($pdo);
 
 		// Create email subject
 		$emailSubject = "You are about to enter the wonderful world of BIRBS!";
