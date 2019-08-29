@@ -37,11 +37,12 @@ try {
 
 	// Sanitize and store input
 	$userProfileId = filter_input(INPUT_GET, "userProfileId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	$userProfileAuthenticationToken = filter_input(INPUT_GET, "userProfileAuthenticationToken", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	$userProfileEmail = filter_input(INPUT_GET, "userProfileEmail", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$userProfileName = filter_input(INPUT_GET, "userProfileName", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$userProfileFirstName = filter_input(INPUT_GET, "userProfileFirstName", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$userProfileLastName = filter_input(INPUT_GET, "userProfileLastName", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	$userProfileName = filter_input(INPUT_GET, "userProfileName", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+	$userProfileAuthenticationToken = filter_input(INPUT_GET, "userProfileAuthenticationToken", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$userProfileEmail = filter_input(INPUT_GET, "userProfileEmail", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$userProfileHash = filter_input(INPUT_GET, "userProfileHash", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
 
@@ -54,11 +55,12 @@ try {
 
 		// Get userProfile based on ID. Is this the best way?
 		if(empty($userProfileId) === false) {
-			$userProfile = UserProfile::getUserProfileById($pdo, $userProfileId);
-			if($userProfile !== null) {
-				$reply->data = $userProfile;
-			}
-		} //else {
+			$reply->data = UserProfile::getUserProfileById($pdo, $userProfileId);
+		} else if (empty($userProfileName) === false){
+			$reply->data = UserProfile::getUserProfileByName($pdo, $userProfileName);
+		}
+
+		//else {
 			//$userProfile = UserProfile::getAllUserProfiles($pdo)->toArray();
 			//if($userProfile !== null) {
 			//	$reply->data = $userProfile;
