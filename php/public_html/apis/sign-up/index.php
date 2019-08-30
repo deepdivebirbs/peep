@@ -108,7 +108,6 @@ try {
 			echo "<h1>Must contain a special character.</h1>";
 		}
 		*/
-		echo json_encode($reply->data->userProfilePassword);
 
 		// Hash the password
 		$hash = password_hash($userProfilePassword, PASSWORD_ARGON2I, ["time_cost" => 384]);
@@ -127,7 +126,7 @@ try {
 
 		$basePath = dirname($_SERVER["SCRIPT_NAME"], 3);
 
-		$urlGlue = $basePath . "/api/activation/?activation=" . "$profileAuthToken";
+		$urlGlue = $basePath . "/apis/activation/index.php/?activation=" . "$profileAuthToken";
 
 		// Create the actual link
 		$confirmLink = "https://" . $_SERVER["SERVER_NAME"] . $urlGlue;

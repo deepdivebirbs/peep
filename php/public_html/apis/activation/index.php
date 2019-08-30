@@ -2,6 +2,7 @@
 
 require_once dirname(__DIR__,3) . "/vendor/autoload.php";
 require_once dirname(__DIR__,3) . "/Classes/autoload.php";
+require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once ("/etc/apache2/capstone-mysql/Secrets.php");
 
 use Birbs\Peep\UserProfile;
@@ -27,10 +28,11 @@ try {
 	$pdo = $secrets->getPdoObject();
 
 	//checks the HTTP method being used
-	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
+	$method = $_SERVER["HTTP_X_HTTP_METHOD"] ?? $_SERVER["REQUEST_METHOD"];
+	echo $method;
 
 	//sanitize the input
-	$activation = filter_input(INPUT_GET, "activation", FILTER_SANITIZE_STRING);
+	$activation = filter_input(INPUT_GET, "activation", FILTER_SANITIZE_STRING, "php://input");
 
 	//make sure the activation token is the correct size
 	if(strlen($activation) !== 32) {
@@ -38,7 +40,7 @@ try {
 	}
 
 	//verify the activation token is a string value of a hexadecimal
-	if(ctype_xdigit($activation) !== false) {
+	if(ctype_xdigit($activation) === false) {
 		throw (new \InvalidArgumentException("activation token is empty or invalid", 405));
 	}
 
@@ -49,7 +51,7 @@ try {
 		setXsrfCookie();
 
 		//find the profile associated with the activation token
-		$userProfile = $userProfile::getUserProfileByAuthenticationToken($pdo, $activation);
+		$userProfile = UserProfile::getUserProfileByAuthenticationToken($pdo, $activation);
 
 		//verify the profile is not null
 		if($userProfile !== null) {
@@ -57,7 +59,7 @@ try {
 			//make sure activation token matches
 			if($activation === $userProfile->getUserProfileAuthenticationToken()) {
 
-				//set activation to null
+				//set activation to nullactivation
 				$userProfile->setUserProfileAuthenticationToken(null);
 
 				//update the profile in the database
