@@ -131,12 +131,13 @@ else if($method === "POST") {
 else {
 	throw(new \InvalidArgumentException("Invalid HTTP Request...", 418));
 }
+
 } catch(\Exception $exception) {
 	// Set error messages
 	$reply->status = $exception->getCode();
 	$reply->message = $exception->getMessage();
 	$reply->trace = $exception->getTraceAsString();
-} catch(\TypeError $exception) {
+} catch(\Exception | \TypeError $exception) {
 	$reply->status = $exception->getCode();
 	$reply->message = $exception->getMessage();
 }
