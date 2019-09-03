@@ -26,7 +26,7 @@ try {
 	}
 
 	//grab the mySQL connection
-	$secrets = new \secrets ("etc/apache2/capstone-mysql/peep.ini");
+	$secrets = new \Secrets ("/etc/apache2/capstone-mysql/peep.ini");
 	$pdo = $secrets->getPdoObject();
 
 	//determine what HTTP method was used
