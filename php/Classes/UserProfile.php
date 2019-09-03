@@ -90,7 +90,7 @@ class UserProfile implements \JsonSerializable {
 	 * accessor method for userProfileEmail
 	 * @return string userProfileEmail - should fit in varChar(128)
 	 */
-	public function getUserProfileEmail(): string {
+	public function getUserProfileEmail(): ?string {
 		return ($this->userProfileEmail);
 	}
 
@@ -428,7 +428,7 @@ class UserProfile implements \JsonSerializable {
 			$pdoStatement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $pdoStatement->fetch();
 			if($row !== false) {
-				$userProfile = new userProfile($row["userProfileId"], $row["userProfileName"], $row["userProfileFirstName"], $row["userProfileLastName"], $row["userProfileEmail"], $row["userProfileAuthenticationToken"], $row["userProfileHash"]);
+				$userProfile = new UserProfile($row["userProfileId"], $row["userProfileName"], $row["userProfileFirstName"], $row["userProfileLastName"], $row["userProfileEmail"], $row["userProfileAuthenticationToken"], $row["userProfileHash"]);
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
@@ -436,7 +436,6 @@ class UserProfile implements \JsonSerializable {
 		}
 		return($userProfile);
 	}
-
 
 	public static function getUserProfileByEmail(\PDO $pdo , string $userProfileEmail ): ?userProfile {
 
@@ -448,25 +447,50 @@ class UserProfile implements \JsonSerializable {
 		$parameters = ["userProfileEmail" => $userProfileEmail];
 		$pdoStatement->execute($parameters);
 
-		// grab the statements from mySQL
-		// build an array of Profiles
-		$userProfiles = new \SplFixedArray($pdoStatement->rowCount());
-		$pdoStatement->setFetchMode(\PDO::FETCH_ASSOC);
-		while(($row = $pdoStatement->fetch()) !== false) {
-			try {
-				$userProfile = null;
-				$pdoStatement->setFetchMode(\PDO::FETCH_ASSOC);
-				$row = $pdoStatement->fetch();
-				if($row !== false) {
-					$userProfile = new userProfile($row["userProfileId"], $row["userProfileName"], $row["userProfileFirstName"], $row["userProfileLastName"], $row["userProfileEmail"], $row["userProfileAuthenticationToken"], $row["userProfileHash"]);
-				}
-			} catch(\Exception $exception) {
-				// if the row couldn't be converted, rethrow it
-				throw(new \PDOException($exception->getMessage(), 0, $exception));
+		// grab the statement from mySQL
+		try {
+			$userProfile = null;
+			$pdoStatement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $pdoStatement->fetch();
+			if($row !== false) {
+				$userProfile = new UserProfile($row["userProfileId"], $row["userProfileName"], $row["userProfileFirstName"], $row["userProfileLastName"], $row["userProfileEmail"], $row["userProfileAuthenticationToken"], $row["userProfileHash"]);
 			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		return($userProfiles);
+		return($userProfile);
 	}
+
+//	public static function getUserProfileByEmail(\PDO $pdo , string $userProfileEmail ): ?UserProfile {
+//
+//		// create query template
+//		$query = "SELECT userProfileId, userProfileName, userProfileFirstName, userProfileLastName, userProfileEmail, userProfileAuthenticationToken, userProfileHash FROM userProfile WHERE userProfileEmail = :userProfileEmail";
+//		$pdoStatement = $pdo->prepare($query);
+//
+//		// bind the user id to the place holder in the template
+//		$parameters = ["userProfileEmail" => $userProfileEmail];
+//		$pdoStatement->execute($parameters);
+//
+//		// grab the statements from mySQL
+//		// build an array of Profiles
+//		$userProfile = new \SplFixedArray($pdoStatement->rowCount());
+//		$pdoStatement->setFetchMode(\PDO::FETCH_ASSOC);
+//		while(($row = $pdoStatement->fetch()) !== false) {
+//			try {
+//				$userProfile = null;
+//				$pdoStatement->setFetchMode(\PDO::FETCH_ASSOC);
+//				$row = $pdoStatement->fetch();
+//				if($row !== false) {
+//					$userProfile = new userProfile($row["userProfileId"], $row["userProfileName"], $row["userProfileFirstName"], $row["userProfileLastName"], $row["userProfileEmail"], $row["userProfileAuthenticationToken"], $row["userProfileHash"]);
+//				}
+//			} catch(\Exception $exception) {
+//				// if the row couldn't be converted, rethrow it
+//				throw(new \PDOException($exception->getMessage(), 0, $exception));
+//			}
+//		}
+//		return($userProfile);
+//	}
 
 	/**
 	 * formats the state variables for JSON serialization. Might need changing.
