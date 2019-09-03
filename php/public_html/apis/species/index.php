@@ -1,5 +1,5 @@
 <?php
-namespace Birbs\Peep;
+use Birbs\Peep;
 
 require_once(dirname(__DIR__, 3) . "/Classes/autoload.php");
 require_once(dirname(__DIR__, 3) . "/vendor/autoload.php");
@@ -13,6 +13,8 @@ require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 /**
  * This is the API for BirdSpecies, this API handles incoming HTTP requests by getting the request, reading the request
  * and pulling the data from the table to the user.
+ *
+ * @author Mark Waid Jr
  */
 
 use Birbs\Peep\{BirdSpecies};
@@ -43,18 +45,24 @@ try {
 	$speciesPhotoUrl = filter_input(INPUT_GET, "speciesPhotoUrl", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
 
-
 	// Define behaviour if $method is a GET request
 	if($method === "GET") {
 		// Set the XSRF cookie
 		setXsrfCookie();
 
-		// Get bird species based on stuff?
+		// Get bird species based on speciesCode
 		if(empty($speciesCode) === false) {
 			$birdSpecies = BirdSpecies::getBirdSpeciesBySpeciesCode($pdo, $speciesCode);
 			if($birdSpecies !== null) {
 				$reply->data = $birdSpecies;
 			}
+
+		} elseif(empty($speciesComName) === false) {
+			$birdSpecies = BirdSpecies::getSpeciesByComName($pdo, $speciesComName);
+			if($birdSpecies !== null) {
+				$reply->data = $birdSpecies;
+			}
+
 		} else {
 			$birdSpecies = BirdSpecies::getAllBirds($pdo)->toArray();
 			if($birdSpecies !== null) {

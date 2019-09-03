@@ -1,7 +1,9 @@
 <?php
 
+require_once("/etc/apache2/capstone-mysql/Secrets.php");
 require_once dirname(__DIR__,3)."/vendor/autoload.php";
-require_once dirname(__DIR__,3). "/Classes/autoload.php";require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
+require_once dirname(__DIR__,3). "/Classes/autoload.php";
+require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/jwt.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 
@@ -29,11 +31,11 @@ try {
 	$pdo = $secrets ->getPdoObject();
 
 	//determine which HTTP method was used
-	$method = $_SERVER["HTTP_X_HTTP_METHOD"] ?? $_SERVER["REQUEST_METHOD"];
+	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
 
 	//sanitize the search parameters
-	$favoriteUserProfileId = $id = filter_input(INPUT_GET, "favoriteUserProfileId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	$favoriteBirdSpeciesId = $id = filter_input(INPUT_GET, "favoriteSpeciesId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$favoriteUserProfileId = filter_input(INPUT_GET, "favoriteUserProfileId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$favoriteBirdSpeciesId = filter_input(INPUT_GET, "favoriteSpeciesId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	if ($method === "GET") {
 		//set XSRF cookie
 		setXsrfCookie();
@@ -51,43 +53,42 @@ try {
 		}
 	} else if ($method === "POST" || $method === "PUT") {
 		//decode the response from the front end
-	$requestContent = file_get_contents("php://input");
-	$requestObject = json_decode($requestContent);
-	if(empty($requestObject->favoriteUserProfileId) === true) {
-		throw (new \InvalidArgumentException("No Profile linked to this Favorite", 405));
-	}
-	if ( $method === "POST") {
-		//enfocer that the user has an XSRF token
-		verifyXsrf();
-		//enforce the user has a JWT token
-		//validateJwtHeader();
-		//enforce the user is signed in
-		if(empty(S_SESSION["userProfile"]) ===true) {
-			throw (new InvalidArgumentException("You must be logged in to access your favorites", 403));
+		$requestContent = file_get_contents("php://input");
+		$requestObject = json_decode($requestContent);
+		if(empty($requestObject->favoriteUserProfileId) === true) {
+			throw (new \InvalidArgumentException("No Profile linked to this Favorite", 405));
 		}
-		validateJwtHeader();
-		$favorite = new Favorite ($_SESSION["userProfile"]->getUserProfileId(), $requestObject->favoriteBirdSpeciesId);
-		$favorite->insert($pdo);
-		$reply->message = "restaurant successfully added to favorites";
-	}elseif($method === "PUT") {
-		//enforce the end user has an XSRF token
-		verifyXsrf();
-		//enforce the end user has a JWT token
-		validateJwtHeader();
-		//grab the favorite by its composite key
-		$favorite = Favorite::getFavoriteByFavoriteUserProfileIdAndFavoriteSpeciesId($pdo, $requestObject->favoriteUserProfileId, $requestObject->favoriteBirdSpeciesId);
-		if ($favorite === null) {
-			throw (new RuntimeException("favorite does not exist"));
-		}
-		//enforce the user is signed in and only trying to edit their onwn favorite
-		if(empty($_SESSION["userProfile"]) === true || $_SESSION["userProfile"]->getUserProfileId() !== $favorite->getFavoriteUserProfileId()) {
-			throw (new \InvalidArgumentException("you are not allowed to delete this favorite", 403));
-		}
-		//validateJwtHeader();
-		//preform the actual delete
-		$favorite->delete($pdo);
-		//update the message
-		$reply->message = "favorite successfully deleted";
+		if ( $method === "POST") {
+			//enforce that the user has an XSRF token
+			verifyXsrf();
+			//enforce the user is signed in
+			if(empty($_SESSION["userProfile"]) ===true) {
+				throw (new InvalidArgumentException("You must be logged in to access your favorites", 403));
+			}
+			//enforce the user has a JWT token
+			validateJwtHeader();
+			$favorite = new Favorite ($_SESSION["userProfile"]->getUserProfileId(), $requestObject->favoriteBirdSpeciesId);
+			$favorite->insert($pdo);
+			$reply->message = "restaurant successfully added to favorites";
+		}elseif($method === "PUT") {
+			//enforce the end user has an XSRF token
+			verifyXsrf();
+			//enforce the end user has a JWT token
+			validateJwtHeader();
+			//grab the favorite by its composite key
+			$favorite = Favorite::getAllFavoriteByUserProfileId($pdo, $requestObject->favoriteUserProfileId);
+			if ($favorite === null) {
+				throw (new RuntimeException("favorite does not exist"));
+			}
+			//enforce the user is signed in and only trying to edit their own favorite
+			if(empty($_SESSION["userProfile"]) === true || $_SESSION["userProfile"]->getUserProfileId() !== $favorite->getFavoriteUserProfileId()) {
+				throw (new \InvalidArgumentException("you are not allowed to delete this favorite", 403));
+			}
+			//validateJwtHeader();
+			//preform the actual delete
+			$favorite->delete($pdo);
+			//update the message
+			$reply->message = "favorite successfully deleted";
 		}
 	} else {
 		throw (new \InvalidArgumentException("invalid http request", 400));
@@ -102,3 +103,5 @@ if($reply->data === null) {
 }
 // encode and return reply to front end caller
 echo json_encode($reply);
+
+var_dump($reply);

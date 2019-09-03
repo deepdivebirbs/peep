@@ -12,6 +12,8 @@ use Symfony\Component\Yaml\Tests\B;
 /**
  * This class takes API data from the Ebirds API at https://confluence.cornell.edu/display/CLOISAPI/eBirdAPIs and parses
  * the data into usable chunks and inserts that data into the table as specified.
+ *
+ * @author Mark Waid Jr
  **/
 class BirdSpecies implements \JsonSerializable{
 
@@ -335,6 +337,35 @@ class BirdSpecies implements \JsonSerializable{
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
+		return $birdSpecies;
+	}
+
+	public static function getSpeciesByComName(\PDO $pdo, $speciesComName): ?BirdSpecies {
+		// Create mySQL query
+		$query = "SELECT speciesId, speciesCode, speciesComName, speciesSciName, speciesPhotoUrl FROM species WHERE speciesComName = :speciesComName";
+
+		// Prepare query
+		$statement = $pdo->prepare($query);
+
+		// Set values
+		$values = ["speciesComName" => $speciesComName];
+
+		// Execute statement
+		$statement->execute($values);
+
+		$row = $statement->fetch();
+
+		try {
+			$birdSpecies = null;
+			if($row !== false) {
+				// Create new bird species with those values
+				$birdSpecies = new BirdSpecies($row["speciesId"], $row["speciesCode"], $row["speciesComName"], $row["speciesSciName"], $row["speciesPhotoUrl"]);
+			}
+		} catch(\InvalidArgumentException | \TypeError | \Exception $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+
 		return $birdSpecies;
 	}
 

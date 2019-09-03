@@ -154,19 +154,27 @@ class UserProfile implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if $newUserAuthorizationToken is empty or insecure
 	 * @throws \RangeException if sanitized input is the wrong length or contains invalid characters
 	 */
-	public function setUserProfileAuthenticationToken(string $newUserProfileAuthenticationToken): void {
+	public function setUserProfileAuthenticationToken(?string $newUserProfileAuthenticationToken): void {
+		if($newUserProfileAuthenticationToken === null) {
+			echo "162";
+			$this->userProfileAuthenticationToken = null;
+			echo "163";
+			return;
+		}
+
 		$newUserProfileAuthenticationToken = strtolower(trim($newUserProfileAuthenticationToken));
 		$newUserProfileAuthenticationToken = filter_var($newUserProfileAuthenticationToken, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-		if(empty($newUserProfileAuthenticationToken) === true) {
-			throw(new \InvalidArgumentException("input is empty"));
-		}
+
 		if(ctype_xdigit($newUserProfileAuthenticationToken) === false) {
-			throw(new\RangeException("user activation is not valid"));
+			throw(new \RangeException("user activation is not valid"));
 		}
 		if(strlen($newUserProfileAuthenticationToken) !== 32) {
 			throw(new\RangeException("user activation token has to be 32 characters."));
 		}
+
+
 		$this->userProfileAuthenticationToken = $newUserProfileAuthenticationToken;
+		//echo $this->userProfileAuthenticationToken;
 	}
 
 	/**
@@ -429,6 +437,36 @@ class UserProfile implements \JsonSerializable {
 		return($userProfile);
 	}
 
+
+	public static function getUserProfileByEmail(\PDO $pdo , string $userProfileEmail ): ?userProfile {
+
+		// create query template
+		$query = "SELECT userProfileId, userProfileName, userProfileFirstName, userProfileLastName, userProfileEmail, userProfileAuthenticationToken, userProfileHash FROM userProfile WHERE userProfileEmail = :userProfileEmail";
+		$pdoStatement = $pdo->prepare($query);
+
+		// bind the user id to the place holder in the template
+		$parameters = ["userProfileEmail" => $userProfileEmail];
+		$pdoStatement->execute($parameters);
+
+		// grab the statements from mySQL
+		// build an array of Profiles
+		$userProfiles = new \SplFixedArray($pdoStatement->rowCount());
+		$pdoStatement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $pdoStatement->fetch()) !== false) {
+			try {
+				$userProfile = null;
+				$pdoStatement->setFetchMode(\PDO::FETCH_ASSOC);
+				$row = $pdoStatement->fetch();
+				if($row !== false) {
+					$userProfile = new userProfile($row["userProfileId"], $row["userProfileName"], $row["userProfileFirstName"], $row["userProfileLastName"], $row["userProfileEmail"], $row["userProfileAuthenticationToken"], $row["userProfileHash"]);
+				}
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return($userProfiles);
+	}
 
 	/**
 	 * formats the state variables for JSON serialization. Might need changing.
