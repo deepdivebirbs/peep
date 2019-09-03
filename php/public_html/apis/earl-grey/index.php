@@ -17,7 +17,7 @@ try {
 	} else {
 		throw (new \InvalidArgumentException("Session not established", 418));
 	}
-} catch(\Exception  | \TypeError $exception) {
+} catch(\Exception | \TypeError $exception) {
 	$reply->status = $exception->getCode();
 	$reply->message = $exception->getMessage();
 }
