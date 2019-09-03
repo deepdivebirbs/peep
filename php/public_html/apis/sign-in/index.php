@@ -46,9 +46,8 @@ try {
 		if(empty($requestObject->userProfileEmail) === true) {
 			throw (new \InvalidArgumentException("email address not provided", 401));
 		} else {
-			$userProfileEmail = filter_var($requestObject->profileEmail, FILTER_SANITIZE_EMAIL);
+			$userProfileEmail = filter_var($requestObject->userProfileEmail, FILTER_SANITIZE_EMAIL);
 		}
-
 		//grab the profile from the database by the email provided
 		$userProfile = UserProfile::getUserProfileByEmail($pdo, $userProfileEmail);
 		if(empty($userProfile) === true) {

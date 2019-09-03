@@ -53,7 +53,7 @@ class UserProfile implements \JsonSerializable {
 	 * @throws \TypeError if the input type is wrong
 	 * @throws \Exception if an exeption turns up.
 	 */
-	public function __construct($newUserProfileId, string $newUserProfileName, string $newUserProfileFirstName, string $newUserProfileLastName, string $newUserProfileEmail, string $newUserProfileAuthenticationToken, string $newUserProfileHash) {
+	public function __construct($newUserProfileId, string $newUserProfileName, string $newUserProfileFirstName, string $newUserProfileLastName, string $newUserProfileEmail, ? string $newUserProfileAuthenticationToken, string $newUserProfileHash) {
 		try {
 			$this->setUserProfileId($newUserProfileId);
 			$this->setUserProfileName($newUserProfileName);
@@ -156,9 +156,7 @@ class UserProfile implements \JsonSerializable {
 	 */
 	public function setUserProfileAuthenticationToken(?string $newUserProfileAuthenticationToken): void {
 		if($newUserProfileAuthenticationToken === null) {
-			echo "162";
 			$this->userProfileAuthenticationToken = null;
-			echo "163";
 			return;
 		}
 
@@ -437,11 +435,12 @@ class UserProfile implements \JsonSerializable {
 		return($userProfile);
 	}
 
-	public static function getUserProfileByEmail(\PDO $pdo , string $userProfileEmail ): ?userProfile {
+	public static function getUserProfileByEmail(\PDO $pdo, string $userProfileEmail ): ?userProfile {
 
 		// create query template
 		$query = "SELECT userProfileId, userProfileName, userProfileFirstName, userProfileLastName, userProfileEmail, userProfileAuthenticationToken, userProfileHash FROM userProfile WHERE userProfileEmail = :userProfileEmail";
 		$pdoStatement = $pdo->prepare($query);
+
 
 		// bind the user id to the place holder in the template
 		$parameters = ["userProfileEmail" => $userProfileEmail];
@@ -452,6 +451,7 @@ class UserProfile implements \JsonSerializable {
 			$userProfile = null;
 			$pdoStatement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $pdoStatement->fetch();
+				var_dump($userProfile);
 			if($row !== false) {
 				$userProfile = new UserProfile($row["userProfileId"], $row["userProfileName"], $row["userProfileFirstName"], $row["userProfileLastName"], $row["userProfileEmail"], $row["userProfileAuthenticationToken"], $row["userProfileHash"]);
 			}
@@ -462,35 +462,6 @@ class UserProfile implements \JsonSerializable {
 		return($userProfile);
 	}
 
-//	public static function getUserProfileByEmail(\PDO $pdo , string $userProfileEmail ): ?UserProfile {
-//
-//		// create query template
-//		$query = "SELECT userProfileId, userProfileName, userProfileFirstName, userProfileLastName, userProfileEmail, userProfileAuthenticationToken, userProfileHash FROM userProfile WHERE userProfileEmail = :userProfileEmail";
-//		$pdoStatement = $pdo->prepare($query);
-//
-//		// bind the user id to the place holder in the template
-//		$parameters = ["userProfileEmail" => $userProfileEmail];
-//		$pdoStatement->execute($parameters);
-//
-//		// grab the statements from mySQL
-//		// build an array of Profiles
-//		$userProfile = new \SplFixedArray($pdoStatement->rowCount());
-//		$pdoStatement->setFetchMode(\PDO::FETCH_ASSOC);
-//		while(($row = $pdoStatement->fetch()) !== false) {
-//			try {
-//				$userProfile = null;
-//				$pdoStatement->setFetchMode(\PDO::FETCH_ASSOC);
-//				$row = $pdoStatement->fetch();
-//				if($row !== false) {
-//					$userProfile = new userProfile($row["userProfileId"], $row["userProfileName"], $row["userProfileFirstName"], $row["userProfileLastName"], $row["userProfileEmail"], $row["userProfileAuthenticationToken"], $row["userProfileHash"]);
-//				}
-//			} catch(\Exception $exception) {
-//				// if the row couldn't be converted, rethrow it
-//				throw(new \PDOException($exception->getMessage(), 0, $exception));
-//			}
-//		}
-//		return($userProfile);
-//	}
 
 	/**
 	 * formats the state variables for JSON serialization. Might need changing.
