@@ -1,6 +1,6 @@
 <?php
-require_once dirname(__DIR__, 3) . "Classes/autoload.php";
-require_once dirname(__DIR__, 3) . "Vendor/autoload.php";
+require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
+require_once dirname(__DIR__, 3) . "/Classes/autoload.php";
 
 require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
@@ -82,7 +82,7 @@ try {
 
 } catch (\Exception | \TypeError $exception) {
 	$reply->status = $exception->getCode();
-	$reply->mesage = $exception->getMessage();
+	$reply->message = $exception->getMessage();
 }
 
 //sets up the response header

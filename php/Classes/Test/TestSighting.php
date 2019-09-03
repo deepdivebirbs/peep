@@ -107,7 +107,7 @@ class TestSighting extends PeepTest {
 
 		//create a new sighting and insert it into MySQL
 		$sightingId = generateUuidV4();
-		$sighting = new Sighting ($sightingId, $this->userProfile->getUserProfileId(), $this->speciesId, $this->sightingBirdPhoto, $this->sightingDateTime, $this->sightingLocX, $this->sightingLocY);
+		$sighting = new Sighting ($sightingId, $this->sightingUserProfileId->generateUuidV4(), $this->speciesId, $this->sightingBirdPhoto, $this->sightingDateTime, $this->sightingLocX, $this->sightingLocY);
 		$sighting->insert($this->getPDO());
 
 		//grab the data from MySQL and enforce the fields match
@@ -132,7 +132,7 @@ class TestSighting extends PeepTest {
 		//create a new sighting and insert into MySQL
 		$sightingId = generateUuidV4();
 
-		$sighting = new Sighting ($sightingId, $this->userProfile->getUserProfileId(), $this->species, $this->sightingBirdPhoto, $this->sightingDateTime, $this->sightingLocX, $this->sightingLocY);
+		$sighting = new Sighting ($sightingId, $this->UserProfile->getUserProfileId(), $this->species, $this->sightingBirdPhoto, $this->sightingDateTime, $this->sightingLocX, $this->sightingLocY);
 		$sighting->insert($this->getPDO());
 
 		//delete the sighting from MySQL
