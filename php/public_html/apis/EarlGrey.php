@@ -13,9 +13,9 @@ try {
 			session_start();
 		}
 		setXsrfCookie();
-		$reply->message = "tea ready";
+		$reply->message = "Session established";
 	} else {
-		throw (new \InvalidArgumentException("Attempting to brew coffee with a teapot", 418));
+		throw (new \InvalidArgumentException("Session not established", 418));
 	}
 } catch(\Exception  | \TypeError $exception) {
 	$reply->status = $exception->getCode();
