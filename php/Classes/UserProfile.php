@@ -155,24 +155,22 @@ class UserProfile implements \JsonSerializable {
 	 * @throws \RangeException if sanitized input is the wrong length or contains invalid characters
 	 */
 	public function setUserProfileAuthenticationToken(?string $newUserProfileAuthenticationToken): void {
+		if($newUserProfileAuthenticationToken === null) {
+			echo "162";
+			$this->userProfileAuthenticationToken = null;
+			echo "163";
+			return;
+		}
+
 		$newUserProfileAuthenticationToken = strtolower(trim($newUserProfileAuthenticationToken));
 		$newUserProfileAuthenticationToken = filter_var($newUserProfileAuthenticationToken, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-		if($newUserProfileAuthenticationToken === null) {
-			$this->userProfileAuthenticationToken = null;
-			return;
-		}
-		/*
-		echo $newUserProfileAuthenticationToken . "\n";
-		echo ctype_xdigit($newUserProfileAuthenticationToken)."\n";
-		echo ctype_xdigit($newUserProfileAuthenticationToken) === false;
 		if(ctype_xdigit($newUserProfileAuthenticationToken) === false) {
 			throw(new \RangeException("user activation is not valid"));
 		}
 		if(strlen($newUserProfileAuthenticationToken) !== 32) {
 			throw(new\RangeException("user activation token has to be 32 characters."));
 		}
-		*/
 
 
 		$this->userProfileAuthenticationToken = $newUserProfileAuthenticationToken;

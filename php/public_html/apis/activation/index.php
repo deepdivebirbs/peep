@@ -55,11 +55,8 @@ try {
 
 		//verify the profile is not null
 		if($userProfile !== null) {
-
 			//make sure activation token matches
 			if($activation === $userProfile->getUserProfileAuthenticationToken()) {
-
-				//set activation to nullactivation
 				$userProfile->setUserProfileAuthenticationToken(null);
 
 				//update the profile in the database
