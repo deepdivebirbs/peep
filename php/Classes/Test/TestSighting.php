@@ -16,7 +16,7 @@ require_once(dirname(__DIR__, 1) . "/autoload.php");
  * @author Ruth Dove <senoritaruth@gmail.com>
  *
  **/
-class SightingTest extends PeepTest {
+class TestSighting extends PeepTest {
 	/**
 	 * User profile that created the sighting; this is for foreign key relations
 	 * @var $userProfile User Profile
@@ -25,7 +25,7 @@ class SightingTest extends PeepTest {
 
 	/**
 	 * This is the species that was used to fill in the sighting being tested
-	 * @var $sightingSpeciesId Species from the API
+	 * @var $sightingBirdSpeciesId Species from the API
 	 */
 	protected $species = null;
 
@@ -88,8 +88,11 @@ class SightingTest extends PeepTest {
 
 		//create and insert the mocked species
 		$speciesId = generateUuidV4();
-		$this->species = new BirdSpecies($speciesId, "pingym", "Pinyon Jay", "Gymnorhinus cyanocephalus", "photo.url/bird");
-		$this->species->insert($this->getPDO());
+		//$this->species = new BirdSpecies($speciesId, "pingym", "Pinyon Jay", "Gymnorhinus cyanocephalus", "photo.url/bird");
+		//$this->species->insert($this->getPDO());
+
+		$birdSpecies = new BirdSpecies($speciesId, "pingym", "Pinyon Jay", "Gymnorhinus cyanocephalus", "photo.url/bird");
+		$birdSpecies->insert($this->getPDO());
 	}
 
 	//calculate the date (just use the time the unit test was set up)
@@ -104,14 +107,14 @@ class SightingTest extends PeepTest {
 
 		//create a new sighting and insert it into MySQL
 		$sightingId = generateUuidV4();
-		$sighting = new Sighting ($sightingId, $this->userProfile->getUserProfileId(), $this->species->getSpeciesId(), $this->sightingBirdPhoto, $this->sightingDateTime, $this->sightingLocX, $this->sightingLocY);
+		$sighting = new Sighting ($sightingId, $this->userProfile->getUserProfileId(), $this->speciesId, $this->sightingBirdPhoto, $this->sightingDateTime, $this->sightingLocX, $this->sightingLocY);
 		$sighting->insert($this->getPDO());
 
 		//grab the data from MySQL and enforce the fields match
 		$pdoSighting = Sighting::getSightingBySightingId($this->getPDO(), $sighting->getSightingId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("sighting"));
 		$this->assertEquals($pdoSighting->getSightingId(), $sightingId);
-		$this->assertEquals($pdoSighting->getSightingSpeciesId(), $sighting->getSightingSpeciesId());
+		$this->assertEquals($pdoSighting->getSightingBirdSpeciesId(), $sighting->getSightingBirdSpeciesId());
 		$this->assertEquals($pdoSighting->getSightingUserProfileId(), $sighting->getSightingUserProfileId());
 		$this->assertEquals($pdoSighting->getSightingBirdPhoto(), $sighting->getSightingBirdPhoto());
 		$this->assertEquals($pdoSighting->getSightingDateTime()->getTimestamp(), $sighting->getSightingDateTime()->getTimestamp());
@@ -129,7 +132,7 @@ class SightingTest extends PeepTest {
 		//create a new sighting and insert into MySQL
 		$sightingId = generateUuidV4();
 
-		$sighting = new Sighting ($sightingId, $this->userProfile->getUserProfileId(), $this->species->getSpeciesId(), $this->sightingBirdPhoto, $this->sightingDateTime, $this->sightingLocX, $this->sightingLocY);
+		$sighting = new Sighting ($sightingId, $this->userProfile->getUserProfileId(), $this->species, $this->sightingBirdPhoto, $this->sightingDateTime, $this->sightingLocX, $this->sightingLocY);
 		$sighting->insert($this->getPDO());
 
 		//delete the sighting from MySQL
@@ -165,7 +168,7 @@ class SightingTest extends PeepTest {
 	$pdoSighting = $results[0];
 
 		$this->assertEquals($pdoSighting->getSightingId(), $sightingId);
-		$this->assertEquals($pdoSighting->getSightingSpeciesId(), $sighting->getSightingSpeciesId());
+		$this->assertEquals($pdoSighting->getSightingBirdSpeciesId(), $sighting->getSightingBirdSpeciesId());
 		$this->assertEquals($pdoSighting->getSightingUserProfileId(), $sighting->getSightingUserProfileId());
 		$this->assertEquals($pdoSighting->getSightingBirdPhoto(), $sighting->getSightingBirdPhoto());
 		$this->assertEquals($pdoSighting->getSightingDateTime()->getTimestamp(), $sighting->getSightingDateTime()->getTimestamp());
@@ -187,7 +190,7 @@ class SightingTest extends PeepTest {
 		$sighting->insert($this->getPDO());
 
 	//grab the data from MySQL and enforce the fields match our expectations
-	$results = Sighting::getSightingsBySightingSpeciesId($this->getPDO(), $sighting->getSightingSpeciesId());
+	$results = Sighting::getSightingsBySightingBirdSpeciesId($this->getPDO(), $sighting->getSightingBirdSpeciesId());
 	$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("sighting"));
 	$this->assertCount(1, $results);
 	$this->assertContainsOnlyInstancesOf("Birbs\\Peep\\Sighting", $results);
@@ -196,7 +199,7 @@ class SightingTest extends PeepTest {
 	$pdoSighting = $results[0];
 
 		$this->assertEquals($pdoSighting->getSightingId(), $sightingId);
-		$this->assertEquals($pdoSighting->getSightingSpeciesId(), $sighting->getSightingSpeciesId());
+		$this->assertEquals($pdoSighting->getSightingBirdSpeciesId(), $sighting->getSightingBirdSpeciesId());
 		$this->assertEquals($pdoSighting->getSightingUserProfileId(), $sighting->getSightingUserProfileId());
 		$this->assertEquals($pdoSighting->getSightingBirdPhoto(), $sighting->getSightingBirdPhoto());
 		$this->assertEquals($pdoSighting->getSightingDateTime()->getTimestamp(), $sighting->getSightingDateTime()->getTimestamp());

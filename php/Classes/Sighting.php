@@ -23,9 +23,9 @@ class Sighting implements \jsonSerializable {
 
 /**
  * id for the bird species table; foreign key
- * @var Uuid $sightingSpeciesId
+ * @var Uuid $sightingBirdSpeciesId
  **/
-	private $sightingSpeciesId;
+	private $sightingBirdSpeciesId;
 
 /**
  * id for the user who is submitting this sighting; foreign key
@@ -61,7 +61,7 @@ class Sighting implements \jsonSerializable {
  * constructor for this sighting
  *
  * @param string|Uuid $newSightingId of this sighting or null if a new sighting
- * @param string|Uuid $newSightingSpeciesId this is the id of the species
+ * @param string|Uuid $newSightingBirdSpeciesId this is the id of the species
  * @param string|Uuid $newSightingUserProfileId of the Profile that posted this sighting
  * @param string $newSightingBirdPhoto url of photo
  * @param \DateTime $newSightingDateTime date and time sighting was sent
@@ -73,10 +73,10 @@ class Sighting implements \jsonSerializable {
  * @throws \Exception if some other exception occurs
  * @Documentation https://php.net/manual/en/language.oop5.decon.php
  **/
-	public function __construct($newSightingId, $newSightingUserProfileId, $newSightingSpeciesId, string $newSightingBirdPhoto, $newSightingDateTime = null, float $newSightingLocX, float $newSightingLocY) {
+	public function __construct($newSightingId, $newSightingUserProfileId, $newSightingBirdSpeciesId, string $newSightingBirdPhoto, $newSightingDateTime = null, float $newSightingLocX, float $newSightingLocY) {
 		try {
 			$this->setSightingId($newSightingId);
-			$this->setSightingSpeciesId($newSightingSpeciesId);
+			$this->setSightingSpeciesId($newSightingBirdSpeciesId);
 			$this->setSightingUserProfileId($newSightingUserProfileId);
 			$this->setSightingBirdPhoto($newSightingBirdPhoto);
 			$this->setSightingDateTime($newSightingDateTime);
@@ -104,8 +104,8 @@ class Sighting implements \jsonSerializable {
  * accessor method for the sighting species Id
  * @return Uuid sighting species Id
  **/
-	public function getSightingSpeciesId(): Uuid {
-		return $this->sightingSpeciesId;
+	public function getSightingBirdSpeciesId(): Uuid {
+		return $this->sightingBirdSpeciesId;
 	}
 
 /** accessor method for Sighting user profile ID
@@ -173,18 +173,18 @@ class Sighting implements \jsonSerializable {
 	/**
 	 *mutator method for sighting species ID
 	 *
-	 * @param Uuid|string $newSightingSpeciesId Uuid of the species id
-	 * @throws \RangeException if the $newSightingSpeciesId is not positive
+	 * @param Uuid|string $newSightingBirdSpeciesId Uuid of the species id
+	 * @throws \RangeException if the $newSightingBirdSpeciesId is not positive
 	 * @throws \TypeError if the profile ID is not
 	 **/
-	public function setSightingSpeciesId($newSightingSpeciesId): void {
+	public function setSightingSpeciesId($newSightingBirdSpeciesId): void {
 		try {
-			$uuid = self::validateUuid($newSightingSpeciesId);
+			$uuid = self::validateUuid($newSightingBirdSpeciesId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-		$this->sightingSpeciesId = $uuid;
+		$this->sightingBirdSpeciesId = $uuid;
 	}
 
 	/**
@@ -299,7 +299,7 @@ class Sighting implements \jsonSerializable {
 
 		// bind the member variables to the place holders in the template
 		$formattedDate = $this->sightingDateTime->format("Y-m-d H:i:s.u");
-		$parameters = ["sightingId" => $this->sightingId->getBytes(), "sightingBirdSpeciesId" => $this->sightingSpeciesId->getBytes(),"sightingUserProfileId" => $this->sightingUserProfileId->getBytes(), "sightingBirdPhoto" => $this->sightingBirdPhoto, "sightingDateTime" => $formattedDate, "sightingLocX" => $this->sightingLocX, "sightingLocY" => $this->sightingLocY];
+		$parameters = ["sightingId" => $this->sightingId->getBytes(), "sightingBirdSpeciesId" => $this->sightingBirdSpeciesId->getBytes(),"sightingUserProfileId" => $this->sightingUserProfileId->getBytes(), "sightingBirdPhoto" => $this->sightingBirdPhoto, "sightingDateTime" => $formattedDate, "sightingLocX" => $this->sightingLocX, "sightingLocY" => $this->sightingLocY];
 		$statement->execute($parameters);
 	}
 
@@ -403,11 +403,11 @@ public static function getSightingsBySightingUserProfileId(\PDO $pdo, $sightingU
 * @throws \TypeError when the variables are not the correct data type
 **/
 
-	public static function getSightingsBySightingSpeciesId(\PDO $pdo, $sightingSpeciesId) :\SplFixedArray {
+	public static function getSightingsBySightingBirdSpeciesId(\PDO $pdo, $sightingBirdSpeciesId) :\SplFixedArray {
 //create the query template
 		$query = "SELECT sightingId, sightingUserProfileId, sightingBirdSpeciesId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY FROM sighting WHERE sightingBirdSpeciesId = :sightingSpeciesId";
 		$statement = $pdo->prepare($query);
-		$parameters = ["sightingSpeciesId" => $sightingSpeciesId->getBytes()];
+		$parameters = ["sightingBirdSpeciesId" => $sightingBirdSpeciesId->getBytes()];
 		$statement->execute($parameters);
 
 //build an array of sightings
@@ -437,7 +437,7 @@ public static function getSightingsBySightingUserProfileId(\PDO $pdo, $sightingU
 
 		$fields["sightingId"] = $this->sightingId->toString();
 		$fields["sightingUserProfileId"] = $this->sightingUserProfileId->toString();
-		$fields["sightingSpeciesId"] = $this->sightingSpeciesId->toString();
+		$fields["sightingBirdSpeciesId"] = $this->sightingBirdSpeciesId->toString();
 
 		//format the date so that the front end can consume it
 		$fields["sightingDateTime"] = round(floatval($this->sightingDateTime->format("U.u")) * 1000);
