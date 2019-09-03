@@ -7,6 +7,20 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+div.dailyFeature {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+button.featureAddToFaves {
+  margin-bottom: 5%;
+}
+
+footer {
+  margin-top: 3%;
+  padding: 2%;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
