@@ -32,7 +32,7 @@ try {
 	$pdo = $secrets->getPdoObject();
 
 	// What HTTP method was used?
-	$method = $_SERVER("HTTP_X_HTTP_METHOD") ?? $_SERVER["REQUEST_METHOD"];
+	$method = $_SERVER ["HTTP_X_HTTP_METHOD"] ?? $_SERVER ["REQUEST_METHOD"];
 
 	// Sanitize and store input
 	$userProfileId = filter_input(INPUT_GET, "userProfileId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -91,7 +91,7 @@ try {
 
 		//profile activation token | if null use activation token in database
 		if (empty($requestObject->userProfileAuthenticationToken)=== true) {
-			$requestObject->userProfileAuthenticationToken = $userProfile ->getUserProfileAuthenticationToken()
+			$requestObject->userProfileAuthenticationToken = $userProfile ->getUserProfileAuthenticationToken();
 		};
 
 		$userProfile->setUserProfileName($requestObject->userProfileName);
