@@ -73,7 +73,7 @@ class Sighting implements \jsonSerializable {
  * @throws \Exception if some other exception occurs
  * @Documentation https://php.net/manual/en/language.oop5.decon.php
  **/
-	public function __construct($newSightingId, $newSightingUserProfileId, $newSightingBirdSpeciesId, string $newSightingBirdPhoto, $newSightingDateTime = null, float $newSightingLocX, float $newSightingLocY) {
+	public function __construct($newSightingId, $newSightingUserProfileId, $newSightingBirdSpeciesId, ?string $newSightingBirdPhoto,$newSightingDateTime, float $newSightingLocX, float $newSightingLocY) {
 		try {
 			$this->setSightingId($newSightingId);
 			$this->setSightingSpeciesId($newSightingBirdSpeciesId);
@@ -230,7 +230,7 @@ class Sighting implements \jsonSerializable {
  * @throws \Exception if there is a different kind of error
  *
  */
-	public function setSightingDateTime($newSightingDateTime = null): void {
+	public function setSightingDateTime($newSightingDateTime): void {
 		if($newSightingDateTime === null) {
 			$this->sightingDateTime = new \DateTime();
 			return;
@@ -440,7 +440,7 @@ public static function getSightingsBySightingUserProfileId(\PDO $pdo, $sightingU
 		$fields["sightingBirdSpeciesId"] = $this->sightingBirdSpeciesId->toString();
 
 		//format the date so that the front end can consume it
-		$fields["sightingDateTime"] = round(floatval($this->sightingDateTime->format("U.u")) * 1000);
+		$fields["sightingDateTime"] = round(floatval($this->sightingDateTime->format("y-m-d H:i:s")) * 1000);
 		echo get_class($fields);
 		return($fields);
 	}
