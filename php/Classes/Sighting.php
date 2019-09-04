@@ -396,7 +396,7 @@ public static function getSightingsBySightingUserProfileId(\PDO $pdo, $sightingU
 
 /**get an array of all sightings by species ID
 *
-* @param $sightingSpeciesId Uuid|string of species ID
+* @param $sightingBirdSpeciesId Uuid|string of species ID
 * @param \PDO $pdo PDO connection object
 * @return \SplFixedArray SplFixedArray of sightings found or null if not found
 * @throws \PDOException when MySQL errors occur
@@ -405,7 +405,7 @@ public static function getSightingsBySightingUserProfileId(\PDO $pdo, $sightingU
 
 	public static function getSightingsBySightingBirdSpeciesId(\PDO $pdo, $sightingBirdSpeciesId) :\SplFixedArray {
 //create the query template
-		$query = "SELECT sightingId, sightingUserProfileId, sightingBirdSpeciesId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY FROM sighting WHERE sightingBirdSpeciesId = :sightingSpeciesId";
+		$query = "SELECT sightingId, sightingUserProfileId, sightingBirdSpeciesId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY FROM sighting WHERE sightingBirdSpeciesId = :sightingBirdSpeciesId";
 		$statement = $pdo->prepare($query);
 		$parameters = ["sightingBirdSpeciesId" => $sightingBirdSpeciesId->getBytes()];
 		$statement->execute($parameters);

@@ -31,7 +31,7 @@ try {
 	// Sanitize and store input
 	$sightingId = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$sightingUserProfileId = filter_input(INPUT_GET, "sightingUserProfileId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	$sightingSpeciesId = filter_input(INPUT_GET, "sightingSpeciesId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$sightingBirdSpeciesId = filter_input(INPUT_GET, "sightingBirdSpeciesId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	// Define behavior if $method is a GET request
 	if($method === "GET") {
 		// Set the XSRF cookie
@@ -41,8 +41,8 @@ try {
 			$reply->data = Sighting::getSightingBySightingId($pdo, $sightingId);
 		} else if(empty($sightingUserProfileId) === false) {
 			$reply->data = Sighting::getSightingsBySightingUserProfileId($pdo, $sightingUserProfileId);
-		} else if(empty($sightingSpeciesId) === false) {
-			$reply->data = Sighting::getSightingsBySightingSpeciesId($pdo, $sightingSpeciesId);
+		} else if(empty($sightingBirdSpeciesId) === false) {
+			$reply->data = Sighting::getSightingsBySightingBirdSpeciesId($pdo, $sightingBirdSpeciesId);
 		} // POST the sighting object
 		else if($method === "POST") {
 			// Enforce user has xsrf token
@@ -75,7 +75,7 @@ try {
 				throw(new \InvalidArgumentException("No location data entered."));
 			}
 
-			if(empty($requestObject->sightingSpeciesId) === true) {
+			if(empty($requestObject->sightingBirdSpeciesId) === true) {
 				throw (new \InvalidArgumentException("No sighting entry linked to the sighting.", 405));
 			}
 
@@ -88,7 +88,7 @@ try {
 
 // CREATE the sighting object
 			validateJwtHeader();
-			$sighting = new Sighting(generateUuidV4(), $_SESSION["userProfile"]->getUserProfileId(), $requestObject->sightingSpeciesId, $requestObject->newSightingDateTime, $requestObject->sightingBirdPhoto, $requestObject->newSightingLocX, $requestObject->newSightingLocY);
+			$sighting = new Sighting(generateUuidV4(), $_SESSION["userProfile"]->getUserProfileId(), $requestObject->sightingBirdSpeciesId, $requestObject->newSightingDateTime, $requestObject->sightingBirdPhoto, $requestObject->newSightingLocX, $requestObject->newSightingLocY);
 			$sighting->insert($pdo);
 			$reply->message = "Sighting successfully added.";
 
