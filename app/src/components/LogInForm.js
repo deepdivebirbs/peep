@@ -1,5 +1,4 @@
 import React from 'react';
-import {Button, Form, FormControl} from 'react-bootstrap';
 
 export const LogInForm = () => {
 	return (

@@ -154,7 +154,7 @@ class UserProfile implements \JsonSerializable {
 	 * @throws \InvalidArgumentException if $newUserAuthorizationToken is empty or insecure
 	 * @throws \RangeException if sanitized input is the wrong length or contains invalid characters
 	 */
-	public function setUserProfileAuthenticationToken(?string $newUserProfileAuthenticationToken): void {
+	public function setUserProfileAuthenticationToken($newUserProfileAuthenticationToken): void {
 		if($newUserProfileAuthenticationToken === null) {
 			$this->userProfileAuthenticationToken = null;
 			return;
