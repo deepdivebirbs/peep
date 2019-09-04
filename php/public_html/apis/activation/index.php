@@ -12,8 +12,8 @@ use Birbs\Peep\UserProfile;
  *
  */
 
-//check to seee if session is active, and start it if not
-if (session_start()!== PHP_SESSION_ACTIVE) {
+//check to see if session is active, and start it if not
+if (session_status()!== PHP_SESSION_ACTIVE) {
 	session_start();
 }
 

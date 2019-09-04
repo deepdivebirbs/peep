@@ -439,8 +439,10 @@ class BirdSpecies implements \JsonSerializable{
 	 *
 	 * @return array
 	 */
-	public function jsonSerialize(): array {
-		$fields = get_object_vars($this);
-		return $fields;
+
+		public function jsonSerialize() : array {
+			$fields = get_object_vars($this);
+			$fields["speciesId"] = $this->speciesId->toString();
+			return($fields);
 	}
 }

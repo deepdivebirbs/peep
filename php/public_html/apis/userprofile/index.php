@@ -36,10 +36,14 @@ try {
 
 	// Sanitize and store input
 	$userProfileId = filter_input(INPUT_GET, "userProfileId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$userProfileName = filter_input (INPUT_GET, "userProfileName", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$userProfileAuthenticationToken = filter_input(INPUT_GET, "userProfileAuthenticationToken", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$userProfileEmail = filter_input(INPUT_GET, "userProfileEmail", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	$userProfileName = filter_input (INPUT_GET, "userProfileName", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
+	//make sure id is valid for methods that require it
+	if(($method === "Delete" || $method === "PUT") && (empty($userProfileId)=== true)) {
+		throw(new \InvalidArgumentException("userProfileId cannot be empty or negative", 405));
+	}
 
 	// Define behaviour if $method is a GET request
 	if($method === "GET") {
@@ -58,16 +62,16 @@ try {
 			$reply->data = UserProfile::getUserProfileByName($pdo, $userProfileName);
 		}
 
-		//Then comes checking for PUT or POST requests.
-	}
-	elseif($method === "PUT") {
+		//Then comes checking for PUT requests.
+	} else if($method === "PUT") {
 		// enforce the user has a XSRF token
 		verifyXsrf();
 
 		//enforce the user is signed in with a valid JWT token and only trying to edit their own profile
 		if(empty($_SESSION["userProfile"]) === true || $_SESSION["userProfile"]->getUserProfileId()->toString() !== $userProfileId) {
-			throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
+		throw(new \InvalidArgumentException("You are not allowed to access this profile", 403));
 		}
+
 		validateJwtHeader();
 
 		//  Retrieves the JSON package that the front end sent, and stores it in $requestContent. Here we are using file_get_contents("php://input") to get the request from the front end. file_get_contents() is a PHP function that reads a file into a string. The argument for the function, here, is "php://input". This is a read only stream that allows raw data to be read from the front end request which is, in this case, a JSON package.
@@ -135,7 +139,7 @@ try {
 //			// update reply
 //			$reply->message = "Everything updated";
 //		}
-	//We will need a delete option too.
+		//We will need a delete option too.
 	}else if($method === "DELETE") {
 		//process DELETE request
 		//enforce that the end user has a XSRF token.

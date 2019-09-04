@@ -451,7 +451,6 @@ class UserProfile implements \JsonSerializable {
 			$userProfile = null;
 			$pdoStatement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $pdoStatement->fetch();
-				var_dump($userProfile);
 			if($row !== false) {
 				$userProfile = new UserProfile($row["userProfileId"], $row["userProfileName"], $row["userProfileFirstName"], $row["userProfileLastName"], $row["userProfileEmail"], $row["userProfileAuthenticationToken"], $row["userProfileHash"]);
 			}
@@ -470,10 +469,7 @@ class UserProfile implements \JsonSerializable {
 	 **/
 	public function jsonSerialize() : array {
 		$fields = get_object_vars($this);
-
 		$fields["userProfileId"] = $this->userProfileId->toString();
-
-
 		return($fields);
 	}
 
