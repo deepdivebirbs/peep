@@ -6,6 +6,7 @@ import PeepNav from './components/PeepNav';
 import Footer from './components/Footer';
 import Home from './components/Home';
 import LogIn from './components/LogInForm';
+import Profile from './components/Profile';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
        <PeepNav/>
        <Home/>
        <Footer/>
+       <Profile/>
     </div>
   );
 }
