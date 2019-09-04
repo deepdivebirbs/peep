@@ -1,4 +1,5 @@
 import React from 'react';
+import {Button, Form, FormControl} from 'react-bootstrap';
 
 export const LogInForm = () => {
 	return (
@@ -23,6 +24,7 @@ export const LogInForm = () => {
 				<Button variant="primary" type="submit">
 					Submit
 				</Button>
+				<span className="ml-3">Need and account?  <a href="/sign-up">Sign Up!</a></span>
 			</Form>
 		</>
 	);
