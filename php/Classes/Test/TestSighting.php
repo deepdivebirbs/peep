@@ -89,7 +89,7 @@ class SightingTest extends PeepTest {
 		$pdoSighting = Sighting::getSightingBySightingId($this->getPDO(), $sighting->getSightingId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("sighting"));
 		$this->assertEquals($pdoSighting->getSightingId(), $sightingId);
-		$this->assertEquals($pdoSighting->getSightingSpeciesId(), $sighting->getSightingSpeciesId());
+		$this->assertEquals($pdoSighting->getSightingBirdSpeciesId(), $sighting->getSightingBirdSpeciesId());
 		$this->assertEquals($pdoSighting->getSightingUserProfileId(), $sighting->getSightingUserProfileId());
 		$this->assertEquals($pdoSighting->getSightingBirdPhoto(), $sighting->getSightingBirdPhoto());
 		$this->assertEquals($pdoSighting->getSightingDateTime()->getTimestamp(), $sighting->getSightingDateTime()->getTimestamp());
@@ -132,7 +132,7 @@ class SightingTest extends PeepTest {
 		//grab the result from the array and validate it
 		$pdoSighting = $results[0];
 		$this->assertEquals($pdoSighting->getSightingId(), $sightingId);
-		$this->assertEquals($pdoSighting->getSightingSpeciesId(), $sighting->getSightingSpeciesId());
+		$this->assertEquals($pdoSighting->getSightingBirdSpeciesId(), $sighting->getSightingBirdSpeciesId());
 		$this->assertEquals($pdoSighting->getSightingUserProfileId(), $sighting->getSightingUserProfileId());
 		$this->assertEquals($pdoSighting->getSightingBirdPhoto(), $sighting->getSightingBirdPhoto());
 		$this->assertEquals($pdoSighting->getSightingDateTime()->getTimestamp(), $sighting->getSightingDateTime()->getTimestamp());
@@ -150,14 +150,14 @@ class SightingTest extends PeepTest {
 		$sighting = new Sighting ($sightingId, $this->userProfile->getUserProfileId(), $this->species->getSpeciesId(), $this->sightingBirdPhoto, $this->sightingDateTime, $this->sightingLocX, $this->sightingLocY);
 		$sighting->insert($this->getPDO());
 		//grab the data from MySQL and enforce the fields match our expectations
-		$results = Sighting::getSightingsBySightingSpeciesId($this->getPDO(), $sighting->getSightingSpeciesId());
+		$results = Sighting::getSightingsBySightingBirdSpeciesId($this->getPDO(), $sighting->getSightingBirdSpeciesId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("sighting"));
 		$this->assertCount(1, $results);
 		$this->assertContainsOnlyInstancesOf("Birbs\\Peep\\Sighting", $results);
 		//grab the result from the array and validate it
 		$pdoSighting = $results[0];
 		$this->assertEquals($pdoSighting->getSightingId(), $sightingId);
-		$this->assertEquals($pdoSighting->getSightingSpeciesId(), $sighting->getSightingSpeciesId());
+		$this->assertEquals($pdoSighting->getSightingBirdSpeciesId(), $sighting->getSightingBirdSpeciesId());
 		$this->assertEquals($pdoSighting->getSightingUserProfileId(), $sighting->getSightingUserProfileId());
 		$this->assertEquals($pdoSighting->getSightingBirdPhoto(), $sighting->getSightingBirdPhoto());
 		$this->assertEquals($pdoSighting->getSightingDateTime()->getTimestamp(), $sighting->getSightingDateTime()->getTimestamp());
