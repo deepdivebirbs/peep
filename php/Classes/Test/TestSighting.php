@@ -84,16 +84,15 @@ class TestSighting extends PeepTest {
 		//create and insert the mocked profile
 		$userProfileId = generateUuidV4();
 		$this->userProfile = new UserProfile($userProfileId, "Bird Lady", "Cardi", "Nal", "cardib@gsnail.com", $userProfileAuthenticationToken, $this->userProfileHash);
-		$this->userProfile->insert($this->getPDO());
 
 		//create and insert the mocked species
 		$speciesId = generateUuidV4();
 		//$this->species = new BirdSpecies($speciesId, "pingym", "Pinyon Jay", "Gymnorhinus cyanocephalus", "photo.url/bird");
 		//$this->species->insert($this->getPDO());
 
-		$birdSpecies = new BirdSpecies($speciesId, "pingym", "Pinyon Jay", "Gymnorhinus cyanocephalus", "photo.url/bird");
-		$birdSpecies->insert($this->getPDO());
+		$birdSpecies = new BirdSpecies(generateUuidV4(), "pingym", "Pinyon Jay", "Gymnorhinus cyanocephalus", "photo.url/bird");
 	}
+
 
 	//calculate the date (just use the time the unit test was set up)
 	//$this->sightingDateTime = \DateTime();
@@ -102,12 +101,14 @@ class TestSighting extends PeepTest {
 	 * Test inserting a valid sighting and verify that the actual MySQL data matches
 	 **/
 	public function testInsertValidSighting(): void {
+		$birdSpecies = new BirdSpecies(generateUuidV4(), "pingym", "Pinyon Jay", "Gymnorhinus cyanocephalus", "photo.url/bird");
+
 		//count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("sighting");
 
 		//create a new sighting and insert it into MySQL
 		$sightingId = generateUuidV4();
-		$sighting = new Sighting ($sightingId, $this->sightingUserProfileId->generateUuidV4(), $this->speciesId, $this->sightingBirdPhoto, $this->sightingDateTime, $this->sightingLocX, $this->sightingLocY);
+		$sighting = new Sighting (generateUuidV4(), generateUuidV4(), $birdSpecies->getSpeciesId(), $this->sightingBirdPhoto, $this->sightingDateTime, $this->sightingLocX, $this->sightingLocY);
 		$sighting->insert($this->getPDO());
 
 		//grab the data from MySQL and enforce the fields match
@@ -126,13 +127,14 @@ class TestSighting extends PeepTest {
 	 * Test creating a sighting and then deleting it
 	 **/
 	public function testDeleteValidSighting(): void {
+		$birdSpecies = new BirdSpecies(generateUuidV4(), "pingym", "Pinyon Jay", "Gymnorhinus cyanocephalus", "photo.url/bird");
 		//count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("sighting");
 
 		//create a new sighting and insert into MySQL
 		$sightingId = generateUuidV4();
 
-		$sighting = new Sighting ($sightingId, $this->UserProfile->getUserProfileId(), $this->species, $this->sightingBirdPhoto, $this->sightingDateTime, $this->sightingLocX, $this->sightingLocY);
+		$sighting = new Sighting (generateUuidV4(), generateUuidV4(), generateUuidV4(), $this->sightingBirdPhoto, $this->sightingDateTime, $this->sightingLocX, $this->sightingLocY);
 		$sighting->insert($this->getPDO());
 
 		//delete the sighting from MySQL
@@ -150,12 +152,13 @@ class TestSighting extends PeepTest {
 	 * Test get an array of sightings by user profile id
 	 */
 	public function testGetAllSightingsByUserProfileId(): void {
+		$birdSpecies = new BirdSpecies(generateUuidV4(), "pingym", "Pinyon Jay", "Gymnorhinus cyanocephalus", "photo.url/bird");
 		//count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("sighting");
 
 		//create a new sighting and insert it into MySQL
 		$sightingId = generateUuidV4();
-		$sighting = new Sighting ($sightingId, $this->userProfile->getUserProfileId(), $this->species->getSpeciesId(), $this->sightingBirdPhoto, $this->sightingDateTime,  $this->sightingLocX, $this->sightingLocY);
+		$sighting = new Sighting (generateUuidV4(), generateUuidV4(), generateUuidV4(), $this->sightingBirdPhoto, $this->sightingDateTime,  $this->sightingLocX, $this->sightingLocY);
 		$sighting->insert($this->getPDO());
 
 	//grab the data from MySQL and enforce the fields match our expectations
@@ -181,12 +184,13 @@ class TestSighting extends PeepTest {
 	 * Test get an array of sightings by sighting species id
 	 */
 	public function testGetAllSightingsSpeciesId(): void {
+		$birdSpecies = new BirdSpecies(generateUuidV4(), "pingym", "Pinyon Jay", "Gymnorhinus cyanocephalus", "photo.url/bird");
 		//count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("sighting");
 
 		//create a new sighting and insert it into MySQL
 		$sightingId = generateUuidV4();
-		$sighting = new Sighting ($sightingId, $this->userProfile->getUserProfileId(), $this->species->getSpeciesId(), $this->sightingBirdPhoto, $this->sightingDateTime, $this->sightingLocX, $this->sightingLocY);
+		$sighting = new Sighting (generateUuidV4(), generateUuidV4(), generateUuidV4(), $this->sightingBirdPhoto, $this->sightingDateTime, $this->sightingLocX, $this->sightingLocY);
 		$sighting->insert($this->getPDO());
 
 	//grab the data from MySQL and enforce the fields match our expectations

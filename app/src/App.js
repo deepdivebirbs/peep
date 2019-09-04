@@ -5,6 +5,7 @@ import './App.css';
 import PeepNav from './components/PeepNav';
 import Footer from './components/Footer';
 import Home from './components/Home';
+import LogIn from './components/LogInForm';
 
 function App() {
   return (
