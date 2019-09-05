@@ -73,7 +73,7 @@ class Sighting implements \jsonSerializable {
  * @throws \Exception if some other exception occurs
  * @Documentation https://php.net/manual/en/language.oop5.decon.php
  **/
-	public function __construct($newSightingId, $newSightingUserProfileId, $newSightingBirdSpeciesId, ?string $newSightingBirdPhoto,$newSightingDateTime, float $newSightingLocX, float $newSightingLocY) {
+	public function __construct($newSightingId, $newSightingUserProfileId, $newSightingBirdSpeciesId, ?string $newSightingBirdPhoto,?\DateTime $newSightingDateTime, float $newSightingLocX, float $newSightingLocY) {
 		try {
 			$this->setSightingId($newSightingId);
 			$this->setSightingSpeciesId($newSightingBirdSpeciesId);
@@ -105,14 +105,14 @@ class Sighting implements \jsonSerializable {
  * @return Uuid sighting species Id
  **/
 	public function getSightingBirdSpeciesId(): Uuid {
-		return $this->sightingBirdSpeciesId;
+		return ($this->sightingBirdSpeciesId);
 	}
 
 /** accessor method for Sighting user profile ID
  * @return Uuid value of the sighting user profile ID
  **/
 	public function getSightingUserProfileId(): Uuid {
-		return $this->sightingUserProfileId;
+		return ($this->sightingUserProfileId);
 	}
 
 /**
@@ -121,7 +121,7 @@ class Sighting implements \jsonSerializable {
  * @return string value of the bird photo url
  **/
 	public function getSightingBirdPhoto(): string {
-		return $this->sightingBirdPhoto;
+		return ($this->sightingBirdPhoto);
 	}
 
 /**
@@ -130,7 +130,7 @@ class Sighting implements \jsonSerializable {
  * @return \DateTime value for sighting date time
  **/
 	public function getSightingDateTime(): \DateTime {
-		return $this->sightingDateTime;
+		return ($this->sightingDateTime);
 	}
 
 /**
@@ -371,6 +371,12 @@ try {
  **/
 
 public static function getSightingsBySightingUserProfileId(\PDO $pdo, $sightingUserProfileId) :\SplFixedArray {
+	try {
+		$sightingUserProfileId= self::validateUuid($sightingUserProfileId);
+	} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+		$exceptionType = get_class($exception);
+		throw(new $exceptionType($exception->getMessage(), 0, $exception));
+	}
 //create the query template
 	$query = "SELECT sightingId,  sightingUserProfileId, sightingBirdSpeciesId, sightingLocX, sightingLocY, sightingDateTime, sightingBirdPhoto FROM sighting WHERE sightingUserProfileId = :sightingUserProfileId";
 	$statement = $pdo->prepare($query);
@@ -404,6 +410,12 @@ public static function getSightingsBySightingUserProfileId(\PDO $pdo, $sightingU
 **/
 
 	public static function getSightingsBySightingBirdSpeciesId(\PDO $pdo, $sightingBirdSpeciesId) :\SplFixedArray {
+		try {
+			$sightingBirdSpeciesId= self::validateUuid($sightingBirdSpeciesId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
 //create the query template
 		$query = "SELECT sightingId, sightingUserProfileId, sightingBirdSpeciesId, sightingBirdPhoto, sightingDateTime, sightingLocX, sightingLocY FROM sighting WHERE sightingBirdSpeciesId = :sightingBirdSpeciesId";
 		$statement = $pdo->prepare($query);
