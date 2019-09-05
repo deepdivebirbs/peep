@@ -7,3 +7,5 @@ export const FourOhFour = () => {
 		</>
 	)
 };
+
+export default FourOhFour;

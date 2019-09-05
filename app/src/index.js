@@ -7,6 +7,7 @@ import Footer from './shared/components/Footer';
 import Home from './pages/Home';
 import MyProfile from './pages/MyProfile';
 import SignUpForm from './pages/SignUpForm';
+import FourOhFour from './pages/FourOhFour';
 
 function App() {
 	return (
@@ -17,6 +18,7 @@ function App() {
 					<Route exact path="/" component={Home}/>
 					<Route exact path="/my-profile" component={MyProfile} />
 					<Route exact path="/sign-up" component={SignUpForm}/>
+					<Route exact path="/FourOhFour" component={FourOhFour}/>
 				</Switch>
 			</BrowserRouter>
 			<Footer/>

@@ -133,13 +133,13 @@ try {
 
 		// Message contents
 		$message = <<< EOF
-<h1>Welcome to your </h1>
+<h1>Welcome to your Peep Account!</h1>
 <p>With this account you can:</p>
 <ul>
-	<li>Log In and view birds</li>
+	<li>Log in and view birds</li>
 	<li>View bird location info</li>
 	<li>Learn when you will see certain birds during the year</li>
-	<li>And much much more, with more on the way!</li>
+	<li><br> We'll be adding the ability to favorite birds, with lots more functionality on the way!</li>
 </ul>
 <p>Click on the link below to activate you account:</p>
 <a href="$confirmLink">$confirmLink</a>
