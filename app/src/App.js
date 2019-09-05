@@ -7,7 +7,7 @@ import PeepNav from './components/PeepNav';
 import Footer from './components/Footer';
 import Home from './components/Home';
 import LogIn from './components/LogInForm';
- import MyProfile from './components/MyProfile';
+import MyProfile from './components/MyProfile';
 import SignUpForm from './components/SignUpForm';
 
 function App() {
