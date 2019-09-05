@@ -133,7 +133,7 @@ try {
 
 		// Message contents
 		$message = <<< EOF
-<h1>WELCOME TO YOU NEW EBIRBS ACCOUNT!!</h1>
+<h1>Welcome to your </h1>
 <p>With this account you can:</p>
 <ul>
 	<li>Log In and view birds</li>
