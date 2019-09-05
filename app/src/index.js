@@ -2,11 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import { Switch, BrowserRouter, Route, Link } from "react-router-dom";
-import PeepNav from './components/PeepNav';
-import Footer from './components/Footer';
-import Home from './components/Home';
-import MyProfile from './components/MyProfile';
-import SignUpForm from './components/SignUpForm';
+import PeepNav from './shared/components/PeepNav';
+import Footer from './shared/components/Footer';
+import Home from './pages/Home';
+import MyProfile from './pages/MyProfile';
+import SignUpForm from './pages/SignUpForm';
 
 function App() {
 	return (

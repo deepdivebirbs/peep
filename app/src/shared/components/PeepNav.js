@@ -1,6 +1,6 @@
 import React from 'react';
 import {Navbar, Nav, NavDropdown, Form, FormControl, Button} from 'react-bootstrap';
-import FormModal from "./Modal";
+import FormModal from "../../pages/Modal";
 
 
 export const PeepNav = () => {
