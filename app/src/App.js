@@ -7,8 +7,7 @@ import PeepNav from './components/PeepNav';
 import Footer from './components/Footer';
 import Home from './components/Home';
 import LogIn from './components/LogInForm';
-import Profile from './components/Profile';
-import MyProfile from './components/MyProfile';
+ import MyProfile from './components/MyProfile';
 import SignUpForm from './components/SignUpForm';
 
 function App() {
@@ -18,13 +17,11 @@ function App() {
        <BrowserRouter>
           <Switch>
              <Route exact path="/" component={Home}/>
-             <Route exact path="/my-profile" component={MyProfile}/>
-             <Route exact path="/sign-in" component={SignUpForm}/>
+             <Route exact path="/my-profile" component={MyProfile} />
              <Route exact path="/sign-up" component={SignUpForm}/>
           </Switch>
        </BrowserRouter>
        <Footer/>
-       <Profile/>
     </div>
   );
 }
