@@ -18,7 +18,6 @@ function App() {
           <Switch>
              <Route exact path="/" component={Home}/>
              <Route exact path="/my-profile" component={MyProfile}/>
-             <Route exact path="/sign-in" component={SignUpForm}/>
              <Route exact path="/sign-up" component={SignUpForm}/>
           </Switch>
        </BrowserRouter>
