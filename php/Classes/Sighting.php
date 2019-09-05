@@ -73,7 +73,7 @@ class Sighting implements \jsonSerializable {
  * @throws \Exception if some other exception occurs
  * @Documentation https://php.net/manual/en/language.oop5.decon.php
  **/
-	public function __construct($newSightingId, $newSightingUserProfileId, $newSightingBirdSpeciesId, ?string $newSightingBirdPhoto,?\DateTime $newSightingDateTime, float $newSightingLocX, float $newSightingLocY) {
+	public function __construct($newSightingId, $newSightingUserProfileId, $newSightingBirdSpeciesId, ?string $newSightingBirdPhoto, $newSightingDateTime = null, float $newSightingLocX, float $newSightingLocY) {
 		try {
 			$this->setSightingId($newSightingId);
 			$this->setSightingSpeciesId($newSightingBirdSpeciesId);
@@ -372,7 +372,7 @@ try {
 
 public static function getSightingsBySightingUserProfileId(\PDO $pdo, $sightingUserProfileId) :\SplFixedArray {
 	try {
-		$sightingUserProfileId= self::validateUuid($sightingUserProfileId);
+		$validSightingUserProfileId = self::validateUuid($sightingUserProfileId);
 	} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 		$exceptionType = get_class($exception);
 		throw(new $exceptionType($exception->getMessage(), 0, $exception));
@@ -380,7 +380,7 @@ public static function getSightingsBySightingUserProfileId(\PDO $pdo, $sightingU
 //create the query template
 	$query = "SELECT sightingId,  sightingUserProfileId, sightingBirdSpeciesId, sightingLocX, sightingLocY, sightingDateTime, sightingBirdPhoto FROM sighting WHERE sightingUserProfileId = :sightingUserProfileId";
 	$statement = $pdo->prepare($query);
-	$parameters = ["sightingUserProfileId" => $sightingUserProfileId->getBytes()];
+	$parameters = ["sightingUserProfileId" => $validSightingUserProfileId->getBytes()];
 	$statement->execute($parameters);
 
 //build an array of sightings
@@ -388,7 +388,7 @@ public static function getSightingsBySightingUserProfileId(\PDO $pdo, $sightingU
 	$statement->setFetchMode(\PDO::FETCH_ASSOC);
 	while(($row = $statement->fetch()) !== false) {
 		try {
-			$sighting = new Sighting($row["sightingId"], $row["sightingUserProfileId"], $row["sightingBirdSpeciesId"], $row["sightingBirdPhoto"], $row["sightingDateTime"], $row["sightingLocX"], $row["sightingLocY"]);
+			$sighting = new Sighting($row["sightingId"], $row["sightingBirdSpeciesId"], $row["sightingUserProfileId"], $row["sightingBirdPhoto"], $row["sightingDateTime"], $row["sightingLocX"], $row["sightingLocY"]);
 			$sightings[$sightings->key()] = $sighting;
 			$sightings->next();
 		} catch(\Exception $exception) {

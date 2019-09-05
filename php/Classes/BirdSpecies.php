@@ -164,7 +164,6 @@ class BirdSpecies implements \JsonSerializable{
 	public function setSpeciesComName($speciesComName): void {
 		// Check if $speciesComName is NULL.
 		if(empty($speciesComName) === true) {
-			var_dump($speciesComName);
 			throw(new \InvalidArgumentException('speciesComName cannot be empty!'));
 		}
 

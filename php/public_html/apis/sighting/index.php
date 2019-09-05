@@ -48,6 +48,7 @@ try {
 		} else if(empty($sightingBirdSpeciesId) === false) {
 			$reply->data = Sighting::getSightingsBySightingBirdSpeciesId($pdo, $sightingBirdSpeciesId);
 		}
+
 		// POST the sighting object
 	} else if($method === "POST") {
 		// Enforce user has xsrf token
@@ -71,7 +72,7 @@ try {
 		if(empty($requestObject->sightingDateTime) === true) {
 			date_default_timezone_set("America/Denver");
 			$dateString = date ("y-m-d H:i:s");
-			$requestObject->sightingDateTime= \DateTime::createFromFormat($dateString, $dateString);
+			$requestObject->sightingDateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $dateString);
 		}
 
 		if(empty($requestObject->sightingLocX) === true) {
