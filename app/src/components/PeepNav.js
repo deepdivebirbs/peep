@@ -1,5 +1,5 @@
 import React from 'react';
-import {Navbar, Nav, NavDropdown, Form, FormControl, Button} from 'react-bootstrap';
+import {Row, Col, Navbar, Nav, NavDropdown, Form, FormControl, Button} from 'react-bootstrap';
 import FormModal from "./Modal";
 
 
@@ -13,12 +13,19 @@ export const PeepNav = () => {
 					<Nav className="mr-auto">
 						<Nav.Link href="/">Home</Nav.Link>
 						<Nav.Link href="/my-profile">My Profile</Nav.Link>
-						<FormModal />
+						<FormModal/>
 
 					</Nav>
 					<Form inline>
-						<FormControl type="text" placeholder="Search" className="mr-sm-2"/>
-						<Button variant="outline-success">Search</Button>
+						<Row className="mt-3">
+							<Col>
+								<Button variant="outline-success">Search</Button>
+							</Col>
+							<Col>
+								<FormControl type="text" placeholder="Search" className="mr-sm-2"/>
+							</Col>
+						</Row>
+
 					</Form>
 				</Navbar.Collapse>
 			</Navbar>
