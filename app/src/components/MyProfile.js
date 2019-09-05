@@ -11,7 +11,7 @@ export const MyProfile = () => {
 				<Form.Label>Email address</Form.Label>
 				<Form.Control type="email" placeholder="Enter email" />
 				<Form.Text className="text-muted">
-					We'll never share your email with anyone else.
+					We'll share your email with everyone else.
 				</Form.Text>
 			</Form.Group>
 
@@ -19,7 +19,7 @@ export const MyProfile = () => {
 				<Form.Label>Password</Form.Label>
 				<Form.Control type="password" placeholder="Password" />
 			</Form.Group>
-			<Form.Group controlId="formBasicChecbox">
+			<Form.Group controlId="formBasicCheckbox">
 				<Form.Check type="checkbox" label="Check me out" />
 			</Form.Group>
 			<Button variant="primary" type="submit">
