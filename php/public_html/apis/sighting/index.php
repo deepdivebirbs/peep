@@ -1,4 +1,3 @@
-
 <?php
 require_once(dirname(__DIR__, 3) . "/Classes/autoload.php");
 require_once(dirname(__DIR__, 3) . "/vendor/autoload.php");
@@ -13,6 +12,7 @@ require_once dirname(__DIR__, 3) . "/lib/uuid.php";
  */
 
 use Birbs\Peep\{Sighting};
+
 // Check if session is active, and if not activate it
 if(session_status() !== PHP_SESSION_ACTIVE) {
 	session_start();
@@ -28,13 +28,17 @@ try {
 	$pdo = $secrets->getPdoObject();
 	// What HTTP method was used?
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
+	echo $method;
 	// Sanitize and store input
 	$sightingId = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$sightingUserProfileId = filter_input(INPUT_GET, "sightingUserProfileId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$sightingBirdSpeciesId = filter_input(INPUT_GET, "sightingBirdSpeciesId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
 	// Define behavior if $method is a GET request
+
 	if($method === "GET") {
 		// Set the XSRF cookie
+
 		setXsrfCookie();
 		// Gets a post by content
 		if(empty($sightingId) === false) {
@@ -43,77 +47,76 @@ try {
 			$reply->data = Sighting::getSightingsBySightingUserProfileId($pdo, $sightingUserProfileId);
 		} else if(empty($sightingBirdSpeciesId) === false) {
 			$reply->data = Sighting::getSightingsBySightingBirdSpeciesId($pdo, $sightingBirdSpeciesId);
-		} // POST the sighting object
-		else if($method === "POST") {
-			// Enforce user has xsrf token
-			verifyXsrf();
-			// Enforce the user is signed in
-			if(empty($_SESSION["userProfile"]) === true) {
-				throw(new \InvalidArgumentException("You must be signed in to create a sighting.", 401));
-			}
+		}
+		// POST the sighting object
+	} else if($method === "POST") {
+		// Enforce user has xsrf token
+		verifyXsrf();
+		// Enforce the user is signed in
+		if(empty($_SESSION["userProfile"]) === true) {
+			throw(new \InvalidArgumentException("You must be signed in to create a sighting.", 401));
+		}
+		// This line grabs JSON and stores result in $requestContent
+		$requestContent = file_get_contents("php://input");
+		//parses JSON package that the front end sent, and stores it in $requestObject
+		$requestObject = json_decode($requestContent);
 
-			// This line grabs JSON and stores result in $requestContent
-			$requestContent = file_get_contents("php://input");
-			//parses JSON package that the front end sent, and stores it in $requestObject
-			$requestObject = json_decode($requestContent);
+		// Ensure sighting content is available (required)
+		if(empty($requestObject->sightingBirdPhoto) === true) {
+			throw(new \InvalidArgumentException("No photo uploaded.", 405));
+		}
 
-			// Ensure sighting content is available (required)
-			if(empty($requestObject->sightingBirdPhoto) === true) {
-				throw(new \InvalidArgumentException("No photo uploaded.", 405));
-			}
+		// Ensure that the sighting includes correct datetime and latlong
+		if(empty($requestObject->sightingDateTime) === true) {
+			$requestObject->sightingDateTime = date("y-m-d H:i:s");
+		}
 
-			// Ensure that the sighting includes correct datetime and latlong
-			if(empty($requestObject->sightingDateTime) === true) {
-				$requestObject->sightingDateTime = date("y-m-d H:i:s");
-			}
+		if(empty($requestObject->sightingLocX) === true) {
+			throw(new \InvalidArgumentException("No location data entered."));
+		}
 
-			if(empty($requestObject->sightingLocX) === true) {
-				throw(new \InvalidArgumentException("No location data entered."));
-			}
+		if(empty($requestObject->sightingLocX) === true) {
+			throw(new \InvalidArgumentException("No location data entered."));
+		}
 
-			if(empty($requestObject->sightingLocX) === true) {
-				throw(new \InvalidArgumentException("No location data entered."));
-			}
-
-			if(empty($requestObject->sightingBirdSpeciesId) === true) {
-				throw (new \InvalidArgumentException("No sighting entry linked to the sighting.", 405));
-			}
+		if(empty($requestObject->sightingBirdSpeciesId) === true) {
+			throw (new \InvalidArgumentException("No sighting entry linked to the sighting.", 405));
+		}
 
 // Enforce for POST method
-			// Enforce the end user has a JWT token
-			// Enforce the user is signed in
-			if(empty($_SESSION["profile"]) === true) {
-				throw(new \InvalidArgumentException("You must be logged in to access sightings.", 403));
-			}
+		// Enforce the end user has a JWT token
+		// Enforce the user is signed in
+		if(empty($_SESSION["profile"]) === true) {
+			throw(new \InvalidArgumentException("You must be logged in to access sightings.", 403));
+		}
 
 // CREATE the sighting object
-			validateJwtHeader();
-			$sighting = new Sighting(generateUuidV4(), $_SESSION["userProfile"]->getUserProfileId(), $requestObject->sightingBirdSpeciesId, $requestObject->newSightingDateTime, $requestObject->sightingBirdPhoto, $requestObject->newSightingLocX, $requestObject->newSightingLocY);
-			$sighting->insert($pdo);
-			$reply->message = "Sighting successfully added.";
+		validateJwtHeader();
+		$sighting = new Sighting(generateUuidV4(), $_SESSION["userProfile"]->getUserProfileId(), $requestObject->sightingBirdSpeciesId, $requestObject->newSightingDateTime, $requestObject->sightingBirdPhoto, $requestObject->newSightingLocX, $requestObject->newSightingLocY);
+		$sighting->insert($pdo);
+		$reply->message = "Sighting successfully added.";
 
-// DELETE the sighting object
-		} else if($method === "DELETE") {
-			//enforce the end user has a XSRF token.
-			verifyXsrf();
-			//grab the sighting by its primary key
-			$sighting = Sighting::getSightingsBySightingId($pdo, $sightingId);
-			if($sighting === null) {
-				throw (new RuntimeException("Sighting does not exist."));
-			}
-			// Enforce the user is signed in and only trying to edit their own sighting
-			if(empty($_SESSION["userProfile"]) === true || $_SESSION["profile"]->getProfileId() !== $sighting->getSightingProfileId()) {
-				throw(new \InvalidArgumentException("You are not allowed to delete this sighting.", 403));
-			}
-			validateJwtHeader();
-			//preform the actual delete
-			$sighting->delete($pdo);
-			//update the message
-			$reply->message = "Sighting successfully deleted.";
+		// DELETE the sighting object
+	} else if($method === "DELETE") {
+		//enforce the end user has a XSRF token.
+		verifyXsrf();
+		//grab the sighting by its primary key
+		$sighting = Sighting::getSightingsBySightingId($pdo, $sightingId);
+		if($sighting === null) {
+			throw (new RuntimeException("Sighting does not exist."));
 		}
-	} else {
-		echo "No";
+		// Enforce the user is signed in and only trying to edit their own sighting
+		if(empty($_SESSION["userProfile"]) === true || $_SESSION["profile"]->getProfileId() !== $sighting->getSightingProfileId()) {
+			throw(new \InvalidArgumentException("You are not allowed to delete this sighting.", 403));
+		}
+		validateJwtHeader();
+		//perform the actual delete
+		$sighting->delete($pdo);
+		//update the message
+		$reply->message = "Sighting successfully deleted.";
 	}
+
+	echo($reply->data);
 } catch(\Exception $exception) {
 	$reply->status = $exception->getCode();
 	$reply->message = $exception->getMessage();
