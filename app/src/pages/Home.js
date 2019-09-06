@@ -35,7 +35,6 @@ export const Home = () => {
 									<Card.Text>
 										Some dynamic text about whatever bird is being displayed above.
 									</Card.Text>
-									<Button className={"featureAddToFaves"} variant={"primary"}>Add to Favorites</Button>
 									<Button variant="primary">View Sightings</Button>
 								</Card.Body>
 							</Card>

@@ -3,9 +3,10 @@ import React from "react"
 export const FourOhFour = () => {
 	return (
 		<>
-			<h1>TURN AROUND PEEP ISN'T HERE</h1>
-			<h2>chirp chirp>
-			<
+			<container>
+				<h4> Peep isn't here. Go Home </h4>
+				<h5>chirp chirp</h5>
+			</container>
 		</>
 	);
 };
