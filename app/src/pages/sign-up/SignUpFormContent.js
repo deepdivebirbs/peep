@@ -5,10 +5,24 @@ import {Formik} from "formik/dist/index";
 import {Container, Col, InputGroup, Form, Button, FormControl} from 'react-bootstrap';
 import {httpConfig} from "../../shared/utils/http-config";
 
-export const SignUpForm = () => {
+export const SignUpFormContent = (props) => {
+
+	const {
+		submitStatus,
+		values,
+		errors,
+		touched,
+		dirty,
+		isSubmitting,
+		handleChange,
+		handleBlur,
+		handleSubmit,
+		handleReset,
+		validator
+	} = props;
+
 	return (
-		/*<Form noValidate validated={validated} onSubmit={handleSubmit}>*/
-		<Form>
+		<Form noValidate validated={validator} onSubmit={handleSubmit}>
 			<Form.Row>
 				<Form.Group as={Col} md="4" controlId="validationCustom01">
 					<Form.Label>First name</Form.Label>
@@ -33,9 +47,6 @@ export const SignUpForm = () => {
 				<Form.Group as={Col} md="4" controlId="validationCustomUsername">
 					<Form.Label>Username</Form.Label>
 					<InputGroup>
-						<InputGroup.Prepend>
-							<InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
-						</InputGroup.Prepend>
 						<Form.Control
 							type="text"
 							placeholder="Username"
@@ -64,16 +75,9 @@ export const SignUpForm = () => {
 					</Form.Control.Feedback>
 				</Form.Group>
 			</Form.Row>
-			<Form.Group>
-				<Form.Check
-					required
-					label="Agree to terms and conditions"
-					feedback="You must agree before submitting."
-				/>
-			</Form.Group>
 			<Button type="submit">Submit form</Button>
 		</Form>
 	);
 };
 
-export default SignUpForm;
+export default SignUpFormContent;

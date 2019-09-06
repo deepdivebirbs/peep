@@ -1,13 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Container} from 'react-bootstrap';
 import './index.css';
 import {Switch, BrowserRouter, Route, Link} from "react-router-dom";
 import PeepNav from './shared/components/PeepNav';
 import Footer from './shared/components/Footer';
 import Home from './pages/Home';
 import MyProfile from './pages/MyProfile';
-import SignUpForm from './pages/sign-up/SignUpForm';
+import SignUpForm from './pages/sign-up/SignUpFormContent';
 import FourOhFour from './pages/FourOhFour';
 
 function App() {
