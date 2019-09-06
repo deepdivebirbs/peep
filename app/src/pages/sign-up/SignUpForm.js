@@ -25,10 +25,10 @@ export const SignUpForm = () => {
 		email: Yup.string()
 			.required("Email is a required field.")
 			.email("Please enter a valid email."),
-		password: Yum.string()
+		password: Yup.string()
 			.required("A password must be entered.")
 			.min(8, "Password must be at least 8 characters."),
-		passwordConfirm: Yum.string()
+		passwordConfirm: Yup.string()
 			.required("You must confirm you password.")
 			.min(8)
 	});
@@ -50,3 +50,5 @@ export const SignUpForm = () => {
 		</Formik>
 	);
 };
+
+export default SignUpForm;

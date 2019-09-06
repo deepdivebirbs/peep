@@ -6,8 +6,9 @@ import PeepNav from './shared/components/PeepNav';
 import Footer from './shared/components/Footer';
 import Home from './pages/Home';
 import MyProfile from './pages/MyProfile';
-import SignUpForm from './pages/sign-up/SignUpFormContent';
+import SignUpForm from './pages/sign-up/SignUpForm';
 import FourOhFour from './pages/FourOhFour';
+
 
 function App() {
 	return (
