@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Container} from 'react-bootstrap';
 import './index.css';
-import { Switch, BrowserRouter, Route, Link } from "react-router-dom";
+import {Switch, BrowserRouter, Route, Link} from "react-router-dom";
 import PeepNav from './shared/components/PeepNav';
 import Footer from './shared/components/Footer';
 import Home from './pages/Home';
@@ -11,22 +12,25 @@ import FourOhFour from './pages/FourOhFour';
 
 function App() {
 	return (
-		<div className="App">
+		<>
+
 			<PeepNav/>
 			<BrowserRouter>
 				<Switch>
 					<Route exact path="/" component={Home}/>
-					<Route exact path="/my-profile" component={MyProfile} />
+					<Route exact path="/my-profile" component={MyProfile}/>
 					<Route exact path="/sign-up" component={SignUpForm}/>
 					<Route exact path="/FourOhFour" component={FourOhFour}/>
 				</Switch>
 			</BrowserRouter>
 			<Footer/>
-		</div>
+			
+		</>
+
 	);
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<App/>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
