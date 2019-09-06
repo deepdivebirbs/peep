@@ -31,10 +31,7 @@ export const Home = () => {
 							<Card className={"dailyFeature"} style={{width: '18rem'}}>
 								<Card.Img variant="top" src="holder.js/100px180"/>
 								<Card.Body>
-									<Card.Title>Featured Bird</Card.Title>
-									<Card.Text>
-										Some dynamic text about whatever bird is being displayed above.
-									</Card.Text>
+									<Card.Title>Random Bird</Card.Title>
 									<Button variant="primary">View Sightings</Button>
 								</Card.Body>
 							</Card>
