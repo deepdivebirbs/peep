@@ -1,5 +1,9 @@
-import React from 'react';
-import {Col, InputGroup, Form, Button, FormControl} from 'react-bootstrap';
+import React, {useState} from 'react';
+import axios from 'axios/index';
+import * as Yup from "yup";
+import {Formik} from "formik/dist/index";
+import {Container, Col, InputGroup, Form, Button, FormControl} from 'react-bootstrap';
+import {httpConfig} from "../../shared/utils/http-config";
 
 export const SignUpForm = () => {
 	return (
@@ -54,7 +58,7 @@ export const SignUpForm = () => {
 				</Form.Group>
 				<Form.Group as={Col} md="3" controlId="validationCustom04">
 					<Form.Label>Password</Form.Label>
-					<Form.Control type="text" placeholder="Password" required/>
+					<Form.Control type="password" placeholder="Password" required/>
 					<Form.Control.Feedback type="invalid">
 						Please provide a valid password.
 					</Form.Control.Feedback>

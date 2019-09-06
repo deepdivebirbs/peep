@@ -1,6 +1,6 @@
 import React from 'react';
 import {Navbar, Nav, NavDropdown, Form, FormControl, Button} from 'react-bootstrap';
-import FormModal from "../../pages/Modal";
+import LogInModal from "../../pages/LogInModal";
 
 
 export const PeepNav = () => {
@@ -13,7 +13,7 @@ export const PeepNav = () => {
 					<Nav className="mr-auto">
 						<Nav.Link href="/">Home</Nav.Link>
 						<Nav.Link href="/my-profile">My Profile</Nav.Link>
-						<FormModal />
+						<LogInModal />
 
 					</Nav>
 					<Form inline>
