@@ -40,8 +40,8 @@ try {
 		/* Set object variables */
 
 		// Get first and last name
-		$userFirstName = $reply->data->first_name;
-		$userLastName = $reply->data->last_name;
+		$userFirstName = $reply->data->userFirstName;
+		$userLastName = $reply->data->userLastName;
 
 		// Get Username
 		$profileUsername = $reply->data->profileUsername;

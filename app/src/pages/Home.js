@@ -1,5 +1,6 @@
 import React from 'react';
 import {Button, Row, Col, Container, Card, ListGroup, ListGroupItem} from 'react-bootstrap';
+import LogInModal from './sign-in/LogInModal';
 
 export const Home = () => {
 	return (

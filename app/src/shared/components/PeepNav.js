@@ -1,9 +1,14 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Navbar, Nav, NavDropdown, Form, FormControl, Button} from 'react-bootstrap';
-import LogInModal from "../../pages/LogInModal";
+import LogInModal from "../../pages/sign-in/LogInModal";
+import {httpConfig} from "../utils/http-config";
 
 
 export const PeepNav = () => {
+	useEffect( () => {
+		 httpConfig.get("/apis/earl-grey/")
+	});
+
 	return (
 		<>
 			<Navbar bg="dark" expand="lg">
