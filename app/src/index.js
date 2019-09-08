@@ -8,18 +8,21 @@ import Home from './pages/Home';
 import MyProfile from './pages/MyProfile';
 import SignUpForm from './pages/sign-up/SignUpForm';
 import FourOhFour from './pages/FourOhFour';
+import sightingcontent from './pages/sighting/sightingcontent';
 
 
 function App() {
 	return (
 		<>
 			<PeepNav/>
+			<a href="/sighting">Sighting</a>
 			<BrowserRouter>
 				<Switch>
 					<Route exact path="/" component={Home}/>
-					<Route exact path="/my-profile" component={MyProfile} />
+					<Route exact path="/my-profile" component={MyProfile}/>
 					<Route exact path="/sign-up" component={SignUpForm}/>
 					<Route exact path="/FourOhFour" component={FourOhFour}/>
+					<Route exact path="/sighting" component={sightingcontent}/>
 				</Switch>
 			</BrowserRouter>
 			<Footer/>
