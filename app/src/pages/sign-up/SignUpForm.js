@@ -6,39 +6,40 @@ import {Formik} from "formik";
 
 export const SignUpForm = () => {
 	let signUp = {
-		firstName: "Johny",
-		lastName: "Appleseed",
-		username: "JApples",
-		email: "johnny@appleseed.com",
-		password: "Password",
-		passwordConfirm: "Password Confirm"
+		userFirstName: "",
+		userLastName: "",
+		profileUsername: "",
+		userProfileEmail: "",
+		userProfilePassword: "",
+		userProfilePasswordConfirm: ""
 	};
 
 	const [status, setStatus] = useState(null);
 
-	const validator = Yup.object.shape({
-		firstName: Yup.string(),
-		lastName: Yup.string(),
-		username: Yup.string()
+	const validator = Yup.object().shape({
+		userFirstName: Yup.string(),
+		userLastName: Yup.string(),
+		profileUsername: Yup.string()
 			.required("User name is required.")
 			.min(3, "Password must be at least 3 characters."),
-		email: Yup.string()
+		userProfileEmail: Yup.string()
 			.required("Email is a required field.")
 			.email("Please enter a valid email."),
-		password: Yup.string()
+		userProfilePassword: Yup.string()
 			.required("A password must be entered.")
 			.min(8, "Password must be at least 8 characters."),
-		passwordConfirm: Yup.string()
+		userProfilePasswordConfirm: Yup.string()
 			.required("You must confirm you password.")
 			.min(8)
 	});
 
 	const signUpSubmit = (values, {resetFrom}) => {
-		httpConfig.post('/apis/sign-up')
+		httpConfig.post('/apis/sign-up/', values)
 			.then(reply => {
 				let {message, type} = reply;
 				setStatus({message, type});
 				if(reply.status === 200) {
+					console.log(values);
 					resetFrom();
 				}
 			});
