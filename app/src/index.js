@@ -9,6 +9,7 @@ import MyProfileForm from './pages/user-profile/MyProfileForm';
 import SignUpForm from './pages/sign-up/SignUpForm';
 import FourOhFour from './pages/FourOhFour';
 import sightingcontent from './pages/sighting/sightingcontent';
+import MyProfile from './pages/user-profile/MyProfile';
 
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
 			<BrowserRouter>
 				<Switch>
 					<Route exact path="/" component={Home}/>
-					<Route exact path="/my-profile" component={MyProfileForm}/>
+					<Route exact path="/my-profile" component={MyProfile}/>
 					<Route exact path="/sign-up" component={SignUpForm}/>
 					<Route exact path="/FourOhFour" component={FourOhFour}/>
 					<Route exact path="/sighting" component={sightingcontent}/>
