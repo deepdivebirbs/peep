@@ -24,6 +24,7 @@ function App() {
 					<Route exact path="/sign-up" component={SignUpForm}/>
 					<Route exact path="/FourOhFour" component={FourOhFour}/>
 					<Route exact path="/sighting" component={sightingcontent}/>
+					<Route component={FourOhFour}/>
 				</Switch>
 			</BrowserRouter>
 			<Footer/>
