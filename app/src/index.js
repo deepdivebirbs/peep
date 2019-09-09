@@ -15,8 +15,9 @@ import {applyMiddleware, createStore} from "redux";
 import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
 import {getAllSpecies} from "./shared/actions/species";
+import Reducers from './shared/reducers/reducers';
 
-const store = createStore(reducers, applyMiddleware(thunk));
+const store = createStore(Reducers, applyMiddleware(thunk));
 
 
 function App() {

@@ -1,8 +1,23 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Button, Row, Col, Container, Card, ListGroup, ListGroupItem} from 'react-bootstrap';
-import LogInModal from './sign-in/LogInModal';
+import {getAllSpecies} from '../shared/actions/species';
+import {useDispatch, useSelector} from "react-redux";
+import {getRandomBird} from '../shared/utils/randomBird';
 
 export const Home = () => {
+	const BIRDS = useSelector(state => state.species ? state.species : []);
+	const DISPATCH = useDispatch();
+
+	const sideEffects = () => {
+		DISPATCH(getAllSpecies());
+	};
+
+	const sideEffectInputs = [];
+
+	useEffect(sideEffects, sideEffectInputs);
+
+	let bird = getRandomBird(BIRDS);
+
 	return (
 		// Home section
 		<>
@@ -21,7 +36,7 @@ export const Home = () => {
 							<Card className={"dailyFeature"} style={{width: '18rem'}}>
 								<Card.Img variant="top" src="holder.js/100px180"/>
 								<Card.Body>
-									<Card.Title>Random Bird</Card.Title>
+									<Card.Title>{bird}</Card.Title>
 									<Button variant="primary">View Sightings</Button>
 								</Card.Body>
 							</Card>
