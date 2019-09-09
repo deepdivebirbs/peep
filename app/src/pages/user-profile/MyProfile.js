@@ -1,8 +1,10 @@
-import React from 'react';
-import {httpConfig} from '../../../../app/src/shared/utils/http-config'
+import React, {useEffect} from 'react';
 import {Container} from 'react-bootstrap';
+import {useSelector, useDispatch} from "react-redux";
+import {getUserProfileById} from "../../shared/actions/myProfile";
+import {UseJwtProfileId} from "../../shared/utils/jwtHelper";
 
-export const MyProfile = () => {
+export const MyProfile = ({match}) => {
 
 	// grab the profile id from the currently logged in account, or null if not found
 	const userProfileId = UseJwtProfileId();
@@ -14,11 +16,13 @@ export const MyProfile = () => {
 	const dispatch = useDispatch();
 
 	const effects = () => {
-		dispatch(getUserProfileById(match.params.userProfileId));
+		dispatch(getUserProfileById(match.param.userProfileId));
 	};
 
 	const inputs = [match.params.userProfileId];
 	useEffect(effects, inputs);
+
+	console.log(match.params);
 
 	return (
 		<>
