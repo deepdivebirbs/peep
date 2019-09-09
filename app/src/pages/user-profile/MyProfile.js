@@ -1,9 +1,8 @@
 import React from 'react';
-import httpConfig from '../../../../app/src/shared/utils/http-config'
+import {httpConfig} from '../../../../app/src/shared/utils/http-config'
 import {Container} from 'react-bootstrap';
 
 export const MyProfile = () => {
-	httpConfig.get()
 	return (
 		<>
 			<Container>

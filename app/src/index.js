@@ -10,29 +10,33 @@ import SignUpForm from './pages/sign-up/SignUpForm';
 import FourOhFour from './pages/FourOhFour';
 import sightingcontent from './pages/sighting/sightingcontent';
 import MyProfile from './pages/user-profile/MyProfile';
-import {combinedReducers} from './shared/reducers/reducers';
+import {reducers} from './shared/reducers/reducers';
 import {applyMiddleware, createStore} from "redux";
+import {Provider} from 'react-redux';
+import thunk from 'redux-thunk';
+import {getAllSpecies} from "./shared/actions/species";
 
-const store = createStore(combinedReducers, applyMiddleware(thunk));
+const store = createStore(reducers, applyMiddleware(thunk));
 
-console.log(store);
 
 function App() {
 	return (
 		<>
-			<PeepNav/>
-			<a href="/sighting">Sighting</a>
-			<BrowserRouter>
-				<Switch>
-					<Route exact path="/" component={Home}/>
-					<Route exact path="/my-profile" component={MyProfile}/>
-					<Route exact path="/sign-up" component={SignUpForm}/>
-					<Route exact path="/FourOhFour" component={FourOhFour}/>
-					<Route exact path="/sighting" component={sightingcontent}/>
-					<Route component={FourOhFour}/>
-				</Switch>
-			</BrowserRouter>
-			<Footer/>
+			<Provider store={store}>
+				<PeepNav/>
+				<a href="/sighting">Sighting</a>
+				<BrowserRouter>
+					<Switch>
+						<Route exact path="/" component={Home}/>
+						<Route exact path="/my-profile" component={MyProfile}/>
+						<Route exact path="/sign-up" component={SignUpForm}/>
+						<Route exact path="/FourOhFour" component={FourOhFour}/>
+						<Route exact path="/sighting" component={sightingcontent}/>
+						<Route component={FourOhFour}/>
+					</Switch>
+				</BrowserRouter>
+				<Footer/>
+			</Provider>
 		</>
 	);
 }

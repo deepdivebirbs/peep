@@ -4,7 +4,7 @@ import favoriteReducer from './favoriteReducer';
 import userProfileReducer from './userProfileReducer';
 import sightingsReducer from './sightingsReducer';
 
-export const combinedReducers = combineReducers({
+export const reducers = combineReducers({
 	species: speciesReducer,
 	favorite: favoriteReducer,
 	userProfile: userProfileReducer,
