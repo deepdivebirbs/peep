@@ -5,11 +5,13 @@ import * as Yup from "yup";
 import {Formik} from "formik";
 
 export const LogInForm = () => {
+	// Set initial values
 	let logIn = {
 		userProfileEmail: "",
 		userProfilePassword: ""
 	};
 
+	// Validate form input
 	let validator = Yup.object().shape({
 		userProfileEmail: Yup.string()
 			.required("Email is required to sign in.")
