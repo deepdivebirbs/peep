@@ -21,10 +21,10 @@ const validator = Yup.object().shape({
 		.required("Please list a valid name."),
 
 	userProfileLastName: Yup.string()
-			.required("Please list a valid name."),
+		.required("Please list a valid name."),
 
 	userProfileEmail: Yup.string().email()
-			.required("You must have a valid email.")
+		.required("You must have a valid email.")
 });
 
 export default MyProfileForm();
