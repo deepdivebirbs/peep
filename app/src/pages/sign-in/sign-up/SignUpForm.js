@@ -1,11 +1,14 @@
 import React, {useState} from 'react';
-import {httpConfig} from "../../../src/shared/utils/http-config";
+import {httpConfig} from "../../../shared/utils/http-config";
 import SignUpFormContent from './SignUpFormContent';
 import * as Yup from "yup";
 import {Formik} from "formik";
 
 export const SignUpForm = () => {
-	let signUp = {
+
+	const [status, setStatus] = useState(null);
+
+	const signUp = {
 		userFirstName: "",
 		userLastName: "",
 		profileUsername: "",
@@ -19,7 +22,7 @@ export const SignUpForm = () => {
 		userLastName: Yup.string(),
 		profileUsername: Yup.string()
 			.required("User name is required.")
-			.min(3, "Password must be at least 3 characters."),
+			.min(3, "User name must be at least 3 characters."),
 		userProfileEmail: Yup.string()
 			.required("Email is a required field.")
 			.email("Please enter a valid email."),
@@ -35,18 +38,25 @@ export const SignUpForm = () => {
 		httpConfig.post('/apis/sign-up/', values)
 			.then(reply => {
 				let {message, type} = reply;
+				setStatus ({message, type});
 				if(reply.status === 200) {
 					resetForm();
 					setStatus({message, type});
 				}
-				setStatus({message, type});
 			});
 	};
 
-	return(
-		<Formik onSubmit={signUpSubmit} initialValues={signUp} validationSchema={validator}>
-			{SignUpFormContent}
-		</Formik>
+	return (
+		<>
+			<Formik
+				initialValues={signUp}
+				onSubmit={signUpSubmit}
+				validationSchema={validator}
+			>
+				{SignUpFormContent}
+			</Formik>
+
+		</>
 	);
 };
 

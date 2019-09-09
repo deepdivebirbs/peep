@@ -6,7 +6,7 @@ import PeepNav from './shared/components/PeepNav';
 import Footer from './shared/components/Footer';
 import Home from './pages/Home';
 import MyProfileForm from './pages/user-profile/MyProfileForm';
-import SignUpForm from './pages/sign-up/SignUpForm';
+import SignUpForm from './pages/sign-in/sign-up/SignUpForm';
 import FourOhFour from './pages/FourOhFour';
 import sightingcontent from './pages/sighting/sightingcontent';
 import MyProfile from './pages/user-profile/MyProfile';

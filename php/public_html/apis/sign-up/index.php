@@ -35,28 +35,28 @@ try {
 		$reqContent = file_get_contents("php://input");
 		$reqObj = json_decode($reqContent);
 
-		$reply->data = $reqObj;
+
 
 		/* Set object variables */
 
 		// Get first and last name
-		$userFirstName = $reply->data->userFirstName;
-		$userLastName = $reply->data->userLastName;
+		$userFirstName = $reqObj->userFirstName;
+		$userLastName = $reqObj->userLastName;
 
 		// Get Username
-		$profileUsername = $reply->data->profileUsername;
+		$profileUsername = $reqObj->profileUsername;
 
 		// Get Email
-		$userProfileEmail = $reply->data->userProfileEmail;
+		$userProfileEmail = $reqObj->userProfileEmail;
 
 		// Get userProfilePassword
-		$userProfilePassword = $reply->data->userProfilePassword;
-		$userProfilePasswordConfirm = $reply->data->userProfilePasswordConfirm;
+		$userProfilePassword = $reqObj->userProfilePassword;
+		$userProfilePasswordConfirm = $reqObj->userProfilePasswordConfirm;
 
 		/* FIRST AND LAST NAME STUFF */
 		// Check if first name field is empty
 		if(empty($userFirstName) === true || empty($userLastName) === true) {
-			throw(new \InvalidArgumentException("First name is required."));
+			throw(new \InvalidArgumentException("First name is required.", 405));
 		}
 
 		/* USERNAME STUFF */
@@ -71,13 +71,13 @@ try {
 
 		// Check if username exists
 		if(UserProfile::getUserProfileByName($pdo, $profileUsername)) {
-			throw(new \InvalidArgumentException("Username exists.  Please choose another."));
+			throw(new \InvalidArgumentException("Username exists.  Please choose another.", 405));
 		}
 
 		/* EMAIL STUFF */
 		// Check if email field is empty
 		if(empty($userProfileEmail) === true) {
-			throw(new \InvalidArgumentException("Email is required."));
+			throw(new \InvalidArgumentException("Email is required.", 405));
 		}
 
 		/* PASSWORD STUFF */
@@ -171,7 +171,7 @@ EOF;
 			throw(new \RuntimeException("Unable to send Email.", 400));
 		}
 
-		$reply->message = "Thank you for creating an account on the Ebirbs website! What is wrong with you? Why would you do this?";
+		$reply->message = "Thank you for creating an account on the Ebirbs website!";
 
 	} else {
 		throw(new \InvalidArgumentException("Invalid HTTP Request..."));

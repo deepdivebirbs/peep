@@ -1,15 +1,11 @@
-import React, {useState} from 'react';
-import axios from 'axios/index';
-import * as Yup from "yup";
-import {Formik} from "formik/dist/index";
+import React from 'react';
+
 import {Container, Col, InputGroup, Form, Button, FormControl} from 'react-bootstrap';
-import {httpConfig} from "../../shared/utils/http-config";
-import {FormDebugger} from "../../shared/components/FormDebugger";
 
 export const SignUpFormContent = (props) => {
 
 	const {
-		submitStatus,
+		status,
 		values,
 		errors,
 		touched,
@@ -18,8 +14,7 @@ export const SignUpFormContent = (props) => {
 		handleChange,
 		handleBlur,
 		handleSubmit,
-		handleReset,
-		validated
+		handleReset
 	} = props;
 
 	return (
@@ -39,7 +34,13 @@ export const SignUpFormContent = (props) => {
 								onBlur={handleBlur}
 								defaultValue="Mark"
 							/>
-							<Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+							{
+								errors.userFirstName && touched.userFirstName&& (
+									<div className="alert alert-danger">
+										{errors.userFirstName}
+									</div>
+								)
+							}
 						</Form.Group>
 						<Form.Group as={Col} md="4">
 							<Form.Label>Last name</Form.Label>
@@ -53,7 +54,13 @@ export const SignUpFormContent = (props) => {
 								onBlur={handleBlur}
 								defaultValue="Otto"
 							/>
-							<Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+							{
+								errors.userLastName && touched.userLastName&& (
+									<div className="alert alert-danger">
+										{errors.userLastName}
+									</div>
+								)
+							}
 						</Form.Group>
 						<Form.Group as={Col} md="4">
 							<Form.Label>Username</Form.Label>
@@ -68,9 +75,13 @@ export const SignUpFormContent = (props) => {
 									aria-describedby="inputGroupPrepend"
 									required
 								/>
-								<Form.Control.Feedback type="invalid">
-									Please choose a username.
-								</Form.Control.Feedback>
+								{
+									errors.profileUsername && touched.profileUsername&& (
+										<div className="alert alert-danger">
+											{errors.profileUsername}
+										</div>
+									)
+								}
 							</InputGroup>
 						</Form.Group>
 					</Form.Row>
@@ -86,9 +97,13 @@ export const SignUpFormContent = (props) => {
 								onBlur={handleBlur}
 								required
 							/>
-							<Form.Control.Feedback type="invalid">
-								Please provide a valid email.
-							</Form.Control.Feedback>
+							{
+								errors.userProfileEmail && touched.userProfileEmail&& (
+									<div className="alert alert-danger">
+										{errors.userProfileEmail}
+									</div>
+								)
+							}
 						</Form.Group>
 						<Form.Group as={Col} md="3">
 							<Form.Label>Password</Form.Label>
@@ -101,9 +116,13 @@ export const SignUpFormContent = (props) => {
 								onBlur={handleBlur}
 								required
 							/>
-							<Form.Control.Feedback type="invalid">
-								Please provide a valid password.
-							</Form.Control.Feedback>
+							{
+								errors.userProfilePassword && touched.userProfilePassword&& (
+									<div className="alert alert-danger">
+										{errors.userProfilePassword}
+									</div>
+								)
+							}
 						</Form.Group>
 						<Form.Group as={Col} md="3">
 							<Form.Label>Password Confirmation</Form.Label>
@@ -116,13 +135,16 @@ export const SignUpFormContent = (props) => {
 								onBlur={handleBlur}
 								required
 							/>
-							<Form.Control.Feedback type="invalid">
-								Please provide a valid password.
-							</Form.Control.Feedback>
+							{
+								errors.userProfilePasswordConfirm && touched.userProfilePasswordConfirm&& (
+									<div className="alert alert-danger">
+										{errors.userProfilePasswordConfirm}
+									</div>
+								)
+							}
 						</Form.Group>
 					</Form.Row>
 					<Button type="submit">Sign Up</Button>
-					<FormDebugger {...props}/>
 				</Form>
 			</Container>
 		</>
