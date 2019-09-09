@@ -10,7 +10,12 @@ import SignUpForm from './pages/sign-up/SignUpForm';
 import FourOhFour from './pages/FourOhFour';
 import sightingcontent from './pages/sighting/sightingcontent';
 import MyProfile from './pages/user-profile/MyProfile';
+import {combinedReducers} from './shared/reducers/reducers';
+import {applyMiddleware, createStore} from "redux";
 
+const store = createStore(combinedReducers, applyMiddleware(thunk));
+
+console.log(store);
 
 function App() {
 	return (
