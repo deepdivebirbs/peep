@@ -28,7 +28,7 @@ export const ShowSighting = () => {
 					<span>Photo: {sighting && sighting.sightingBirdPhoto}</span>
 				</div>
 				<div>
-					<span>Common Name: /*{aspecies && species.comName}*/</span>
+					<span>Common Name: /*{species && species.comName}*/</span>
 				</div>
 				<div>
 					<span>Scientific Name: /*{species && species.sciName}*/</span>
