@@ -8,26 +8,30 @@ import {FormDebugger} from "../../shared/components/FormDebugger";
 import sightingcontent from "./sightingcontent";
 
 export const Sighting = () => {
-	let Sighting = {
+	let values = {
+		speciesComName: "",
+		speciesSciName: "",
 		sightingBirdPhoto: "",
 		sightingDate: "",
 		sightingTime: "",
-		sightingLocX: "",
-		sightingLocY: "",
+		sightingLocation: "",
 	};
+
 	const validator = Yup.object().shape({
 		sightingBirdPhoto: Yup.string()
 			.url("Must be valid URL.")
 			.required ("You must upload a photo."),
+		speciesComName: Yup.string()
+			.required("You must include a bird name"),
+		speciesSciName: Yup.string()
+			.required("You must include a bird science name"),
 		sightingDate: Yup.string()
 			.required("You must include a valid date."),
 		sightingTime: Yup.string()
 			.required("You must include a valid time."),
-		sightingLocX: Yup.number()
+		sightingLocation: Yup.string()
 			.required("You must include a valid latitude."),
-		sightingLocY: Yup.number()
-			.required("You must include a valid longitude."),
-	})
+	});
 	const submitSighting = (values, {resetForm}) => {
 		httpConfig.post("/apis/sighting/", values)
 			.then(reply => {
@@ -37,13 +41,13 @@ export const Sighting = () => {
 					resetForm();
 				}
 			})
-	}
+	};
 
 	return (
 
 		<Formik
-			initialValues={signUp}
-			onSubmit={submitSignUp}
+			initialValues={values}
+			onSubmit={submitSighting}
 			validationSchema={validator}
 		>
 			{sightingcontent}
