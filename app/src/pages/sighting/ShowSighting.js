@@ -25,25 +25,26 @@ export const ShowSighting = () => {
 			<Container>
 				<h1>Sighting</h1>
 				<div>
-					<p>Photo</p>
+					<span>Photo: {sighting && sighting.sightingBirdPhoto}</span>
 				</div>
 				<div>
-					<p>Common Name</p>
+					<span>Common Name: /*{aspecies && species.comName}*/</span>
 				</div>
 				<div>
-					<p>Scientific Name</p>
+					<span>Scientific Name: /*{species && species.sciName}*/</span>
 				</div>
 				<div>
-					<p>Date</p>
+					<span>Date: {sighting && sighting.sightingDate}</span>
 				</div>
 				<div>
-					<p>Time</p>
+					<p>Time: {sighting && sighting.sightingTime}</p>
 				</div>
 				<div>
-					<p>Location</p>
+					<span>Location: {sighting && sighting.sightingLocation}</span>
 				</div>
 			</Container>
 		</>
 	);
-}
+};
 
+export default ShowSighting;
