@@ -11,7 +11,7 @@ export const MyProfile = () => {
 				<Form.Label>Email address</Form.Label>
 				<Form.Control type="email" placeholder="Enter email" />
 				<Form.Text className="text-muted">
-					We'll share your email with everyone else.
+					
 				</Form.Text>
 			</Form.Group>
 
