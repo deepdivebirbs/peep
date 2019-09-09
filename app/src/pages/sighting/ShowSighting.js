@@ -14,10 +14,10 @@ export const ShowSighting = () => {
 	const dispatch = useDispatch();
 
 	const effects = () => {
-		dispatch(getSightingsBySightingUserProfileId(match.params.userProfileId));
+		dispatch(getSightingsBySightingUserProfileId(match.params.sightingUserProfileId));
 	};
 
-	const inputs = [match.params.userProfileId];
+	const inputs = [match.params.sightingUserProfileId];
 	useEffect(effects, inputs);
 
 	return (
