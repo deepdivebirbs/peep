@@ -24,7 +24,7 @@ export const UseJwtUsername = () => {
 		const token = window.localStorage.getItem("jwt-token");
 		if(token !== null) {
 			const decodedJwt = jwtDecode(token);
-			setUserProfileName(decodedJwt.auth.profileUsername);
+			setUserProfileName(decodedJwt.auth.userProfileName);
 		}
 	});
 
