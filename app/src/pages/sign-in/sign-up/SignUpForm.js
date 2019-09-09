@@ -18,8 +18,10 @@ export const SignUpForm = () => {
 	};
 
 	const validator = Yup.object().shape({
-		userFirstName: Yup.string(),
-		userLastName: Yup.string(),
+		userFirstName: Yup.string()
+			.required ("First name is required"),
+		userLastName: Yup.string()
+			.required ("Last name is required"),
 		profileUsername: Yup.string()
 			.required("User name is required.")
 			.min(3, "User name must be at least 3 characters."),
@@ -27,11 +29,11 @@ export const SignUpForm = () => {
 			.required("Email is a required field.")
 			.email("Please enter a valid email."),
 		userProfilePassword: Yup.string()
-			.required("A password must be entered.")
+			.required("You must enter a password.")
 			.min(8, "Password must be at least 8 characters."),
 		userProfilePasswordConfirm: Yup.string()
-			.required("You must confirm you password.")
-			.min(8)
+			.required("You must confirm your password.")
+			.min(8, "Password must be at least 8 characters.")
 	});
 
 	const signUpSubmit = (values, {resetForm, setStatus}) => {

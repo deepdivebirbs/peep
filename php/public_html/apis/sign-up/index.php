@@ -171,7 +171,7 @@ EOF;
 			throw(new \RuntimeException("Unable to send Email.", 400));
 		}
 
-		$reply->message = "Thank you for creating an account on the Ebirbs website!";
+		$reply->message = "Peep account created. Verification e-mail sent.";
 
 	} else {
 		throw(new \InvalidArgumentException("Invalid HTTP Request..."));

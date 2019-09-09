@@ -26,7 +26,6 @@ export const SignUpFormContent = (props) => {
 							<Form.Label>First name</Form.Label>
 							<Form.Control
 								name="userFirstName"
-								required
 								type="text"
 								value={values.userFirstName}
 								placeholder="First name"
@@ -46,7 +45,6 @@ export const SignUpFormContent = (props) => {
 							<Form.Label>Last name</Form.Label>
 							<Form.Control
 								name="userLastName"
-								required
 								type="text"
 								value={values.userLastName}
 								placeholder="Last name"
@@ -73,7 +71,6 @@ export const SignUpFormContent = (props) => {
 									onChange={handleChange}
 									onBlur={handleBlur}
 									aria-describedby="inputGroupPrepend"
-									required
 								/>
 								{
 									errors.profileUsername && touched.profileUsername&& (
@@ -95,7 +92,6 @@ export const SignUpFormContent = (props) => {
 								placeholder="Email"
 								onChange={handleChange}
 								onBlur={handleBlur}
-								required
 							/>
 							{
 								errors.userProfileEmail && touched.userProfileEmail&& (
@@ -114,7 +110,6 @@ export const SignUpFormContent = (props) => {
 								placeholder="Password"
 								onChange={handleChange}
 								onBlur={handleBlur}
-								required
 							/>
 							{
 								errors.userProfilePassword && touched.userProfilePassword&& (
@@ -133,7 +128,6 @@ export const SignUpFormContent = (props) => {
 								placeholder="Password Confirmation"
 								onChange={handleChange}
 								onBlur={handleBlur}
-								required
 							/>
 							{
 								errors.userProfilePasswordConfirm && touched.userProfilePasswordConfirm&& (
@@ -146,6 +140,8 @@ export const SignUpFormContent = (props) => {
 					</Form.Row>
 					<Button type="submit">Sign Up</Button>
 				</Form>
+
+				{status && (<div className={status.type}>{status.message}</div>)}
 			</Container>
 		</>
 	);
