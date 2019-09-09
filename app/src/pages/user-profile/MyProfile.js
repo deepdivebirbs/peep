@@ -5,7 +5,7 @@ import {Container} from 'react-bootstrap';
 export const MyProfile = () => {
 
 	// grab the profile id from the currently logged in account, or null if not found
-	//const userProfileId = UseJwtProfileId();
+	const userProfileId = UseJwtProfileId();
 
 	// Return the profile by profileId from the redux store
 	const profile = useSelector(state => (state.profile ? state.profile[0] : []));
