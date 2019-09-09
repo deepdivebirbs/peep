@@ -1,18 +1,12 @@
-import React from 'react';
-import {
-	Form,
-	Button
-	} from 'react-bootstrap';
+import React, {useState} from 'react';
+import {Button, Form, FormControl} from 'react-bootstrap'
 
-export const MyProfile = () => {
+export const MyProfileFormContent = () => {
 	return(<Form>
 			<h1>My Profile</h1>
 			<Form.Group controlId="formBasicEmail">
 				<Form.Label>Email address</Form.Label>
 				<Form.Control type="email" placeholder="Enter email" />
-				<Form.Text className="text-muted">
-					
-				</Form.Text>
 			</Form.Group>
 
 			<Form.Group controlId="formBasicPassword">
@@ -31,4 +25,4 @@ export const MyProfile = () => {
 	);
 };
 
-export default MyProfile;
+export default MyProfileFormContent;

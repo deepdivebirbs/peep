@@ -5,7 +5,7 @@ import {Switch, BrowserRouter, Route, Link} from "react-router-dom";
 import PeepNav from './shared/components/PeepNav';
 import Footer from './shared/components/Footer';
 import Home from './pages/Home';
-import MyProfile from './pages/MyProfile';
+import MyProfileForm from './pages/user-profile/MyProfileForm';
 import SignUpForm from './pages/sign-up/SignUpForm';
 import FourOhFour from './pages/FourOhFour';
 import sightingcontent from './pages/sighting/sightingcontent';
@@ -19,7 +19,7 @@ function App() {
 			<BrowserRouter>
 				<Switch>
 					<Route exact path="/" component={Home}/>
-					<Route exact path="/my-profile" component={MyProfile}/>
+					<Route exact path="/my-profile" component={MyProfileForm}/>
 					<Route exact path="/sign-up" component={SignUpForm}/>
 					<Route exact path="/FourOhFour" component={FourOhFour}/>
 					<Route exact path="/sighting" component={sightingcontent}/>
