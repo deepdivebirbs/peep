@@ -67,8 +67,8 @@ try {
 
 		//create the Auth payload
 		$authObject = (object)[
-			"userProfileEmail" => $userProfile->getUserProfileId(),
-			"userProfilePassword" => $userProfile->getUserProfileHash()
+			"userProfileId" => $userProfile->getUserProfileId(),
+			"userProfileName" => $userProfile->getUserProfileName()
 		];
 
 		//create and set the JWT token

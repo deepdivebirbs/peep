@@ -24,6 +24,8 @@ export const MyProfile = ({match}) => {
 	const inputs = [match.param.userProfileId];
 	useEffect(effects, inputs);
 
+	console.log(userProfileId);
+
 	return (
 		<>
 			<Container>
