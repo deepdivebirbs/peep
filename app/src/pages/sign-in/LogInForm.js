@@ -46,7 +46,7 @@ export const LogInForm = () => {
 	return(
 		<>
 			{/*redirect user to home page on sign-in*/}
-			{toHome ? <BrowserRouter><Redirect to="/" component={"Home"}/></BrowserRouter> : null}
+			{toHome ? <Redirect to="/" component={"Home"}/> : null}
 		<Formik
 			initialValues={logIn}
 			onSubmit={logInSubmit}
