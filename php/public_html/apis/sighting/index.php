@@ -47,7 +47,7 @@ try {
 			$sightings = Sighting::getSightingsBySightingUserProfileId($pdo, $sightingUserProfileId)->toArray();
 			$sightingSpecies = [];
 			foreach($sightings as $sighting){
-				$bird = BirdSpecies::getSpeciesBySpeciesId($pdo, $sightings->getSightingBirdSpeciesId());
+				$bird = BirdSpecies::getSpeciesBySpeciesId($pdo, $sighting->getSightingBirdSpeciesId());
 				$sightingSpecies[] = (object) [
 					"sighting" => $sighting,
 					"birdSpecies" => $bird
