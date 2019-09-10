@@ -1,7 +1,6 @@
 import React from 'react';
 import {Button, Row, Col, Container, Card, ListGroup, ListGroupItem} from 'react-bootstrap';
 import {RandomBird} from './RandomBird';
-import BirdCard from '../shared/components/BirdCard';
 
 export const Home = () => {
 
@@ -9,7 +8,6 @@ export const Home = () => {
 		// Home section
 		<>
 			<Container className={"home"}>
-				<BirdCard title="Test" birdInfo="test"/>
 				<section>
 					<Row>
 						<Col>
