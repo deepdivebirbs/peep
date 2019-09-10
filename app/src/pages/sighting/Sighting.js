@@ -9,9 +9,12 @@ export const Sighting = () => {
 	//const userProfileId = UseJwtProfileId();
 
 	// Return the profile by profileId from the redux store
-	const sightings = sightings.sighting ? [...sighting.specularexponent ] : [];
-	const birdSpecies = userPosts.user ? {...userPosts.user} : null;
+	/*
+	const sightings = useSelector(sighting.birdSpeciesSightings ? [...sighting.birdSpeciesSightings] : []);
+	const birdSpecies = useSelector(species.birdSpeciesSightings ? {...userPosts.user} : null);
+>>>>>>> Added getSpeciesBySpeciesId action.
 	const sighting = useSelector(state => (state.birdSpeciesSightings ? state.sighting[0] : []));
+	*/
 
 	const dispatch = useDispatch();
 
