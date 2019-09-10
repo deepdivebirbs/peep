@@ -12,7 +12,7 @@ export const Sighting = () => {
 	// Return the profile by profileId from the redux store
 	const sightings = useSelector(state => state.sighting ? [...state.sighting] : []);
 	const birdSpecies = useSelector(state => state.species ? {...state.species} : null);
-	const sighting = useSelector(state => (state.birdSpeciesSightings ? state.sighting[0] : []));
+	//const sighting = useSelector(state => (state.birdSpeciesSightings ? state.sighting[0] : []));
 
 	const dispatch = useDispatch();
 
