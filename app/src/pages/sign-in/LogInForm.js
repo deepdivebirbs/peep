@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Redirect} from "react-router";
+import {BrowserRouter} from "react-router-dom";
 import {httpConfig} from "../../../src/shared/utils/http-config";
 import * as Yup from "yup";
 import {Formik} from "formik";
@@ -7,6 +8,9 @@ import {Formik} from "formik";
 import LogInFormContent from "./LogInFormContent";
 
 export const LogInForm = () => {
+
+	//state variables to handle redirect to home page on sign-in
+	const [toHome, setToHome] = useState(null);
 
 	// Set initial values
 	let logIn = {
@@ -31,7 +35,9 @@ export const LogInForm = () => {
 					window.localStorage.removeItem("jwt-token");
 					window.localStorage.setItem("jwt-token", reply.headers ["x-jwt-token"]);
 					resetForm();
-					setStatus({message, type});
+					setTimeout(()=>{
+						setToHome(true);
+					}, 1500);
 				}
 				setStatus({message, type});
 			});
@@ -39,6 +45,8 @@ export const LogInForm = () => {
 
 	return(
 		<>
+			{/*redirect user to home page on sign-in*/}
+			{toHome ? <BrowserRouter><Redirect to="/" component={"Home"}/></BrowserRouter> : null}
 		<Formik
 			initialValues={logIn}
 			onSubmit={logInSubmit}
