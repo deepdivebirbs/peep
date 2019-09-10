@@ -71,4 +71,4 @@ export const LogInForm = (props) => {
 	);
 };
 
-export default LogInForm;
+export default LogInFormContent;

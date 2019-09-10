@@ -4,7 +4,7 @@ import {httpConfig} from "../../../src/shared/utils/http-config";
 import * as Yup from "yup";
 import {Formik} from "formik";
 
-import {LogInFormContent} from "./LogInFormContent"
+import {LogInFormContent} from "./LogInFormContent.js"
 
 export const LogInForm = () => {
 
