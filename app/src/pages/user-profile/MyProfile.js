@@ -6,6 +6,8 @@ import {UseJwtProfileId} from "../../shared/utils/jwtHelper";
 
 export const MyProfile = ({match}) => {
 
+	const USER = useSelector(state => state.profile ? state.profile : []);
+
 	// grab the profile id from the currently logged in account, or null if not found
 	const userProfileId = UseJwtProfileId();
 
@@ -19,10 +21,8 @@ export const MyProfile = ({match}) => {
 		dispatch(getUserProfileById(match.param.userProfileId));
 	};
 
-	const inputs = [match.params.userProfileId];
+	const inputs = [match.param.userProfileId];
 	useEffect(effects, inputs);
-
-	console.log(match.params);
 
 	return (
 		<>

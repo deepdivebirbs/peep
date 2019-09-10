@@ -19,7 +19,7 @@ export const PeepNav = () => {
 						<Nav.Link href="/">Home</Nav.Link>
 						<Nav.Link href="/my-profile">My Profile</Nav.Link>
 						<Nav.Link href="#">My Sightings</Nav.Link>
-						<Nav.Link href="#">Add Sighting</Nav.Link>
+						<Nav.Link href="/add-sighting">Add Sighting</Nav.Link>
 						<LogInModal />
 
 					</Nav>
