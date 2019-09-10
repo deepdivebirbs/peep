@@ -20,13 +20,15 @@ export const FormModal = (props) => {
 	//console.log("Modal State: " + props.state);
 
 	/*
-		If user is signed in button.text = "Sign Out"
-		If user is NOT signed in button.text = "Sign In"
+		If user is signed in buttonText = "Sign Out"
+		If user is NOT signed in buttonText = "Sign In"
 	 */
 	let buttonText = "";
 	if(getSignInState()) {
+		console.log("User Signed In");
 		buttonText = "Sign Out";
 	} else {
+		console.log("User Signed Out");
 		buttonText = "Sign In";
 	}
 
