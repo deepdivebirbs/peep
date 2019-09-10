@@ -2,6 +2,7 @@ import React from 'react';
 import {Link} from "react-router-dom";
 import {Button, Form, FormControl, FormLabel} from 'react-bootstrap';
 import InputGroup from "react-bootstrap/InputGroup";
+import LogInModal from './LogInModal';
 
 
 export const LogInFormContent = (props) => {
@@ -23,7 +24,6 @@ export const LogInFormContent = (props) => {
 	return (
 		<>
 			<Form onSubmit={handleSubmit}>
-
 				<Form.Group>
 					<Form.Label>Email address</Form.Label>
 					<InputGroup>
@@ -70,7 +70,7 @@ export const LogInFormContent = (props) => {
 				</Form.Group>
 
 				<Form.Group>
-					<Button variant="primary" type="submit">
+					<Button variant="primary" type="submit" href="/">
 						Sign In
 					</Button>
 					<span className="ml-3">Need an account?  <a href="/Sign-up">Sign Up!</a></span>

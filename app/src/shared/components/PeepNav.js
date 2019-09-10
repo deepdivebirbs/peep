@@ -20,12 +20,13 @@ export const PeepNav = () => {
 						<Nav.Link href="/my-profile">My Profile</Nav.Link>
 						<Nav.Link href="#">My Sightings</Nav.Link>
 						<Nav.Link href="/add-sighting">Add Sighting</Nav.Link>
-						<LogInModal />
+						<LogInModal state={"false"}/>
 
 					</Nav>
 					<Form inline>
-						<FormControl type="text" placeholder="Search" className="mr-sm-2"/>
-						<Button variant="outline-success">Search</Button>
+						<div>
+							<p>Profile Pic</p>
+						</div>
 					</Form>
 				</Navbar.Collapse>
 			</Navbar>

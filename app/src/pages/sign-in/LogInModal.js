@@ -3,10 +3,20 @@ import React, {useState} from 'react';
 import LogInForm from './LogInForm';
 import Modal from "react-bootstrap/Modal";
 
-export const FormModal = () => {
+export const FormModal = (props) => {
 	const [show, setShow] = useState(false);
-	const handleClose = () => setShow(false);
-	const handleShow = () => setShow(true);
+
+	const handleClose = (props) => {
+		props.show = false;
+		setShow(props.show);
+	};
+
+	const handleShow = (props) => {
+		props.show = true;
+		setShow(props.show);
+	};
+
+	//console.log("Modal State: " + props.state);
 
 	return (
 		<>
