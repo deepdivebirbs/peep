@@ -32,19 +32,19 @@ export const Sighting = () => {
 					<span>Photo: {sightings && sightings.sightingBirdPhoto}</span>
 				</div>
 				<div>
-					<span>Common Name: {sighting.birdSpeciesSightings && birdSpecies.birdComName}</span>
+					<span>Common Name: {sightings && birdSpecies.birdComName}</span>
 				</div>
 				<div>
-					<span>Scientific Name: {sighting.birdSpeciesSighting && birdSpecies.birdSciName}</span>
+					<span>Scientific Name: {sightings && birdSpecies.birdSciName}</span>
 				</div>
 				<div>
-					<span>Date: {sighting && sighting.sightingDate}</span>
+					<span>Date: {sightings && sightings.sightingDate}</span>
 				</div>
 				<div>
-					<p>Time: {sighting && sighting.sightingTime}</p>
+					<p>Time: {sightings && sightings.sightingTime}</p>
 				</div>
 				<div>
-					<span>Location: {sighting && sighting.sightingLocation}</span>
+					<span>Location: {sightings && sightings.sightingLocation}</span>
 				</div>
 			</Container>
 		</>

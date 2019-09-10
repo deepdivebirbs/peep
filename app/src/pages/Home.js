@@ -9,7 +9,7 @@ export const Home = () => {
 		// Home section
 		<>
 			<Container className={"home"}>
-				<BirdCard title="Test"/>
+				<BirdCard title="Test" birdInfo="test"/>
 				<section>
 					<Row>
 						<Col>
