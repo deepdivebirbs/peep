@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {Container} from 'react-bootstrap';
 import {useSelector, useDispatch} from "react-redux";
 import {getUserProfileById} from "../../shared/actions/myProfile";
-import {UseJwtProfileId} from "../../shared/utils/jwtHelper";
+import {UseJwtProfileId} from "../../shared/utils/jwtHelper2";
 
 export const MyProfile = ({match}) => {
 
