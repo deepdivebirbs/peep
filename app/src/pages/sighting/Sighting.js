@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import {Container} from 'react-bootstrap';
 import {useSelector, useDispatch} from "react-redux";
 import {getSightingsBySightingUserProfileId} from "../../shared/actions/birdSpeciesSighting";
+import {getSpeciesBySpeciesId} from "../../shared/actions/species";
 
 export const Sighting = () => {
 
@@ -12,7 +13,6 @@ export const Sighting = () => {
 	/*
 	const sightings = useSelector(sighting.birdSpeciesSightings ? [...sighting.birdSpeciesSightings] : []);
 	const birdSpecies = useSelector(species.birdSpeciesSightings ? {...userPosts.user} : null);
->>>>>>> Added getSpeciesBySpeciesId action.
 	const sighting = useSelector(state => (state.birdSpeciesSightings ? state.sighting[0] : []));
 	*/
 
@@ -20,6 +20,7 @@ export const Sighting = () => {
 
 	const effects = () => {
 		dispatch(getSightingsBySightingUserProfileId());
+		dispatch(getSpeciesBySpeciesId());
 	};
 
 	const inputs = [];
