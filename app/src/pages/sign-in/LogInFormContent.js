@@ -3,7 +3,7 @@ import {Button, Form, FormControl, FormLabel} from 'react-bootstrap';
 import InputGroup from "react-bootstrap/InputGroup";
 
 
-export const LogInForm = (props) => {
+export const LogInFormContent = (props) => {
 	const {
 		submitStatus,
 		values,
