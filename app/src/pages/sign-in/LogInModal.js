@@ -15,14 +15,15 @@ export const FormModal = (props) => {
 	const handleShow = (props) => {
 		props.show = true;
 		setShow(props.show);
-	};
 
-	//console.log("Modal State: " + props.state);
+		console.log(getSignInState());
+	};
 
 	/*
 		If user is signed in buttonText = "Sign Out"
 		If user is NOT signed in buttonText = "Sign In"
 	 */
+
 	let buttonText = "";
 	if(getSignInState()) {
 		//console.log("User Signed In");
@@ -32,16 +33,9 @@ export const FormModal = (props) => {
 		buttonText = "Sign In";
 	}
 
-	function checkSignIn() {
-		if(getSignInState()) {
-			setShow(false);
-		}
-	}
-
-
 	return (
 		<>
-			<button type="button" className="btn btn-primary" onClick={handleShow}>{buttonText}</button>
+			<button type="button" className="btn btn-outline-success" onClick={handleShow}>{buttonText}</button>
 			<Modal show={show} enforceFocus="true">
 				<Modal.Dialog>
 					<Modal.Header closeButton>
