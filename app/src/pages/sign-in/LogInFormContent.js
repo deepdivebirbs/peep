@@ -1,5 +1,7 @@
 import React from 'react';
-import {Button, Form, FormControl} from 'react-bootstrap';
+import {Button, Form, FormControl, FormLabel} from 'react-bootstrap';
+import InputGroup from "react-bootstrap/InputGroup";
+
 
 export const LogInForm = (props) => {
 	const {
@@ -18,20 +20,18 @@ export const LogInForm = (props) => {
 
 	return (
 		<>
-			<Form onSubmit={handleSubmit}>
+			<Form.Group onSubmit={handleSubmit}>
 				<Form.Group>
 					<Form.Label>Email address</Form.Label>
 					<Form.Control
+						id="userProfileEmail"
+						onChange={handleChange}
 						name="userProfileEmail"
+						onBlur={handleBlur}
 						type="email"
 						value={values.userProfileEmail}
-						onChange={handleChange}
-						onBlur={handleBlur}
 						placeholder="Enter email"
 					/>
-					<Form.Text className="text-muted">
-						We'll never share your email with anyone else.
-					</Form.Text>
 					{
 						errors.userProfileEmail && touched.userProfileEmail&& (
 							<div className="alert alert-danger">
@@ -45,11 +45,11 @@ export const LogInForm = (props) => {
 					<Form.Label>Password</Form.Label>
 					<Form.Control
 						name="userProfilePassword"
-						type="password"
-						value={values.userProfilePassword}
 						onChange={handleChange}
 						onBlur={handleBlur}
+						type="password"
 						placeholder="Password"
+						value={values.userProfilePassword}
 					/>
 					{
 						errors.userProfilePassword && touched.userProfilePassword&& (
@@ -66,7 +66,7 @@ export const LogInForm = (props) => {
 					Sign In
 				</Button>
 				<span className="ml-3">Need an account?  <a href="/sign-up">Sign Up!</a></span>
-			</Form>
+			</Form.Group>
 		</>
 	);
 };
