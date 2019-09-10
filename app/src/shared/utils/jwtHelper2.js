@@ -39,8 +39,6 @@ export const UseJwtProfileId = () => {
 		if(token !== null) {
 			const decodedJwt = jwtDecode(token);
 			setUserProfileId(decodedJwt.auth.userProfileId);
-		} else {
-			throw(TypeError("User not signed in."));
 		}
 	});
 

@@ -25,11 +25,17 @@ export const FormModal = (props) => {
 	 */
 	let buttonText = "";
 	if(getSignInState()) {
-		console.log("User Signed In");
+		//console.log("User Signed In");
 		buttonText = "Sign Out";
 	} else {
-		console.log("User Signed Out");
+		//console.log("User Signed Out");
 		buttonText = "Sign In";
+	}
+
+	function checkSignIn() {
+		if(getSignInState()) {
+			setShow(false);
+		}
 	}
 
 
