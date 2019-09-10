@@ -10,11 +10,9 @@ export const Sighting = () => {
 	//const userProfileId = UseJwtProfileId();
 
 	// Return the profile by profileId from the redux store
-	/*
-	const sightings = useSelector(sighting.birdSpeciesSightings ? [...sighting.birdSpeciesSightings] : []);
-	const birdSpecies = useSelector(species.birdSpeciesSightings ? {...userPosts.user} : null);
+	const sightings = useSelector(state => state.sighting ? [...state.sighting] : []);
+	const birdSpecies = useSelector(state => state.species ? {...state.species} : null);
 	const sighting = useSelector(state => (state.birdSpeciesSightings ? state.sighting[0] : []));
-	*/
 
 	const dispatch = useDispatch();
 
@@ -31,13 +29,13 @@ export const Sighting = () => {
 			<Container>
 				<h1>Sighting</h1>
 				<div>
-					<span>Photo: {sighting && sighting.sightingBirdPhoto}</span>
+					<span>Photo: {sightings && sightings.sightingBirdPhoto}</span>
 				</div>
 				<div>
-					<span>Common Name: {birdSpeciesSighting && species.comName}</span>
+					<span>Common Name: {sighting.birdSpeciesSightings && birdSpecies.birdComName}</span>
 				</div>
 				<div>
-					<span>Scientific Name: {birdSpeciesSighting && species.sciName}</span>
+					<span>Scientific Name: {sighting.birdSpeciesSighting && birdSpecies.birdSciName}</span>
 				</div>
 				<div>
 					<span>Date: {sighting && sighting.sightingDate}</span>
