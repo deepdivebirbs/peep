@@ -9,10 +9,9 @@ export const Sighting = () => {
 	//const userProfileId = UseJwtProfileId();
 
 	// Return the profile by profileId from the redux store
-	/*const sightings = sighting.sighting ? [...userPosts.posts] : [];*/
-	/*const birdSpecies = userPosts.user ? {...userPosts.user} : null;*/
+	const sightings = sighting.sighting ? [...userPosts.posts] : [];
+	const birdSpecies = userPosts.user ? {...userPosts.user} : null;
 	const sighting = useSelector(state => (state.birdSpeciesSightings ? state.sighting[0] : []));
-	console.log(sighting);
 
 	const dispatch = useDispatch();
 
@@ -27,7 +26,7 @@ export const Sighting = () => {
 		<>
 			<Container>
 				<h1>Sighting</h1>
-				/**<div>
+				<div>
 					<span>Photo: {sighting && sighting.sightingBirdPhoto}</span>
 				</div>
 				<div>
@@ -44,7 +43,7 @@ export const Sighting = () => {
 				</div>
 				<div>
 					<span>Location: {sighting && sighting.sightingLocation}</span>
-				</div>**/
+				</div>
 			</Container>
 		</>
 	);

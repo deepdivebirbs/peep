@@ -36,8 +36,8 @@ try {
 	// Define behavior if $method is a GET request
 
 	if($method === "GET") {
-		// Set the XSRF cookie
 
+		// Set the XSRF cookie
 		setXsrfCookie();
 
 		// Gets a post by content
@@ -46,19 +46,13 @@ try {
 		} else if(empty($sightingUserProfileId) === false) {
 			$sightings = Sighting::getSightingsBySightingUserProfileId($pdo, $sightingUserProfileId)->toArray();
 			$sightingSpecies = [];
-
-
 			foreach($sightings as $sighting){
-				$bird = BirdSpecies::getSpeciesBySpeciesId($pdo, $sighting->getSightingSpeciesId());
-
-
-
-				$sightings[] = (object) [
+				$bird = BirdSpecies::getSpeciesBySpeciesId($pdo, $sightings->getSightingBirdSpeciesId());
+				$sightingSpecies[] = (object) [
 					"sighting" => $sighting,
 					"birdSpecies" => $bird
 				];
-
-
+				var_dump($sighting);
 			}
 			$reply->data = $sightingSpecies;
 		} else if(empty($sightingBirdSpeciesId) === false) {

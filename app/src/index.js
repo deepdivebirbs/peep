@@ -34,6 +34,8 @@ function App() {
 						<Route exact path="/sign-up" component={SignUpForm}/>
 						<Route exact path="/FourOhFour" component={FourOhFour}/>
 						<Route exact path="/sighting" component={Sighting}/>
+
+						<Route exact path="/sighting" component={Sighting}/>
 						<Route component={FourOhFour}/>
 					</Switch>
 				</BrowserRouter>
