@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {getSignInState} from '../../shared/utils/signInState';
 
 import LogInForm from './LogInForm';
 import Modal from "react-bootstrap/Modal";
@@ -18,9 +19,21 @@ export const FormModal = (props) => {
 
 	//console.log("Modal State: " + props.state);
 
+	/*
+		If user is signed in button.text = "Sign Out"
+		If user is NOT signed in button.text = "Sign In"
+	 */
+	let buttonText = "";
+	if(getSignInState()) {
+		buttonText = "Sign Out";
+	} else {
+		buttonText = "Sign In";
+	}
+
+
 	return (
 		<>
-			<button type="button" className="btn btn-primary" onClick={handleShow}>Sign In</button>
+			<button type="button" className="btn btn-primary" onClick={handleShow}>{buttonText}</button>
 			<Modal show={show} enforceFocus="true">
 				<Modal.Dialog>
 					<Modal.Header closeButton>

@@ -1,7 +1,8 @@
 import React, {useEffect} from 'react';
-import {Navbar, Nav, NavDropdown, Form, FormControl, Button} from 'react-bootstrap';
+import {Row, Col, Navbar, Nav, Form} from 'react-bootstrap';
 import LogInModal from "../../pages/sign-in/LogInModal";
 import {httpConfig} from "../utils/http-config";
+
 
 
 export const PeepNav = () => {
@@ -20,12 +21,10 @@ export const PeepNav = () => {
 						<Nav.Link href="/my-profile">My Profile</Nav.Link>
 						<Nav.Link href="#">My Sightings</Nav.Link>
 						<Nav.Link href="/add-sighting">Add Sighting</Nav.Link>
-						<LogInModal state={"false"}/>
-
 					</Nav>
 					<Form inline>
 						<div>
-							<p>Profile Pic</p>
+								<LogInModal />
 						</div>
 					</Form>
 				</Navbar.Collapse>

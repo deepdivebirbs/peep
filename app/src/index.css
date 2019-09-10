@@ -26,3 +26,8 @@ code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
 	monospace;
 }
+
+a.nav-link:hover {
+	border-radius: 5px !important;
+	background-color: #02891f !important;
+}
