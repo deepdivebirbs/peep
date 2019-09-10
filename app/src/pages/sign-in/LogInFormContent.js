@@ -22,7 +22,6 @@ export const LogInForm = (props) => {
 				<Form.Group>
 					<Form.Label>Email address</Form.Label>
 					<Form.Control
-						required
 						name="userProfileEmail"
 						type="email"
 						value={values.userProfileEmail}
@@ -33,12 +32,18 @@ export const LogInForm = (props) => {
 					<Form.Text className="text-muted">
 						We'll never share your email with anyone else.
 					</Form.Text>
+					{
+						errors.userProfileEmail && touched.userProfileEmail&& (
+							<div className="alert alert-danger">
+								{errors.userProfileEmail}
+							</div>
+						)
+					}
 				</Form.Group>
 
 				<Form.Group>
 					<Form.Label>Password</Form.Label>
 					<Form.Control
-						required
 						name="userProfilePassword"
 						type="password"
 						value={values.userProfilePassword}
@@ -46,6 +51,13 @@ export const LogInForm = (props) => {
 						onBlur={handleBlur}
 						placeholder="Password"
 					/>
+					{
+						errors.userProfilePassword && touched.userProfilePassword&& (
+							<div className="alert alert-danger">
+								{errors.userProfilePassword}
+							</div>
+						)
+					}
 				</Form.Group>
 				{errors.userProfilePassword && touched.userProfilePassword && (
 					<div className="alert alert-danger">{errors.userProfilePassword}</div>
@@ -53,7 +65,7 @@ export const LogInForm = (props) => {
 				<Button type="submit">
 					Sign In
 				</Button>
-				<span className="ml-3">Need and account?  <a href="/sign-up">Sign Up!</a></span>
+				<span className="ml-3">Need an account?  <a href="/sign-up">Sign Up!</a></span>
 			</Form>
 		</>
 	);

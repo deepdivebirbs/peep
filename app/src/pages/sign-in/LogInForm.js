@@ -18,7 +18,6 @@ export const LogInForm = () => {
 			.email("Must be a valid email."),
 		userProfilePassword: Yup.string()
 			.required("Enter you password to log in.")
-			.min(8, "Password must be at least 8 characters.")
 	});
 
 	const signInSubmit = (values, {resetForm, setStatus}) => {
