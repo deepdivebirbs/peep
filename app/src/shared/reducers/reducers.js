@@ -8,7 +8,7 @@ export const Reducers = combineReducers({
 	species: speciesReducer,
 	favorite: favoriteReducer,
 	userProfile: userProfileReducer,
-	sightings: sightingsReducer
+	birdSpeciesSightings: sightingsReducer
 });
 
 export default Reducers;

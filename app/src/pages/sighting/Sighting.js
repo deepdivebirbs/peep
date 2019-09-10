@@ -1,58 +1,53 @@
-import React, {useState} from 'react';
-import axios from 'axios/index';
-import * as Yup from "yup";
-import {Formik} from "formik/dist/index";
-import {Container, Col, InputGroup, Form, Button, FormControl} from 'react-bootstrap';
-import {httpConfig} from "../../shared/utils/http-config";
-import {FormDebugger} from "../../shared/components/FormDebugger";
-import sightingcontent from "./sightingcontent";
+import React, {useEffect} from 'react';
+import {Container} from 'react-bootstrap';
+import {useSelector, useDispatch} from "react-redux";
+import {getSightingsBySightingUserProfileId} from "../../shared/actions/birdSpeciesSighting";
 
 export const Sighting = () => {
-	let values = {
-		speciesComName: "",
-		speciesSciName: "",
-		sightingBirdPhoto: "",
-		sightingDate: "",
-		sightingTime: "",
-		sightingLocation: "",
+
+	// grab the profile id from the currently logged in account, or null if not found
+	//const userProfileId = UseJwtProfileId();
+
+	// Return the profile by profileId from the redux store
+	/*const sightings = sighting.sighting ? [...userPosts.posts] : [];*/
+	/*const birdSpecies = userPosts.user ? {...userPosts.user} : null;*/
+	const sighting = useSelector(state => (state.birdSpeciesSightings ? state.sighting[0] : []));
+	console.log(sighting);
+
+	const dispatch = useDispatch();
+
+	const effects = () => {
+		dispatch(getSightingsBySightingUserProfileId());
 	};
 
-	const validator = Yup.object().shape({
-		sightingBirdPhoto: Yup.string()
-			.url("Must be valid URL.")
-			.required ("You must upload a photo."),
-		speciesComName: Yup.string()
-			.required("You must include a bird name"),
-		speciesSciName: Yup.string()
-			.required("You must include a bird science name"),
-		sightingDate: Yup.string()
-			.required("You must include a valid date."),
-		sightingTime: Yup.string()
-			.required("You must include a valid time."),
-		sightingLocation: Yup.string()
-			.required("You must include a valid latitude."),
-	});
-	const submitSighting = (values, {resetForm}) => {
-		httpConfig.post("/apis/sighting/", values)
-			.then(reply => {
-				let {message, type} = reply;
-				setStatus({message, type});
-				if(reply.status === 200) {
-					resetForm();
-				}
-			})
-	};
+	const inputs = [];
+	useEffect(effects, inputs);
 
 	return (
-
-		<Formik
-			initialValues={values}
-			onSubmit={submitSighting}
-			validationSchema={validator}
-		>
-			{sightingcontent}
-		</Formik>
-	)
+		<>
+			<Container>
+				<h1>Sighting</h1>
+				/**<div>
+					<span>Photo: {sighting && sighting.sightingBirdPhoto}</span>
+				</div>
+				<div>
+					<span>Common Name: {birdSpeciesSighting && species.comName}</span>
+				</div>
+				<div>
+					<span>Scientific Name: {birdSpeciesSighting && species.sciName}</span>
+				</div>
+				<div>
+					<span>Date: {sighting && sighting.sightingDate}</span>
+				</div>
+				<div>
+					<p>Time: {sighting && sighting.sightingTime}</p>
+				</div>
+				<div>
+					<span>Location: {sighting && sighting.sightingLocation}</span>
+				</div>**/
+			</Container>
+		</>
+	);
 };
 
-
+export default Sighting;

@@ -11,7 +11,7 @@ require_once dirname(__DIR__, 3) . "/lib/uuid.php";
  *
  */
 
-use Birbs\Peep\{Sighting};
+use Birbs\Peep\{Sighting, BirdSpecies};
 
 // Check if session is active, and if not activate it
 if(session_status() !== PHP_SESSION_ACTIVE) {
@@ -44,7 +44,23 @@ try {
 		if(empty($sightingId) === false) {
 			$reply->data = Sighting::getSightingBySightingId($pdo, $sightingId);
 		} else if(empty($sightingUserProfileId) === false) {
-			$reply->data = Sighting::getSightingsBySightingUserProfileId($pdo, $sightingUserProfileId);
+			$sightings = Sighting::getSightingsBySightingUserProfileId($pdo, $sightingUserProfileId)->toArray();
+			$sightingSpecies = [];
+
+
+			foreach($sightings as $sighting){
+				$bird = BirdSpecies::getSpeciesBySpeciesId($pdo, $sighting->getSightingSpeciesId());
+
+
+
+				$sightings[] = (object) [
+					"sighting" => $sighting,
+					"birdSpecies" => $bird
+				];
+
+
+			}
+			$reply->data = $sightingSpecies;
 		} else if(empty($sightingBirdSpeciesId) === false) {
 			$reply->data = Sighting::getSightingsBySightingBirdSpeciesId($pdo, $sightingBirdSpeciesId);
 		}
