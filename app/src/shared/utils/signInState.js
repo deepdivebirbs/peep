@@ -1,4 +1,4 @@
-import {UseJwtUsername, UseJwtProfileId} from './jwtHelper';
+import {UseJwtUsername, UseJwtProfileId} from './jwtHelper2';
 
 export const getSignInState = () => {
 	// if user is logged in return true
