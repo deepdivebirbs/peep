@@ -12,7 +12,7 @@ export const BirdCard = (props) => {
 					<Card.Text>
 						{props.birdInfo}
 					</Card.Text>
-					<Button variant="primary">Go To Species</Button>
+					<Button variant="primary" className="btn-success">Go To Species</Button>
 				</Card.Body>
 			</Card>
 		</>

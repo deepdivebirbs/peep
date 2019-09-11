@@ -11,16 +11,17 @@ export const Home = () => {
 				<section>
 					<Row>
 						<Col>
-							<article>
+							<div className="bg-light p-3 mb-lg-5 mt-5 rounded">
 								<h1>Welcome To Peep!</h1>
 								<p>
 									Join a community of local birdwatchers who track the birds in the region as put together by the eBirds team at Cornell University. Make an account to keep track of your sightings and build a Favorite list of birds you've already seen, or the ones you're still trying to peep.
 								</p>
-							</article>
-						</Col>
-						<Col>
+
 							<RandomBird/>
+							</div>
 						</Col>
+						<Col></Col>
+						<Col></Col>
 					</Row>
 				</section>
 			</Container>

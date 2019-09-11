@@ -17,16 +17,48 @@ button.featureAddToFaves {
 	margin-bottom: 5%;
 }
 
+div.card-body {
+	padding:20px;
+	position:relative;
+	background: rgb(204, 204, 204); /* Fallback for older browsers without RGBA-support */
+	/*background: rgba(204, 204, 204, 0.1) !important;*/
+	background: transparent !important;
+}
+
+div.mt-5 {
+	margin-top: 7rem !important;
+}
+
 code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
 	monospace;
 }
 
-a.nav-link:hover {
-	color: white;
-	border-radius: 5px !important;
-	background-color: #02891f !important;
+a.nav-link {
+	color: #299644;
 }
+
+a.nav-link:hover {
+	color: white !important;
+	border-radius: 5px !important;
+	background-color: #299644 !important;
+}
+
+/* Phone Media Query */
+@media screen and (min-width: 375px) {
+	body {
+		background: url("images/phone-bird-background.jpg") !important;
+	}
+}
+
+/* Tablet Media Query */
+@media screen and (min-width: 768px) {
+	body {
+		background: url("images/tablet-bird-background.jpg") no-repeat !important;
+	}
+}
+
+
 
 
 

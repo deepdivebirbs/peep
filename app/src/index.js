@@ -27,7 +27,6 @@ function App() {
 		<>
 			<Provider store={store}>
 				<PeepNav/>
-				<a href="/sighting">Sighting</a>
 				<BrowserRouter>
 					<Switch>
 						<Route exact path="/" component={Home}/>

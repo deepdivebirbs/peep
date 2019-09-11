@@ -16,7 +16,7 @@ export const Footer = () => {
 
 	return (
 		<>
-			<footer style={style} className="footer">
+			<footer style={style} className="footer mt-5">
 				<Row>
 					<Col><a href={"/"}>Home</a></Col>
 					<Col><a href={"/my-profile"}>Profile</a></Col>
