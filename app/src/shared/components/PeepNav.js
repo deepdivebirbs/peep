@@ -19,8 +19,8 @@ export const PeepNav = () => {
 					<Nav className="mr-auto">
 						<Nav.Link href="/">Home</Nav.Link>
 						<Nav.Link href="/my-profile">My Profile</Nav.Link>
-						<Nav.Link href="#">My Sightings</Nav.Link>
-						<Nav.Link href="/Sighting">Add Sighting</Nav.Link>
+						<Nav.Link href="/MySightings">My Sightings</Nav.Link>
+						<Nav.Link href="/SightingForm">Add Sighting</Nav.Link>
 					</Nav>
 					<Form inline>
 						<div>

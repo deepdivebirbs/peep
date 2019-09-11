@@ -4,9 +4,8 @@ import * as Yup from "yup";
 import {Formik} from "formik/dist/index";
 import {Container, Col, InputGroup, Form, Button, FormControl} from 'react-bootstrap';
 import {httpConfig} from "../../shared/utils/http-config";
-import {FormDebugger} from "../../shared/components/FormDebugger";
 
-export const sightingcontent = (props) => {
+export const AddSighting = (props) => {
 	const {
 		submitStatus,
 		values,
@@ -111,4 +110,4 @@ export const sightingcontent = (props) => {
 };
 
 
-export default sightingcontent;
+export default AddSighting;

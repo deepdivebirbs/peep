@@ -5,7 +5,7 @@ import {Formik} from "formik/dist/index";
 import {Container, Col, InputGroup, Form, Button, FormControl} from 'react-bootstrap';
 import {httpConfig} from "../../shared/utils/http-config";
 import {FormDebugger} from "../../shared/components/FormDebugger";
-import sightingcontent from "./sightingcontent";
+import SightingFormContent from "./SightingFormContent";
 
 export const SightingForm = () => {
 	let values = {
@@ -20,7 +20,7 @@ export const SightingForm = () => {
 	const validator = Yup.object().shape({
 		sightingBirdPhoto: Yup.string()
 			.url("Must be valid URL.")
-			.required ("You must upload a photo."),
+			.required("You must upload a photo."),
 		speciesComName: Yup.string()
 			.required("You must include a bird name"),
 		speciesSciName: Yup.string()
@@ -50,7 +50,7 @@ export const SightingForm = () => {
 			onSubmit={submitSighting}
 			validationSchema={validator}
 		>
-			{sightingcontent}
+			{SightingForm}
 		</Formik>
 	)
 };

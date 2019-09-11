@@ -16,8 +16,8 @@ import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
 import {getAllSpecies} from "./shared/actions/species";
 import Reducers from './shared/reducers/reducers';
-import Sighting from "./pages/sighting/Sighting";
-
+import MySightings from "./pages/MySightings/MySightings";
+import AddSighting from "./pages/sighting/SightingFormContent"
 const store = createStore(Reducers, applyMiddleware(thunk));
 
 
@@ -32,7 +32,8 @@ function App() {
 						<Route exact path="/my-profile" component={MyProfile}/>
 						<Route exact path="/sign-up" component={SignUpForm}/>
 						<Route exact path="/FourOhFour" component={FourOhFour}/>
-						<Route exact path="/Sighting" component={Sighting}/>
+						<Route exact path="/AddSighting" component={AddSighting}/>
+						<Route exact path="/MySightings" component={MySightings}/>
 						<Route component={FourOhFour}/>
 					</Switch>
 				</BrowserRouter>
