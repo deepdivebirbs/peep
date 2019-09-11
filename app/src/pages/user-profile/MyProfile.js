@@ -28,7 +28,7 @@ export const MyProfile = ({match}) => {
 		<>
 			<Container>
 				<div className="jumbotron mt-4 col-6 justify-content-end">
-					<h1>My Profile</h1><br/>
+					<h1><strong>My Profile</strong></h1><br/>
 					<div>
 						<h3 id="profile-card-text">Username: {profile && profile.userProfileName}</h3><br/>
 						<h3 id="profile-card-text">First Name: {profile && profile.userProfileFirstName}</h3><br/>
