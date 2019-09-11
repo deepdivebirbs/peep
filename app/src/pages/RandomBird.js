@@ -35,7 +35,7 @@ export const RandomBird = () => {
 
 	return(
 		<>
-			<BirdCard title={bird.birdComName} birdInfo={bird.birdSciName} image={bird.birdPhotoUrl}/>
+			<BirdCard title={bird.birdComName} birdInfo={bird.birdSciName} /*image={bird.birdPhotoUrl}*//>
 		</>
 	);
 };
