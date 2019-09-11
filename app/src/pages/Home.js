@@ -1,8 +1,11 @@
 import React from 'react';
 import {Container, Row, Col, Jumbotron} from 'react-bootstrap';
 import {RandomBird} from './RandomBird';
+import {getBod} from '../shared/utils/bod';
 
 export const Home = () => {
+
+	getBod();
 
 	return (
 		// Home section
@@ -21,7 +24,6 @@ export const Home = () => {
 											your sightings and build a Favorite list of birds you've already seen, or the ones
 											you're still trying to peep.
 										</p>
-
 										<RandomBird/>
 									</Container>
 								</Jumbotron>

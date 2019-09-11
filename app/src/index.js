@@ -18,6 +18,7 @@ import {getAllSpecies} from "./shared/actions/species";
 import Reducers from './shared/reducers/reducers';
 import Sighting from "./pages/sighting/Sighting";
 import AddSighting from './pages/AddSighting';
+import ViewBirdPage from './pages/ViewBird/ViewBirdPage'
 
 const store = createStore(Reducers, applyMiddleware(thunk));
 
@@ -35,6 +36,7 @@ function App() {
 						<Route exact path="/FourOhFour" component={FourOhFour}/>
 						<Route exact path="/sighting" component={Sighting}/>
 						<Route exact path="/add-sighting" component={AddSighting}/>
+						<Route exact path="/view-bird" component={ViewBirdPage}/>
 						<Route component={FourOhFour}/>
 					</Switch>
 				</BrowserRouter>

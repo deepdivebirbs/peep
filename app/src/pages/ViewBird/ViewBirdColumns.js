@@ -1,13 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import {Col} from 'react-bootstrap';
 import {useDispatch, useSelector} from "react-redux";
-import {getAllSpecies} from "../shared/actions/species";
-import {useEffect} from "react";
-import {Button, Card} from "react-bootstrap";
-import BirdCard from '../shared/components/BirdCard';
+import {getAllSpecies} from "../../shared/actions/species";
+import BirdCard from '../../shared/components/BirdCard';
 
-
-
-export const RandomBird = () => {
+export const ViewBirdColumn = () => {
 	const BIRDS = useSelector(state => state.species ? state.species : []);
 	const DISPATCH = useDispatch();
 
@@ -32,11 +29,17 @@ export const RandomBird = () => {
 		birdPhotoUrl: randomBird ? randomBird.speciesPhotoUrl : ""
 	};
 
-	return(
-		<>
-			<BirdCard commonName={bird.birdComName} sciName={bird.birdSciName} /*image={bird.birdPhotoUrl}*//>
-		</>
-	);
+	console.log(BIRDS);
+
+	for(let i in BIRDS) {
+		return (
+			<>
+				<Col>
+					<BirdCard commonName={BIRDS[i]} sciName={BIRDS[i]}/>
+				</Col>
+			</>
+		);
+	}
 };
 
-export default RandomBird;
+export default ViewBirdColumn;
