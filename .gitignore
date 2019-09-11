@@ -1,2 +1,12 @@
 .DS_Store
+/.sync-config.cson
 /.idea
+/vendor
+/node_modules
+/app/node_modules
+/php/vendor
+/app/src/setupProxy.js
+/vendor
+/npm-debug.log
+/php/Classes/.something.php
+/php/Classes/test.php

@@ -1,0 +1,101 @@
+body {
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+	"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+	sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	background: url('./images/bird-background.jpg');
+}
+
+a.navbar-brand {
+	color: white !important;
+	font-size: 30px;
+	font-family: 'Kaushan Script', cursive;
+
+}
+
+#jumbo-peep {
+	font-family: 'Kaushan Script', cursive;
+}
+
+div.transparent {
+	background: rgba(255, 255, 255, 0.4)
+}
+
+div.dailyFeature {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+button.featureAddToFaves {
+	margin-bottom: 5%;
+}
+
+div.card-body {
+	padding:20px;
+	position:relative;
+	background: rgb(204, 204, 204); /* Fallback for older browsers without RGBA-support */
+	/*background: rgba(204, 204, 204, 0.1) !important;*/
+	background: none !important;
+	border: none !important;
+}
+
+div.mt-5 {
+	margin-top: 7rem !important;
+}
+
+code {
+	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+	monospace;
+}
+
+a.nav-link {
+	color: white !important;
+}
+
+a.nav-link:hover {
+	color: white !important;
+	border-radius: 5px !important;
+	background-color: #299644 !important;
+}
+
+/*Profile page styling*/
+.profile-card-text {
+	font-size: 500% !important;
+	margin: 1em !important;
+}
+
+/* Phone Media Query */
+@media screen and (max-width: 376px) {
+	body {
+		background: url("images/phone-bird-background.jpg") !important;
+	}
+
+	a.nav-link {
+		color: white !important;
+	}
+}
+
+/* Tablet Media Query */
+@media screen and (min-width: 376px) and (max-width: 1079px) {
+	body {
+		background: url("images/tablet-bird-background.jpg") no-repeat !important;
+	}
+
+	a.nav-link {
+		color: white !important;
+	}
+}
+
+/* Desktop Media Query */
+@media screen and (min-width: 1080px) {
+	body {
+		background: url("images/bird-background.jpg") !important;
+	}
+}
+
+
+
+
+
