@@ -27,12 +27,14 @@ export const MyProfile = ({match}) => {
 	return (
 		<>
 			<Container>
-				<h1>My Profile</h1>
-				<div>
-					<span>Username: {profile && profile.userProfileName}</span><br/>
-					<span>First Name: {profile && profile.userProfileFirstName}</span><br/>
-					<span>Last Name: {profile && profile.userProfileLastName}</span><br/>
-					<span>Email: {profile && profile.userProfileEmail}</span>
+				<div className="jumbotron">
+					<h1>My Profile</h1>
+					<div>
+						<span>Username: {profile && profile.userProfileName}</span><br/>
+						<span>First Name: {profile && profile.userProfileFirstName}</span><br/>
+						<span>Last Name: {profile && profile.userProfileLastName}</span><br/>
+						<span>Email: {profile && profile.userProfileEmail}</span>
+					</div>
 				</div>
 			</Container>
 		</>
