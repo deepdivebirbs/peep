@@ -5,7 +5,8 @@ import ViewBirdColumns from './ViewBirdColumns';
 export const ViewBirdPage = () => {
 	return (
 		<>
-			<Row>
+			<h1 className="text-center">View Species</h1>
+			<Row className="text-center">
 				<ViewBirdColumns/>
 			</Row>
 		</>

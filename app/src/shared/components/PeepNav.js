@@ -21,6 +21,7 @@ export const PeepNav = () => {
 						<Nav.Link href="/my-profile">My Profile</Nav.Link>
 						<Nav.Link href="/MySightings">My Sightings</Nav.Link>
 						<Nav.Link href="/SightingForm">Add Sighting</Nav.Link>
+						<Nav.Link href="/view-species">View Species</Nav.Link>
 					</Nav>
 					<Form inline>
 						<div>

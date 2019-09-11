@@ -1,3 +1,5 @@
+// Written by Mark Waid Jr
+
 import React, {useState} from 'react';
 
 import LogInForm from './sign-in/LogInForm';

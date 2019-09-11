@@ -1,3 +1,5 @@
+// Written by Mark Waid Jr
+
 import React, {useEffect} from 'react';
 import {Col} from 'react-bootstrap';
 import {useDispatch, useSelector} from "react-redux";
@@ -15,13 +17,6 @@ export const ViewBirdColumn = ({props}) => {
 	const sideEffectInputs = [];
 
 	useEffect(sideEffects, sideEffectInputs);
-
-	function getRandomBird(birdArray) {
-		let rand = Math.floor((Math.random() * birdArray.length) + 1);
-		return (birdArray[rand]);
-	}
-
-	let randomBird = getRandomBird(BIRDS);
 
 	let mappedBird = BIRDS.map(function(bird){
 		return(
