@@ -28,6 +28,7 @@ code {
 }
 
 a.nav-link:hover {
+	color: white;
 	border-radius: 5px !important;
 	background-color: #02891f !important;
 }
