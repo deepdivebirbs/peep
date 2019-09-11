@@ -14,8 +14,8 @@ export const Home = () => {
 				<section>
 					<Row>
 						<Col>
-							<div className="  p-3 mb-lg-5 mt-5 rounded">
-								<Jumbotron className="transparent" fluid>
+							<div className="  p-3 mb-lg-5 mt-5">
+								<Jumbotron className="transparent rounded" fluid>
 									<Container>
 										<h1>Welcome To <span id="jumbo-peep">Peep!</span></h1>
 										<p>

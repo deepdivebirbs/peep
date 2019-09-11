@@ -36,7 +36,7 @@ function App() {
 						<Route exact path="/FourOhFour" component={FourOhFour}/>
 						<Route exact path="/sighting" component={Sighting}/>
 						<Route exact path="/add-sighting" component={AddSighting}/>
-						<Route exact path="/view-bird" component={ViewBirdPage}/>
+						<Route exact path="/view-species" component={ViewBirdPage}/>
 						<Route component={FourOhFour}/>
 					</Switch>
 				</BrowserRouter>
