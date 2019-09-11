@@ -17,7 +17,7 @@ export const BirdCard = (props) => {
 					<Card.Text>
 						<span className="font-weight-bold">Scientific Name: </span>{props.sciName}
 					</Card.Text>
-					<Button href="/view-bird" variant="primary" className="btn-success">Go To Species</Button>
+					{/*<Button href="/view-bird" variant="primary" className="btn-success">Go To Species</Button>*/}
 				</Card.Body>
 			</Card>
 		</>
