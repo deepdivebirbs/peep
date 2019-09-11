@@ -50,6 +50,11 @@ code {
 	monospace;
 }
 
+.view-species-header {
+	font-family: 'Kaushan Script', cursive;
+	text-decoration: underline;
+}
+
 a.nav-link {
 	color: white !important;
 }

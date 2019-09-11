@@ -45,20 +45,12 @@ try {
 			$reply->data = Sighting::getSightingBySightingId($pdo, $sightingId);
 		} else if(empty($sightingUserProfileId) === false) {
 			$sightings = Sighting::getSightingsBySightingUserProfileId($pdo, $sightingUserProfileId)->toArray();
-			$sightingSpecies = [];
-			foreach($sightings as $sighting){
-				$bird = BirdSpecies::getSpeciesBySpeciesId($pdo, $sighting->getSightingBirdSpeciesId());
-				$sightingSpecies[] = (object) [
-					"sighting" => $sighting,
-					"birdSpecies" => $bird
-				];
-				var_dump($sighting);
-			}
-			$reply->data = $sightingSpecies;
-		} else if(empty($sightingBirdSpeciesId) === false) {
-			$reply->data = Sighting::getSightingsBySightingBirdSpeciesId($pdo, $sightingBirdSpeciesId);
-		}
 
+			$reply->data = $sightings;
+		} else if(empty($sightingBirdSpeciesId) === false) {
+			$sightings = Sighting::getSightingsBySightingBirdSpeciesId($pdo, $sightingBirdSpeciesId);
+			$reply->data = $sightings;
+		}
 		// POST the sighting object
 	} else if($method === "POST") {
 		// Enforce user has xsrf token
@@ -81,7 +73,7 @@ try {
 		// Ensure that the sighting includes correct datetime and latlong
 		if(empty($requestObject->sightingDateTime) === true) {
 			date_default_timezone_set("America/Denver");
-			$dateString = date ("y-m-d H:i:s");
+			$dateString = date("y-m-d H:i:s");
 			$requestObject->sightingDateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $dateString);
 		}
 

@@ -453,7 +453,6 @@ public static function getSightingsBySightingUserProfileId(\PDO $pdo, $sightingU
 
 		//format the date so that the front end can consume it
 		$fields["sightingDateTime"] = round(floatval($this->sightingDateTime->format("y-m-d H:i:s")) * 1000);
-		echo get_class($fields);
 		return($fields);
 	}
 } //class closing bracket

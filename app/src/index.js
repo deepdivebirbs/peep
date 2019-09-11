@@ -31,7 +31,7 @@ function App() {
 						<Route exact path="/sign-up" component={SignUpForm}/>
 						<Route exact path="/FourOhFour" component={FourOhFour}/>
 						<Route exact path="/AddSighting" component={AddSighting}/>
-						<Route exact path="/MySightings" component={MySightings}/>
+						<Route exact path="/sightings/:birdId" component={MySightings} birdId=":birdId"/>
 						<Route exact path="/view-species" component={ViewBirdPage}/>
 						<Route component={FourOhFour}/>
 					</Switch>
