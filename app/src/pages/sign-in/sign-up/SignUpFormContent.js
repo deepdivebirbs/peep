@@ -138,7 +138,7 @@ export const SignUpFormContent = (props) => {
 							}
 						</Form.Group>
 					</Form.Row>
-					<Button type="submit">Sign Up</Button>
+					<Button variant="outline-primary" className="btn" type="submit">Sign Up</Button>
 				</Form>
 
 				{status && (<div className={status.type}>{status.message}</div>)}

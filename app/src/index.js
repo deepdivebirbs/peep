@@ -19,6 +19,7 @@ import Reducers from './shared/reducers/reducers';
 import MySightings from "./pages/MySightings/MySightings";
 import AddSighting from "./pages/sighting/SightingFormContent"
 import ViewBirdPage from "./pages/ViewBird/ViewBirdPage"
+
 const store = createStore(Reducers, applyMiddleware(thunk));
 
 
