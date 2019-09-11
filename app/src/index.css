@@ -12,6 +12,10 @@ a.navbar-brand {
 	color: white !important;
 }
 
+div.transparent {
+	background: rgba(152, 196, 99, 0.5)
+}
+
 div.dailyFeature {
 	margin-left: auto;
 	margin-right: auto;
