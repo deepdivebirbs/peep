@@ -70,7 +70,7 @@ export const LogInFormContent = (props) => {
 				</Form.Group>
 
 				<Form.Group>
-					<Button variant="primary" type="submit" href="/">
+					<Button variant="primary" type="submit">
 						Sign In
 					</Button>
 					<span className="ml-3">Need an account?  <a href="/Sign-up">Sign Up!</a></span>

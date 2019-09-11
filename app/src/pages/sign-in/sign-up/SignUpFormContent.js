@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Container, Col, InputGroup, Form, Button, FormControl} from 'react-bootstrap';
+import {Container, Col, InputGroup, Form, Button} from 'react-bootstrap';
 
 export const SignUpFormContent = (props) => {
 
@@ -34,7 +34,7 @@ export const SignUpFormContent = (props) => {
 								defaultValue="Mark"
 							/>
 							{
-								errors.userFirstName && touched.userFirstName&& (
+								errors.userFirstName && touched.userFirstName && (
 									<div className="alert alert-danger">
 										{errors.userFirstName}
 									</div>
@@ -53,7 +53,7 @@ export const SignUpFormContent = (props) => {
 								defaultValue="Otto"
 							/>
 							{
-								errors.userLastName && touched.userLastName&& (
+								errors.userLastName && touched.userLastName && (
 									<div className="alert alert-danger">
 										{errors.userLastName}
 									</div>
@@ -73,7 +73,7 @@ export const SignUpFormContent = (props) => {
 									aria-describedby="inputGroupPrepend"
 								/>
 								{
-									errors.profileUsername && touched.profileUsername&& (
+									errors.profileUsername && touched.profileUsername && (
 										<div className="alert alert-danger">
 											{errors.profileUsername}
 										</div>
@@ -94,7 +94,7 @@ export const SignUpFormContent = (props) => {
 								onBlur={handleBlur}
 							/>
 							{
-								errors.userProfileEmail && touched.userProfileEmail&& (
+								errors.userProfileEmail && touched.userProfileEmail && (
 									<div className="alert alert-danger">
 										{errors.userProfileEmail}
 									</div>
@@ -112,7 +112,7 @@ export const SignUpFormContent = (props) => {
 								onBlur={handleBlur}
 							/>
 							{
-								errors.userProfilePassword && touched.userProfilePassword&& (
+								errors.userProfilePassword && touched.userProfilePassword && (
 									<div className="alert alert-danger">
 										{errors.userProfilePassword}
 									</div>
@@ -130,7 +130,7 @@ export const SignUpFormContent = (props) => {
 								onBlur={handleBlur}
 							/>
 							{
-								errors.userProfilePasswordConfirm && touched.userProfilePasswordConfirm&& (
+								errors.userProfilePasswordConfirm && touched.userProfilePasswordConfirm && (
 									<div className="alert alert-danger">
 										{errors.userProfilePasswordConfirm}
 									</div>
@@ -138,9 +138,8 @@ export const SignUpFormContent = (props) => {
 							}
 						</Form.Group>
 					</Form.Row>
-					<Button type="submit">Sign Up</Button>
+					<Button variant="outline-primary" className="btn" type="submit">Sign Up</Button>
 				</Form>
-
 				{status && (<div className={status.type}>{status.message}</div>)}
 			</Container>
 		</>

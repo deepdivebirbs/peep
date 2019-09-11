@@ -5,20 +5,17 @@ import {Switch, BrowserRouter, Route, Link} from "react-router-dom";
 import PeepNav from './shared/components/PeepNav';
 import Footer from './shared/components/Footer';
 import Home from './pages/Home';
-import MyProfileForm from './pages/user-profile/MyProfileForm';
 import SignUpForm from './pages/sign-in/sign-up/SignUpForm';
 import FourOhFour from './pages/FourOhFour';
-import sightingFormContent from './pages/sighting/SightingFormContent';
 import MyProfile from './pages/user-profile/MyProfile';
-import {reducers} from './shared/reducers/reducers';
 import {applyMiddleware, createStore} from "redux";
 import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
-import {getAllSpecies} from "./shared/actions/species";
 import Reducers from './shared/reducers/reducers';
 import MySightings from "./pages/MySightings/MySightings";
 import AddSighting from "./pages/sighting/SightingFormContent"
 import ViewBirdPage from "./pages/ViewBird/ViewBirdPage"
+
 const store = createStore(Reducers, applyMiddleware(thunk));
 
 
