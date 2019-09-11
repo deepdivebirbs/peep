@@ -17,7 +17,7 @@ export const UseJwt = () => {
 	return jwt;
 };
 
-export const UseJwtUsername = () => {
+export const UseJwtUserProfileName = () => {
 	const [userProfileName, setUserProfileName] = useState(null);
 
 	useEffect(() => {
@@ -31,7 +31,7 @@ export const UseJwtUsername = () => {
 	return userProfileName;
 };
 
-export const UseJwtProfileId = () => {
+export const UseJwtUserProfileId = () => {
 	const [userProfileId, setUserProfileId] = useState(null);
 
 	useEffect(() => {
