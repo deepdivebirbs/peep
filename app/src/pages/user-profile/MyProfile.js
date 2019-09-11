@@ -27,13 +27,13 @@ export const MyProfile = ({match}) => {
 	return (
 		<>
 			<Container>
-				<div className="jumbotron">
+				<div className="jumbotron mt-4 col-6 justify-content-end">
 					<h1>My Profile</h1>
 					<div>
-						<span>Username: {profile && profile.userProfileName}</span><br/>
-						<span>First Name: {profile && profile.userProfileFirstName}</span><br/>
-						<span>Last Name: {profile && profile.userProfileLastName}</span><br/>
-						<span>Email: {profile && profile.userProfileEmail}</span>
+						<span id="profile-card-text">Username: {profile && profile.userProfileName}</span><br/>
+						<span id="profile-card-text">First Name: {profile && profile.userProfileFirstName}</span><br/>
+						<span id="profile-card-text">Last Name: {profile && profile.userProfileLastName}</span><br/>
+						<span id="profile-card-text">Email: {profile && profile.userProfileEmail}</span>
 					</div>
 				</div>
 			</Container>

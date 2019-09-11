@@ -60,6 +60,12 @@ a.nav-link:hover {
 	background-color: #299644 !important;
 }
 
+/*Profile page styling*/
+.profile-card-text {
+	font-size: 150%;
+	margin: 1em;
+}
+
 /* Phone Media Query */
 @media screen and (max-width: 376px) {
 	body {
