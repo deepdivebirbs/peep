@@ -27,7 +27,7 @@ export const MySightings = () => {
 	return (
 		<>
 			<Container>
-				<div className="jumbotron mt-4 col-6 justify-content-end">
+				<div className="jumbotron p-3 mt-5 justify-content-end transparent">
 				<h1><strong>My Most Recent Sighting</strong></h1><br/>
 					<div>
 					<h3>Photo: {sightings && sightings.sightingBirdPhoto}</h3><br/>
