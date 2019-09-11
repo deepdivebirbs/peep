@@ -62,8 +62,8 @@ a.nav-link:hover {
 
 /*Profile page styling*/
 .profile-card-text {
-	font-size: 150%;
-	margin: 1em;
+	font-size: 500% !important;
+	margin: 1em !important;
 }
 
 /* Phone Media Query */

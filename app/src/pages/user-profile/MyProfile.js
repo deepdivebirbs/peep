@@ -28,12 +28,12 @@ export const MyProfile = ({match}) => {
 		<>
 			<Container>
 				<div className="jumbotron mt-4 col-6 justify-content-end">
-					<h1>My Profile</h1>
+					<h1>My Profile</h1><br/>
 					<div>
-						<span id="profile-card-text">Username: {profile && profile.userProfileName}</span><br/>
-						<span id="profile-card-text">First Name: {profile && profile.userProfileFirstName}</span><br/>
-						<span id="profile-card-text">Last Name: {profile && profile.userProfileLastName}</span><br/>
-						<span id="profile-card-text">Email: {profile && profile.userProfileEmail}</span>
+						<h3 id="profile-card-text">Username: {profile && profile.userProfileName}</h3><br/>
+						<h3 id="profile-card-text">First Name: {profile && profile.userProfileFirstName}</h3><br/>
+						<h3 id="profile-card-text">Last Name: {profile && profile.userProfileLastName}</h3><br/>
+						<h3 id="profile-card-text">Email: {profile && profile.userProfileEmail}</h3>
 					</div>
 				</div>
 			</Container>
