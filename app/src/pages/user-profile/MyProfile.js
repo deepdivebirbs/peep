@@ -29,9 +29,9 @@ export const MyProfile = ({match}) => {
 			<Container>
 				<h1>My Profile</h1>
 				<div>
-					<span>Username: {profile && profile.userProfileName}</span>
-					<span>First Name: {profile && profile.userProfileFirstName}</span>
-					<span>Last Name: {profile && profile.userProfileLastName}</span>
+					<span>Username: {profile && profile.userProfileName}</span><br>
+					<span>First Name: {profile && profile.userProfileFirstName}</span><br>
+					<span>Last Name: {profile && profile.userProfileLastName}</span><br>
 					<span>Email: {profile && profile.userProfileEmail}</span>
 				</div>
 			</Container>
