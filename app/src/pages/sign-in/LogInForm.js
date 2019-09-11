@@ -36,7 +36,7 @@ export const LogInForm = () => {
 					window.localStorage.setItem("jwt-token", reply.headers ["x-jwt-token"]);
 					resetForm();
 					setTimeout(()=>{
-						setToHome(true);
+						//setToHome(true);
 					}, 1500);
 				}
 				setStatus({message, type});
