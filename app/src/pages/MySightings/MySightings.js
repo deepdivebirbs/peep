@@ -27,24 +27,16 @@ export const MySightings = () => {
 	return (
 		<>
 			<Container>
-				<h1>Sighting</h1>
-				<div>
-					<span>Photo: {sightings && sightings.sightingBirdPhoto}</span>
-				</div>
-				<div>
-					<span>Common Name: {sightings && birdSpecies.birdComName}</span>
-				</div>
-				<div>
-					<span>Scientific Name: {sightings && birdSpecies.birdSciName}</span>
-				</div>
-				<div>
-					<span>Date: {sightings && sightings.sightingDate}</span>
-				</div>
-				<div>
-					<p>Time: {sightings && sightings.sightingTime}</p>
-				</div>
-				<div>
-					<span>Location: {sightings && sightings.sightingLocation}</span>
+				<div className="jumbotron mt-4 col-6 justify-content-end">
+				<h1><strong>My Most Recent Sighting</strong></h1><br/>
+					<div>
+					<h3>Photo: {sightings && sightings.sightingBirdPhoto}</h3><br/>
+					<h3>Common Name: {sightings && birdSpecies.birdComName}</h3><br/>
+					<h3>Scientific Name: {sightings && birdSpecies.birdSciName}</h3><br/>
+					<h3>Date: {sightings && sightings.sightingDate}</h3><br/>
+					<h3>Time: {sightings && sightings.sightingTime}</h3><br/>
+					<h3>Location: {sightings && sightings.sightingLocation}</h3><br/>
+					</div>
 				</div>
 			</Container>
 		</>
