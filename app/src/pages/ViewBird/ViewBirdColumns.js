@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {getAllSpecies} from "../../shared/actions/species";
 import BirdCard from '../../shared/components/BirdCard';
 
-export const ViewBirdColumn = () => {
+export const ViewBirdColumn = ({props}) => {
 	const BIRDS = useSelector(state => state.species ? state.species : []);
 	const DISPATCH = useDispatch();
 
@@ -18,28 +18,22 @@ export const ViewBirdColumn = () => {
 
 	function getRandomBird(birdArray) {
 		let rand = Math.floor((Math.random() * birdArray.length) + 1);
-		return(birdArray[rand]);
+		return (birdArray[rand]);
 	}
 
 	let randomBird = getRandomBird(BIRDS);
 
-	let bird = {
-		birdComName: randomBird ? randomBird.speciesComName : "",
-		birdSciName: randomBird ? randomBird.speciesSciName : "",
-		birdPhotoUrl: randomBird ? randomBird.speciesPhotoUrl : ""
-	};
-
-	console.log(BIRDS);
-
-	for(let i in BIRDS) {
-		return (
-			<>
-				<Col>
-					<BirdCard commonName={BIRDS[i]} sciName={BIRDS[i]}/>
-				</Col>
-			</>
+	let mappedBird = BIRDS.map(function(bird){
+		return(
+			<BirdCard commonName={bird.speciesComName} sciName={bird.speciesSciName}/>
 		);
-	}
+	});
+
+	return (
+		<>
+			{mappedBird}
+		</>
+	);
 };
 
 export default ViewBirdColumn;
