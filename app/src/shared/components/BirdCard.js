@@ -5,7 +5,7 @@ export const BirdCard = (props) => {
 
 	return (
 		<>
-			<Card style={{width: '18rem'}}>
+			<Card className="transparent" style={{width: '18rem'}}>
 				<Card.Img variant="top" src={props.image} alt={props.image}/>
 				<Card.Body>
 					<Card.Title>{props.title}</Card.Title>

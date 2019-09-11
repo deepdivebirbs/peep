@@ -10,10 +10,17 @@ body {
 
 a.navbar-brand {
 	color: white !important;
+	font-size: 30px;
+	font-family: 'Kaushan Script', cursive;
+
+}
+
+#jumbo-peep {
+	font-family: 'Kaushan Script', cursive;
 }
 
 div.transparent {
-	background: rgba(152, 196, 99, 0.5)
+	background: rgba(255, 255, 255, 0.4)
 }
 
 div.dailyFeature {
@@ -44,7 +51,7 @@ code {
 }
 
 a.nav-link {
-	color: #299644;
+	color: white !important;
 }
 
 a.nav-link:hover {
@@ -54,9 +61,9 @@ a.nav-link:hover {
 }
 
 /* Phone Media Query */
-@media screen and (min-width: 375px) {
+@media screen and (max-width: 376px) {
 	body {
-		background: url("images/tablet-bird-background.jpg") !important;
+		background: url("images/phone-bird-background.jpg") !important;
 	}
 
 	a.nav-link {
@@ -65,7 +72,7 @@ a.nav-link:hover {
 }
 
 /* Tablet Media Query */
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 376px) and (max-width: 1079px) {
 	body {
 		background: url("images/tablet-bird-background.jpg") no-repeat !important;
 	}
@@ -76,9 +83,9 @@ a.nav-link:hover {
 }
 
 /* Desktop Media Query */
-@media screen and (max-width: 1080px) {
+@media screen and (min-width: 1080px) {
 	body {
-		background: url("images/bird-background.jpg");
+		background: url("images/bird-background.jpg") !important;
 	}
 }
 
