@@ -20,7 +20,6 @@ export const Footer = () => {
 				<Row>
 					<Col><a href={"/"}>Home</a></Col>
 					<Col><a href={"/my-profile"}>Profile</a></Col>
-					<Col><a href={"#privacy-page"}>Privacy Policy</a></Col>
 				</Row>
 			</footer>
 		</>

@@ -8,6 +8,10 @@ body {
 	background: url('./images/bird-background.jpg');
 }
 
+a.navbar-brand {
+	color: white !important;
+}
+
 div.dailyFeature {
 	margin-left: auto;
 	margin-right: auto;
@@ -22,7 +26,8 @@ div.card-body {
 	position:relative;
 	background: rgb(204, 204, 204); /* Fallback for older browsers without RGBA-support */
 	/*background: rgba(204, 204, 204, 0.1) !important;*/
-	background: transparent !important;
+	background: none !important;
+	border: none !important;
 }
 
 div.mt-5 {
@@ -49,12 +54,20 @@ a.nav-link:hover {
 	body {
 		background: url("images/phone-bird-background.jpg") !important;
 	}
+
+	a.nav-link {
+		color: white !important;
+	}
 }
 
 /* Tablet Media Query */
 @media screen and (min-width: 768px) {
 	body {
 		background: url("images/tablet-bird-background.jpg") no-repeat !important;
+	}
+
+	a.nav-link {
+		color: white !important;
 	}
 }
 
