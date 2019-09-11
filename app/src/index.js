@@ -8,7 +8,7 @@ import Home from './pages/Home';
 import MyProfileForm from './pages/user-profile/MyProfileForm';
 import SignUpForm from './pages/sign-in/sign-up/SignUpForm';
 import FourOhFour from './pages/FourOhFour';
-import sightingcontent from './pages/sighting/sightingcontent';
+import sightingFormContent from './pages/sighting/SightingFormContent';
 import MyProfile from './pages/user-profile/MyProfile';
 import {reducers} from './shared/reducers/reducers';
 import {applyMiddleware, createStore} from "redux";
@@ -17,7 +17,6 @@ import thunk from 'redux-thunk';
 import {getAllSpecies} from "./shared/actions/species";
 import Reducers from './shared/reducers/reducers';
 import Sighting from "./pages/sighting/Sighting";
-import AddSighting from './pages/AddSighting';
 
 const store = createStore(Reducers, applyMiddleware(thunk));
 
@@ -34,7 +33,7 @@ function App() {
 						<Route exact path="/sign-up" component={SignUpForm}/>
 						<Route exact path="/FourOhFour" component={FourOhFour}/>
 						<Route exact path="/sighting" component={Sighting}/>
-						<Route exact path="/add-sighting" component={AddSighting}/>
+						<Route exact path="/sighting" component={Sighting}/>
 						<Route component={FourOhFour}/>
 					</Switch>
 				</BrowserRouter>
