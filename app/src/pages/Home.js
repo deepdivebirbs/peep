@@ -11,9 +11,9 @@ export const Home = () => {
 				<section>
 					<Row>
 						<Col>
-							<div className="transparent p-3 mb-lg-5 mt-5 rounded">
-								<Jumbotron fluid>
-									<Container>
+							<div className="  p-3 mb-lg-5 mt-5 rounded">
+								<Jumbotron className="transparent" fluid>
+									<Container className="transparent">
 										<h1>Welcome To Peep!</h1>
 										<p>
 											Join a community of local birdwatchers who track the birds in the region as put
