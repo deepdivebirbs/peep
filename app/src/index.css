@@ -56,7 +56,7 @@ a.nav-link:hover {
 /* Phone Media Query */
 @media screen and (min-width: 375px) {
 	body {
-		background: url("images/phone-bird-background.jpg") !important;
+		background: url("images/tablet-bird-background.jpg") !important;
 	}
 
 	a.nav-link {
@@ -72,6 +72,13 @@ a.nav-link:hover {
 
 	a.nav-link {
 		color: white !important;
+	}
+}
+
+/* Desktop Media Query */
+@media screen and (max-width: 1080px) {
+	body {
+		background: url("images/bird-background.jpg");
 	}
 }
 
