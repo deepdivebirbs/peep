@@ -5,6 +5,7 @@ body {
 	sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+	background: url('./images/bird-background.jpg');
 }
 
 div.dailyFeature {
@@ -14,12 +15,6 @@ div.dailyFeature {
 
 button.featureAddToFaves {
 	margin-bottom: 5%;
-}
-
-footer {
-	padding: 2%;
-	display: block;
-	height: 100%;
 }
 
 code {
@@ -32,3 +27,6 @@ a.nav-link:hover {
 	border-radius: 5px !important;
 	background-color: #02891f !important;
 }
+
+
+
