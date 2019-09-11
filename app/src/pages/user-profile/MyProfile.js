@@ -16,7 +16,7 @@ export const MyProfile = ({match}) => {
 	const dispatch = useDispatch();
 
 	const effects = () => {
-		dispatch(getUserProfileById(match.param.userProfileId));
+		dispatch(getUserProfileById(match.params.userProfileId));
 	};
 
  	const inputs = [match.param.userProfileId];
