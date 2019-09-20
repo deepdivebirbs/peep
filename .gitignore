@@ -10,3 +10,4 @@
 /npm-debug.log
 /php/Classes/.something.php
 /php/Classes/test.php
+/docker-compose.env
