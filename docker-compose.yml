@@ -21,13 +21,12 @@ services:
       ports:
          - 8080:80
       volumes:
-        - .:/app/
-        - ./node_modules:/app/node_modules/
+        - .:/app
 
    sql:
       build: ./sql
       volumes:
-         - peep:/var/lib/mysql
+         - peep:/var/lib/mysql/
       env_file:
          - ./docker-compose.env
 
