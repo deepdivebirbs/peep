@@ -1,6 +1,14 @@
 version: "3"
 
 services:
+   
+   sql:
+      build: ./sql
+      volumes:
+         - peep:/var/lib/mysql
+      env_file:
+         - ./docker-compose.env
+
    php:
       build: ./php
       depends_on:
@@ -19,14 +27,10 @@ services:
       depends_on:
          - php
       ports:
-         - 8081:80
-
-   sql:
-      build: ./sql
-      volumes:
-         - peep:/var/lib/mysql
-      env_file:
-         - ./docker-compose.env
+         - 8080:80
+      environment:
+         - NODE_ENV=development
+      tty: true
 
 volumes:
    peep:
