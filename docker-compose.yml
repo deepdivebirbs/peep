@@ -29,7 +29,7 @@ services:
       ports:
          - 8080:80
       environment:
-         - NODE_ENV=development
+         - NODE_ENV=production
       tty: true
 
 volumes:
