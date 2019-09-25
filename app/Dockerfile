@@ -3,7 +3,9 @@ WORKDIR /app
 COPY package.json /app/
 RUN npm install
 COPY ./ /app/
-EXPOSE 80
-CMD ["npm", "run", "start"]
+RUN npm run build
+FROM nginx:1.15
+COPY --from=build-stage /app/build/ /usr/share/nginx/html
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
 
