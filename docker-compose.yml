@@ -23,14 +23,14 @@ services:
          - ./php/lib:/var/www/lib
 
    app:
-      build: ./app
+      build: ./app/node_modules
       depends_on:
          - php
       ports:
          - 8080:80
-      environment:
-         - NODE_ENV=production
-      tty: true
+      volumes:
+        - ./app/:/app/
+        - ./app/node_modules:/app/node_modules/
 
 volumes:
    peep:
