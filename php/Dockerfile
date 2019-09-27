@@ -16,6 +16,7 @@ COPY --from=vendor /app/vendor/ /var/www/vendor/
 
 RUN mkdir /etc/apache2/peep
 RUN touch /etc/apache2/peep/peep.ini && php /etc/apache2/peep/peep.ini
+COPY /config/secrets/Secrets.php /etc/apache2/peep/
 
 WORKDIR /var/www
 

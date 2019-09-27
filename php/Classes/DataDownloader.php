@@ -11,7 +11,7 @@ require_once(".something.php");
 require_once("autoload.php");
 require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 require_once(dirname(__DIR__, 1) . "/lib/uuid.php");
-require_once("/etc/apache2/capstone-mysql/Secrets.php");
+require_once("/etc/apache2/peep/Secrets.php");
 
 
 /**
