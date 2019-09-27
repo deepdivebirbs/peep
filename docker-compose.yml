@@ -20,8 +20,6 @@ services:
          - php
       ports:
          - 8080:80
-      volumes:
-        - .:/app
 
    sql:
       build: ./sql
