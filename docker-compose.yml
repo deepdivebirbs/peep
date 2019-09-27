@@ -23,7 +23,7 @@ services:
          - ./php/lib:/var/www/lib
 
    app:
-      build: ./app/node_modules
+      build: ./app/
       depends_on:
          - php
       ports:
