@@ -1,6 +1,8 @@
-ALTER DATABASE peep CHARACTER SET utf8 COLLATE utf8_unicode_cli;
-
 /* ONLY RUN ONCE THIS LINE DELETES THE CURRENT TABLE AND REMAKES IT!! */
+DROP DATABASE peep;
+CREATE DATABASE peep;
+USE peep;
+ALTER DATABASE peep CHARACTER SET utf8;
 
 DROP TABLE IF EXISTS favorite;
 DROP TABLE IF EXISTS sighting;
@@ -8,14 +10,14 @@ DROP TABLE IF EXISTS species;
 DROP TABLE IF EXISTS userProfile;
 
 create table userProfile(
-	userProfileId binary(16) not null,
-	userProfileName varchar(32) not null,
-	userProfileFirstName varchar(32) not null,
-	userProfileLastName varchar(32) not null,
-	userProfileEmail varchar(128) not null,
-	userProfileAuthenticationToken char(32) null,
-	userProfileHash char(97) not null,
-	primary key (userProfileId),
+	userProfileId BINARY(16) NOT NULL,
+	userProfileName VARCHAR(32) NOT NULL,
+	userProfileFirstName VARCHAR(32) NOT NULL,
+	userProfileLastName VARCHAR(32) NOT NULL,
+	userProfileEmail VARCHAR(128) NOT NULL,
+	userProfileAuthenticationToken CHAR(32) NULL,
+	userProfileHash CHAR(97) NOT NULL,
+	PRIMARY KEY (userProfileId),
 	unique (userProfileName)
 );
 
@@ -28,7 +30,7 @@ CREATE TABLE species(
 	PRIMARY KEY (speciesId)
 );
 
-create table sighting (
+CREATE TABLE sighting (
 	sightingId BINARY (16) NOT NULL,
 	sightingUserProfileId BINARY (16) NOT NULL,
 	sightingBirdSpeciesId BINARY (16) NOT NULL,
@@ -37,22 +39,22 @@ create table sighting (
 	sightingLocX FLOAT (6, 3) NOT NULL,
 	sightingLocY FLOAT (6, 3) NOT NULL,
 	unique(sightingId),
-	primary key(sightingId),
-	foreign key(sightingUserProfileId) REFERENCES userProfile(userProfileId),
-	foreign key(sightingBirdSpeciesId) REFERENCES species(speciesId)
+	PRIMARY KEY(sightingId),
+	FOREIGN KEY(sightingUserProfileId) REFERENCES userProfile(userProfileId),
+	FOREIGN KEY(sightingBirdSpeciesId) REFERENCES species(speciesId)
 );
 
--- Note that the table FavoriteBirdlist contains two foreign keys, each from a different
+-- NOTe that the table FavoriteBirdlist contains two FOREIGN KEYs, each from a different
 -- table that must be created first. These tables are User and BirdSpecies, and the relationship is
 CREATE TABLE favorite (
 	favoriteSpeciesId BINARY(16) NOT NULL,
 	favoriteUserProfileId BINARY (16) NOT NULL,
-	-- creates index before making foreign keys--
+	-- creates index before making FOREIGN KEYs--
 	INDEX (favoriteSpeciesId),
 	INDEX (favoriteUserProfileId),
-	-- creates foreign key relations
+	-- creates FOREIGN KEY relations
 	FOREIGN KEY (favoriteSpeciesId) REFERENCES species(speciesId),
 	FOREIGN KEY (favoriteUserProfileId) REFERENCES userProfile(userProfileId),
-	-- creates a  composite foreign key with the two foreign keys that depend on speciesId and userID
+	-- creates a  composite FOREIGN KEY with the two FOREIGN KEYs that depend on speciesId and userID
 	PRIMARY KEY (favoriteSpeciesId, favoriteUserProfileId)
 );

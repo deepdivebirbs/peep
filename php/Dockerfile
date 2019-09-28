@@ -21,3 +21,5 @@ COPY /config/secrets/Secrets.php /etc/apache2/peep/
 WORKDIR /var/www
 
 EXPOSE 80
+
+ENTRYPOINT ["./run.sh"]
