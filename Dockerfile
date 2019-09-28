@@ -1,1 +1,1 @@
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["run.sh"]

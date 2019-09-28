@@ -22,4 +22,4 @@ WORKDIR /var/www
 
 EXPOSE 80
 
-ENTRYPOINT ["./run.sh"]
+#CMD ["php Classes/DataDownloader.php"]
